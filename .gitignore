@@ -105,3 +105,8 @@ venv.bak/
 .DS_Store
 .vscode/settings.json
 .vscode/settings.json
+
+# VS Code config
+/.vscode
+/vscode
+.vscode/settings.json
