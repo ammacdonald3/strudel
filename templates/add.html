@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block heading %}
+    Add New Recipes
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <form role="form" method='POST'>
+      <div class="form-group">
+        <input type="text" name="recipe_name" class="form-control" id="recipe_name_box" placeholder="Enter recipe name" style="max-width: 300px;" autofocus required>
+        <input type="text" name="recipe_desc" class="form-control" id="recipe_desc_box" placeholder="Enter recipe description" style="max-width: 300px;" autofocus required>
+        <input type="text" name="recipe_prep_time" class="form-control" id="recipe_prep_box" placeholder="Enter recipe prep time" style="max-width: 300px;" autofocus required>
+        <input type="text" name="recipe_cook_time" class="form-control" id="recipe_cook_box" placeholder="Enter recipe cook time" style="max-width: 300px;" autofocus required>
+      </div>
+      <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+    <br>
+    {% for item in output %}
+      <h4>{{ item }}</h4>
+    {% endfor %}
+  </div>
+{% endblock %}
