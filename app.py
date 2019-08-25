@@ -1,6 +1,14 @@
 from flask import Flask, render_template
-app = Flask(__name__)
+from flask_sqlalchemy import SQLAlchemy
+import os
 
+app = Flask(__name__)
+app.config.from_object(os.environ['APP_SETTINGS'])
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URL'] = ['DATABASE_URL']
+db = SQLAlchemy(app)
+
+from models import Result
 
 @app.route('/')
 def hello():
@@ -16,6 +24,7 @@ def all():
     recipes = ['Steak','Chicken','Veal']
     return render_template('all.html', recipes=recipes)
 
+print(os.environ['APP_SETTINGS'])
 
 if __name__ == '__main__':
     app.run()
