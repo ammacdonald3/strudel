@@ -36,10 +36,22 @@ def add_recipe():
             output.append("Item did not add to database :(")
     return render_template('add.html', output=output)
 
+@app.route('/all_recipes', methods=['GET','POST'])
+def all_recipes():
+    recipe_list = Result.query.all()
+    return render_template("all_recipes.html", recipe_list=recipe_list)
+
+
+
 @app.route('/all')
 def all():
     recipes = ['Steak','Chicken','Veal']
     return render_template('all.html', recipes=recipes)
+
+@app.route('/recipe/<recipe_id>')
+def recipe_detail(recipe_id):
+    recipe = Result.query.filter_by(id=recipe_id).first_or_404()
+    return render_template('recipe_detail.html', recipe=recipe)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block nav_recipes %}
+  active
+{% endblock %}
+
+{% block heading %}
+    All Recipes
+{% endblock %}
+
+{% block body %}
+<div class="container">
+  <table class="table table-striped">
+    {% for recipe in recipe_list %}
+      <tr>
+          <td><a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}">{{ recipe.recipe_name }}</a></td>
+        <td>{{ recipe.recipe_desc }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+  </div>
+{% endblock %}
