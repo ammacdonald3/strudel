@@ -10,10 +10,13 @@
 {% block body %}
 <div class="container">
   <table class="table table-striped">
-      <tr><td>{{ recipe.recipe_name }}</td></tr>
-      <tr><td>{{ recipe.recipe_desc }}</td></tr>
-      <tr><td>{{ recipe.recipe_prep_time}}</td></tr>
-      <tr><td>{{ recipe.recipe_cook_time }}</td></tr>
+      <tr><td>Recipe</td><td>{{ recipe.recipe_name }}</td></tr>
+      <tr><td>Description</td><td>{{ recipe.recipe_desc }}</td></tr>
+      <tr><td>Prep Time</td><td>{{ recipe.recipe_prep_time}}</td></tr>
+      <tr><td>Cook Time</td><td>{{ recipe.recipe_cook_time }}</td></tr>
   </table>
+    <div>
+        <a href="{{ url_for('all_recipes') }}">Return to previous page</a></td>
+    </div>
   </div>
 {% endblock %}
