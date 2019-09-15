@@ -1,14 +1,17 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 import os
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_DATABASE_URL'] = ['DATABASE_URL']
+login = LoginManager(app)
+login.login_view = 'login'
 db = SQLAlchemy(app)
 
-from models import Recipe, Ingredient, Step
+from models import Recipe, Ingredient, Recipe_Step, User, LoginForm, RegistrationForm
 
 
 # Define route for landing page
@@ -19,6 +22,7 @@ def index():
 
 # Define route for page to add recipes
 @app.route('/add', methods=['GET', 'POST'])
+@login_required
 def add_recipe():
     output = []
     # If user submits data on input form, write to DB
@@ -38,6 +42,18 @@ def add_recipe():
         # Return error if database write was unsuccessful
         except:
             output.append("Recipe did not add to database :(")
+
+        # Write to user_recipe
+        try:
+            user_recipe = User_Recipe(
+                recipe_id=recipe.id,
+                user_id=2,
+                owner_ind='Y'
+            )
+            db.session.add(user_recipe)
+            db.session.commit()
+        except:
+            output.append("User ownership of this recipe was not established")
 
         # Write Ingredient 1
         try:
@@ -234,6 +250,53 @@ def all_recipes():
 def recipe_detail(recipe_id):
     recipe = Recipe.query.filter_by(id=recipe_id).first_or_404()
     return render_template('recipe_detail.html', recipe=recipe)
+    
+# Define route for login page
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user is None or not user.check_password(form.password.data):
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
+        login_user(user, remember=form.remember_me.data)
+        return redirect(url_for('index'))
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user is None or not user.check_password(form.password.data):
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
+        login_user(user, remember=form.remember_me.data)
+        next_page = request.args.get('next')
+        if not next_page:
+            next_page = url_for('index')
+        return redirect(next_page)
+    return render_template('login.html', title='Sign In', form=form)
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(first_name=form.first_name.data, last_name=form.last_name.data, username=form.username.data, email=form.email.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Congratulations, you are now a registered user!')
+        return redirect(url_for('login'))
+    return render_template('register.html', title='Register', form=form)
+
 
 
 if __name__ == '__main__':

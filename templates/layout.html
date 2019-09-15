@@ -1,56 +1,71 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>
-            Recipe Selector
-        </title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <style>
-      .container {
-        max-width: 1000px;
-      }
-    </style>
-    </head>
-    <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="{{ url_for('index') }}">Recipe App</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-          
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav mr-auto">
-                <li class="nav-item {% block nav_home %}{% endblock %}">
-                  <a class="nav-link" href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item {% block nav_add %}{% endblock %}">
-                    <a class="nav-link" href="{{ url_for('add_recipe') }}">Add</a>
-                </li>
-                <li class="nav-item {% block nav_recipes %}{% endblock %}">
-                  <a class="nav-link" href="{{ url_for('all_recipes') }}">Recipes</a>
-                </li>
-                <li class="nav-item {% block nav_current %}{% endblock %}">
-                    <a class="nav-link" href="#">Current Meals</a>
-                </li>
-              </ul>
-              <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-              </form>
-            </div>
-          </nav>
-          <div class="container">
-            <h1>{% block heading %}{% endblock %}</h1>
-          </div>
-        
-        {% block body %}
-        {% endblock %}
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-          
-        {% block footer %}
-        {% endblock %}
 
-      </body>
+<head>
+  <title>
+    Recipe Selector
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" media="screen">
+  <style>
+    .container {
+      max-width: 1000px;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="{{ url_for('index') }}">Recipe App</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item {% block nav_home %}{% endblock %}">
+          <a class="nav-link" href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item {% block nav_add %}{% endblock %}">
+          <a class="nav-link" href="{{ url_for('add_recipe') }}">Add</a>
+        </li>
+        <li class="nav-item {% block nav_recipes %}{% endblock %}">
+          <a class="nav-link" href="{{ url_for('all_recipes') }}">Recipes</a>
+        </li>
+        <li class="nav-item {% block nav_current %}{% endblock %}">
+          <a class="nav-link" href="#">Current Meals</a>
+        </li>
+
+      </ul>
+      <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+        <li class="nav-item active">
+          {% if current_user.is_active %}
+          <a class="nav-link" href="#">Welcome, {{ current_user.username }}!</a>
+          {% endif %}
+        </li>
+        <li class="nav-item active">
+          {% if current_user.is_anonymous %}
+          <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+          {% else %}
+          <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+          {% endif %}
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container">
+    <h1>{% block heading %}{% endblock %}</h1>
+  </div>
+
+  {% block body %}
+  {% endblock %}
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+  {% block footer %}
+  {% endblock %}
+
+</body>
+
 </html>
