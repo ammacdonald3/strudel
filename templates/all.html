@@ -5,9 +5,9 @@
 {% endblock %}
 
 {% block body %}
-    <ul>
-        {% for recipe in recipes %}
-            <li>{{ recipe }}</li>
-        {% endfor %}
-    </ul>
+    <div>
+        {% for recipe in ingredients %}
+            <h3>{{ recipe.recipe_name }}</h3>
+            <p>{{ recipe.recipe_desc }}</p>
+    </div>
 {% endblock %}

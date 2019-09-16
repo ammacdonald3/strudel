@@ -6,7 +6,10 @@
     Recipe Selector
   </title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" media="screen">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" media="screen">
+  <link rel="stylesheet" href="{{ url_for('static', filename='recipe.css') }}">
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
+  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
   <style>
     .container {
       max-width: 1000px;
@@ -14,7 +17,7 @@
   </style>
 </head>
 
-<body>
+<body id="{% block bodyid %}{% endblock %}">
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="{{ url_for('index') }}">Recipe App</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -38,24 +41,26 @@
         </li>
 
       </ul>
-      <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
-        <li class="nav-item active">
-          {% if current_user.is_active %}
-          <a class="nav-link" href="#">Welcome, {{ current_user.username }}!</a>
-          {% endif %}
-        </li>
-        <li class="nav-item active">
-          {% if current_user.is_anonymous %}
-          <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-          {% else %}
-          <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
-          {% endif %}
-        </li>
-      </ul>
+      <form class="form-inline">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            {% if current_user.is_active %}
+            <a class="nav-link" href="#">Welcome, {{ current_user.first_name }}!</a>
+            {% endif %}
+          </li>
+          <li class="nav-item active">
+            {% if current_user.is_anonymous %}
+            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+            {% else %}
+            <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+            {% endif %}
+          </li>
+        </ul>
+      </form>
     </div>
   </nav>
-  <div class="container">
-    <h1>{% block heading %}{% endblock %}</h1>
+  <div class="container" id="title">
+    <h2>{% block heading %}{% endblock %}</h2>
   </div>
 
   {% block body %}

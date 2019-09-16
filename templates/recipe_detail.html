@@ -1,22 +1,31 @@
 {% extends "layout.html" %}
 {% block nav_recipes %}
-  active
+active
 {% endblock %}
 
 {% block heading %}
-    Recipe Detail
+{{ recipe.recipe_name }}
 {% endblock %}
 
 {% block body %}
 <div class="container">
-  <table class="table table-striped">
-      <tr><td>Recipe</td><td>{{ recipe.recipe_name }}</td></tr>
-      <tr><td>Description</td><td>{{ recipe.recipe_desc }}</td></tr>
-      <tr><td>Prep Time</td><td>{{ recipe.recipe_prep_time}}</td></tr>
-      <tr><td>Cook Time</td><td>{{ recipe.recipe_cook_time }}</td></tr>
-  </table>
-    <div>
-        <a href="{{ url_for('all_recipes') }}">Return to previous page</a></td>
-    </div>
+  <p>
+    Prep Time: {{ recipe.recipe_prep_time}} minutes
+    <br>
+    Cook Time: {{ recipe.recipe_cook_time }} minutes
+  </p>
+  <p>{{ recipe.recipe_desc }}</p>
+
+  <br>
+  <div class="container">
+    <h4>Ingredients:</h4>
+    {% for ingredient in ingredient_list %}
+      <li>{{ ingredient.ingredient_qty }} {{ ingredient.ingredient_measurement }} {{ ingredient.ingredient_desc }}</li>
+    {% endfor %}
   </div>
+  <br>
+  <div>
+    <a href="{{ url_for('all_recipes') }}">Return to previous page</a></td>
+  </div>
+</div>
 {% endblock %}

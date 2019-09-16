@@ -11,7 +11,7 @@ $(AddButton).click(function (e) //on add input button click
         if (x <= FieldCount) {
             FieldCount++; //text box added increment
             //add input box
-            $('<div class="form-group"><p>Ingredient ' + FieldCount + '</p><div class="form-row"><input type="text" name="ingredient_qty' + FieldCount + '" id="ingredient_qty' + FieldCount + '" placeholder="Qty ' + FieldCount + '" class="form-control col"/><input type="text" name="ingredient_measurement' + FieldCount + '" id="ingredient_measurement' + FieldCount + '" placeholder="Measurement ' + FieldCount + '" class="form-control col"/><input type="text" name="ingredient_desc' + FieldCount + '" id="ingredient_desc' + FieldCount + '" placeholder="Ingredient' + FieldCount + '" class="form-control col"/> <button class="removeclass btn btn-outline-danger col">Delete</button></div></div>').insertBefore(InputsWrapper);
+            $('<div class="form-group"><p>Ingredient ' + FieldCount + '</p><div class="row"><div class="form-group col-sm"><input type="text" name="ingredient_qty' + FieldCount + '" id="ingredient_qty' + FieldCount + '" placeholder="Qty ' + FieldCount + '" class="form-control col"/></div><div class="form-group col-sm"><input type="text" name="ingredient_measurement' + FieldCount + '" id="ingredient_measurement' + FieldCount + '" placeholder="Measurement ' + FieldCount + '" class="form-control col"/></div><div class="form-group col-sm"><input type="text" name="ingredient_desc' + FieldCount + '" id="ingredient_desc' + FieldCount + '" placeholder="Ingredient' + FieldCount + '" class="form-control col"/></div><div class="form-group col-sm"><button class="removeclass btn btn-outline-danger col">Delete</button></div></div></div>').insertBefore(InputsWrapper);
             x++; //text box increment
         }
         return false;
@@ -21,7 +21,7 @@ $("body").on("click", ".removeclass", function (e) { //user click on remove text
     console.log(x);
     if (x > 1) {
         console.log(x);
-        $(this).parent('div').parent('div').remove(); //remove text box
+        $(this).parent('div').parent('div').parent('div').remove(); //remove text box
         x--; //decrement textbox
     }
     return false;

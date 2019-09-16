@@ -104,7 +104,7 @@ class User_Recipe(db.Model):
         self.owner_ind = owner_ind
 
     def __repr__(self):
-        return '<id{}>'.format(self.id)
+        return '<id {}>'.format(self.id)
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])

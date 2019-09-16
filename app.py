@@ -48,12 +48,23 @@ def add_recipe():
             user_recipe = User_Recipe(
                 recipe_id=recipe.id,
                 user_id=2,
-                owner_ind='Y'
+                owner_ind="Y"
             )
+        except:
+            output.append("user didn't add")
+        try:
+            output.append("recipe_id: " + recipe_id)
+        except:
+            output.append("recipe_id didn't add")
+        try:
+            output.append("recipe.id: " + Recipe.query.first())
+        except:
+            output.append("recipe.id didn't add")
+        try:
             db.session.add(user_recipe)
             db.session.commit()
         except:
-            output.append("User ownership of this recipe was not established")
+            output.append("user didn't commit")
 
         # Write Ingredient 1
         try:
@@ -249,7 +260,8 @@ def all_recipes():
 @app.route('/recipe/<recipe_id>')
 def recipe_detail(recipe_id):
     recipe = Recipe.query.filter_by(id=recipe_id).first_or_404()
-    return render_template('recipe_detail.html', recipe=recipe)
+    ingredient_list = Ingredient.query.filter_by(recipe_id=recipe_id)
+    return render_template('recipe_detail.html', recipe=recipe, ingredient_list=ingredient_list)
     
 # Define route for login page
 @app.route('/login', methods=['GET', 'POST'])

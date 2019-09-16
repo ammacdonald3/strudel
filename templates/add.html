@@ -4,61 +4,67 @@ active
 {% endblock %}
 
 {% block heading %}
-Add New Recipes
+Add New Recipe
 {% endblock %}
 
 {% block body %}
 <div class="container">
   <form role="form" method='POST'>
-    <div class="form-group">
-      <label for="recipe_name_box">Recipe</label>
-      <input type="text" name="recipe_name" class="form-control" id="recipe_name_box" placeholder="Enter recipe name"
-        style="max-width: 300px;" autofocus required>
+    <div class="row">
+      <div class="form-group col-sm">
+        <label for="recipe_name_box">Recipe</label>
+        <input type="text" name="recipe_name" class="form-control" id="recipe_name_box" placeholder="Enter recipe name"
+          style="max-width: 300px;" autofocus required>
+      </div>
+      <div class="form-group col-sm">
+        <label for="recipe_desc_box">Description</label>
+        <input type="text" name="recipe_desc" class="form-control" id="recipe_desc_box"
+          placeholder="Enter recipe description" style="max-width: 300px;" autofocus required>
+      </div>
     </div>
-    <div class="form-group">
-      <label for="recipe_desc_box">Description</label>
-      <input type="text" name="recipe_desc" class="form-control" id="recipe_desc_box"
-        placeholder="Enter recipe description" style="max-width: 300px;" autofocus required>
-    </div>
-    <div class="form-group">
-      <label for="recipe_prep_box">Prep Time</label>
-      <input type="text" name="recipe_prep_time" class="form-control" id="recipe_prep_box"
-        placeholder="Enter recipe prep time" style="max-width: 300px;" aria-describedby="prep_help" autofocus required>
-      <small id="prep_help" class="form-text text-muted">Enter prep time in minutes.</small>
-    </div>
-    <div class="form-group">
-      <label for="recipe_cook_box">Cook Time</label>
-      <input type="text" name="recipe_cook_time" class="form-control" id="recipe_cook_box"
-        placeholder="Enter recipe cook time" style="max-width: 300px;" aria-describedby="cook_help" autofocus required>
-      <small id="cook_help" class="form-text text-muted">Enter cook time in minutes.</small>
+    <div class="row">
+      <div class="form-group col-sm">
+        <label for="recipe_prep_box">Prep Time</label>
+        <input type="text" name="recipe_prep_time" class="form-control" id="recipe_prep_box"
+          placeholder="Enter recipe prep time" style="max-width: 300px;" aria-describedby="prep_help" autofocus
+          required>
+        <small id="prep_help" class="form-text text-muted">Enter prep time in minutes.</small>
+      </div>
+      <div class="form-group col-sm">
+        <label for="recipe_cook_box">Cook Time</label>
+        <input type="text" name="recipe_cook_time" class="form-control" id="recipe_cook_box"
+          placeholder="Enter recipe cook time" style="max-width: 300px;" aria-describedby="cook_help" autofocus
+          required>
+        <small id="cook_help" class="form-text text-muted">Enter cook time in minutes.</small>
+      </div>
     </div>
 
     <br>
     <br>
     <div>
-      <h1>Ingredients</h1>
+      <h3>Ingredients</h3>
       <p>Add your ingredients.</p>
       <div class="form-group">
         <p>Ingredient 1</p>
-        <div class="form-row">
-          <div class="form-group">
+        <div class="row">
+          <div class="form-group col-sm">
             <input name="ingredient_qty1" class="form-control col" placeholder="Qty 1" aria-describedby="qty_help">
             <small id="qty_help" class="form-text text-muted">Enter quantity needed (i.e. '4').</small>
           </div>
-          <div class="form-group">
+          <div class="form-group col-sm">
             <input name="ingredient_measurement1" class="form-control col" placeholder="Measurement 1"
               aria-describedby="measurement_help">
             <small id="measurement_help" class="form-text text-muted">Enter measurement (i.e. 'cups').</small>
           </div>
-          <div class="form-group">
+          <div class="form-group col-sm">
             <input name="ingredient_desc1" class="form-control col" placeholder="Ingredient 1"
               aria-describedby="ingredient_help">
             <small id="ingredient_help" class="form-text text-muted">Enter ingredient (i.e. 'brown
               sugar').</small>
           </div>
-          <div class="form-group">
-          <button class="removeclass btn btn-outline-danger col">Delete</button>
-        </div>
+          <div class="form-group col-sm">
+            <button class="removeclass btn btn-outline-danger col">Delete</button>
+          </div>
         </div>
       </div>
       <div id="InputsWrapper"></div>

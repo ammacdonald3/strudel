@@ -9,13 +9,9 @@
 
 {% block body %}
 <div class="container">
-  <table class="table table-striped">
     {% for recipe in recipe_list %}
-      <tr>
-          <td><a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}">{{ recipe.recipe_name }}</a></td>
-        <td>{{ recipe.recipe_desc }}</td>
-      </tr>
+        <h4><a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}">{{ recipe.recipe_name }}</a></h4>
+        <p>{{ recipe.recipe_desc }}</p>
     {% endfor %}
-  </table>
   </div>
 {% endblock %}

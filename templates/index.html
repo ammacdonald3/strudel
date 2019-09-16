@@ -3,12 +3,26 @@
   active
 {% endblock %}
 
-{% block heading %}
-    Recipe Selector
-{% endblock %}
+{% block bodyid %}index{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <img src="/static/title_image.jpg" class="img-fluid">
+<div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="content">
+                    <h1>Recipe App</h1>
+                    <h3>An App to Store and Select Recipes</h3>
+                    <hr>
+                    {% if current_user.is_anonymous %}
+                    <a class="nav-link" href="{{ url_for('login') }}">
+                    <button class="btn btn-light btn-lg">
+                        <i class="fas fa-thumbs-up"></i> 
+                        Get Started
+                    </button>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
