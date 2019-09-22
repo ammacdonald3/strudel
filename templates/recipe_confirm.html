@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block nav_add %}
+active
+{% endblock %}
+
+{% block heading %}
+Add New Recipe
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div>
+        {{ recipe_desc }} was sucessfully added!
+    </div>
+
+    <div>
+        <a href="{{ url_for('recipe_detail', recipe_id=recipe_id) }}">Click here</a> to view.
+    </div>
+
+    <div>
+        <a href="{{ url_for('add_recipe') }}">Click here</a> to add another recipe.
+    </div>
+</div>
+
+<!--
+{% for item in output %}
+<h4>{{ item }}</h4>
+{% endfor %}
+-->
+
+{% endblock %}
+
+
+{% block footer %}
+<script type="text/javascript" src="{{ url_for('static', filename='ingredients.js') }}"></script>
+{% endblock %}

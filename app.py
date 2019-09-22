@@ -43,208 +43,21 @@ def add_recipe():
         except:
             output.append("Recipe did not add to database :(")
 
-        # Write to user_recipe
-        try:
-            user_recipe = User_Recipe(
-                recipe_id=recipe.id,
-                user_id=2,
-                owner_ind="Y"
-            )
-        except:
-            output.append("user didn't add")
-        try:
-            output.append("recipe_id: " + recipe_id)
-        except:
-            output.append("recipe_id didn't add")
-        try:
-            output.append("recipe.id: " + Recipe.query.first())
-        except:
-            output.append("recipe.id didn't add")
-        try:
-            db.session.add(user_recipe)
-            db.session.commit()
-        except:
-            output.append("user didn't commit")
-
-        # Write Ingredient 1
-        try:
-            ingredient1 = Ingredient(
-                # ingredient_qty=request.form('ingredient_qty')
-                recipe_id=recipe.id,
-                ingredient_qty=request.form['ingredient_qty1'],
-                ingredient_measurement=request.form['ingredient_measurement1'],
-                ingredient_desc=request.form['ingredient_desc1']
-            )
-            db.session.add(ingredient1)
-            db.session.commit()
-        # Return error if database write was unsuccessful
-        except:
-            output.append("Ingredient 1 did not add to database :(")
-
-        # Write Ingredient 2
-        try:
-            ingredient2 = Ingredient(
-                # ingredient_qty=request.form('ingredient_qty')
-                recipe_id=recipe.id,
-                ingredient_qty=request.form['ingredient_qty2'],
-                ingredient_measurement=request.form['ingredient_measurement2'],
-                ingredient_desc=request.form['ingredient_desc2']
-            )
-            db.session.add(ingredient2)
-            db.session.commit()
-        # Return error if database write was unsuccessful
-        except:
-            output.append("Ingredient2 did not add to database :(")
-
-        # Write Ingredient 3
-        try:
-            ingredient3 = Ingredient(
-                # ingredient_qty=request.form('ingredient_qty')
-                recipe_id=recipe.id,
-                ingredient_qty=request.form['ingredient_qty3'],
-                ingredient_measurement=request.form['ingredient_measurement3'],
-                ingredient_desc=request.form['ingredient_desc3']
-            )
-            db.session.add(ingredient3)
-            db.session.commit()
-        # Return error if database write was unsuccessful
-        except:
-            output.append("Ingredient3 did not add to database :(")
-
-            # Write Ingredient 4
+        for x in range(1, 12):
             try:
-                ingredient4 = Ingredient(
-                    # ingredient_qty=request.form('ingredient_qty')
+                ingredient = Ingredient(
                     recipe_id=recipe.id,
-                    ingredient_qty=request.form['ingredient_qty4'],
-                    ingredient_measurement=request.form['ingredient_measurement4'],
-                    ingredient_desc=request.form['ingredient_desc4']
+                    ingredient_qty=request.form['ingredient_qty' + str(x)],
+                    ingredient_measurement=request.form['ingredient_measurement' + str(x)],
+                    ingredient_desc=request.form['ingredient_desc' + str(x)]
                 )
-                db.session.add(ingredient4)
+                db.session.add(ingredient)
                 db.session.commit()
             # Return error if database write was unsuccessful
             except:
-                output.append("Ingredient4 did not add to database :(")
+                output.append("Ingredient " + str(x) + " did not add to database!!")
 
-            # Write Ingredient 5
-            try:
-                ingredient5 = Ingredient(
-                    # ingredient_qty=request.form('ingredient_qty')
-                    recipe_id=recipe.id,
-                    ingredient_qty=request.form['ingredient_qty5'],
-                    ingredient_measurement=request.form['ingredient_measurement5'],
-                    ingredient_desc=request.form['ingredient_desc5']
-                )
-                db.session.add(ingredient5)
-                db.session.commit()
-            # Return error if database write was unsuccessful
-            except:
-                output.append("Ingredient5 did not add to database :(")
-
-            # Write Ingredient 6
-            try:
-                ingredient6 = Ingredient(
-                    # ingredient_qty=request.form('ingredient_qty')
-                    recipe_id=recipe.id,
-                    ingredient_qty=request.form['ingredient_qty6'],
-                    ingredient_measurement=request.form['ingredient_measurement6'],
-                    ingredient_desc=request.form['ingredient_desc6']
-                )
-                db.session.add(ingredient6)
-                db.session.commit()
-            # Return error if database write was unsuccessful
-            except:
-                output.append("Ingredient6 did not add to database :(")
-
-            # Write Ingredient 7
-            try:
-                ingredient7 = Ingredient(
-                    # ingredient_qty=request.form('ingredient_qty')
-                    recipe_id=recipe.id,
-                    ingredient_qty=request.form['ingredient_qty7'],
-                    ingredient_measurement=request.form['ingredient_measurement7'],
-                    ingredient_desc=request.form['ingredient_desc7']
-                )
-                db.session.add(ingredient7)
-                db.session.commit()
-            # Return error if database write was unsuccessful
-            except:
-                output.append("Ingredient7 did not add to database :(")
-
-            # Write Ingredient 8
-            try:
-                ingredient8 = Ingredient(
-                    # ingredient_qty=request.form('ingredient_qty')
-                    recipe_id=recipe.id,
-                    ingredient_qty=request.form['ingredient_qty8'],
-                    ingredient_measurement=request.form['ingredient_measurement8'],
-                    ingredient_desc=request.form['ingredient_desc8']
-                )
-                db.session.add(ingredient8)
-                db.session.commit()
-            # Return error if database write was unsuccessful
-            except:
-                output.append("Ingredient8 did not add to database :(")
-
-            # Write Ingredient 9
-            try:
-                ingredient9 = Ingredient(
-                    # ingredient_qty=request.form('ingredient_qty')
-                    recipe_id=recipe.id,
-                    ingredient_qty=request.form['ingredient_qty9'],
-                    ingredient_measurement=request.form['ingredient_measurement9'],
-                    ingredient_desc=request.form['ingredient_desc9']
-                )
-                db.session.add(ingredient9)
-                db.session.commit()
-            # Return error if database write was unsuccessful
-            except:
-                output.append("Ingredient9 did not add to database :(")
-
-            # Write Ingredient 10
-            try:
-                ingredient10 = Ingredient(
-                    # ingredient_qty=request.form('ingredient_qty')
-                    recipe_id=recipe.id,
-                    ingredient_qty=request.form['ingredient_qty10'],
-                    ingredient_measurement=request.form['ingredient_measurement10'],
-                    ingredient_desc=request.form['ingredient_desc10']
-                )
-                db.session.add(ingredient10)
-                db.session.commit()
-            # Return error if database write was unsuccessful
-            except:
-                output.append("Ingredient10 did not add to database :(")
-
-            # Write Ingredient 11
-            try:
-                ingredient11 = Ingredient(
-                    # ingredient_qty=request.form('ingredient_qty')
-                    recipe_id=recipe.id,
-                    ingredient_qty=request.form['ingredient_qty11'],
-                    ingredient_measurement=request.form['ingredient_measurement11'],
-                    ingredient_desc=request.form['ingredient_desc11']
-                )
-                db.session.add(ingredient11)
-                db.session.commit()
-            # Return error if database write was unsuccessful
-            except:
-                output.append("Ingredient11 did not add to database :(")
-
-            # Write Ingredient 12
-            try:
-                ingredient12 = Ingredient(
-                    # ingredient_qty=request.form('ingredient_qty')
-                    recipe_id=recipe.id,
-                    ingredient_qty=request.form['ingredient_qty12'],
-                    ingredient_measurement=request.form['ingredient_measurement12'],
-                    ingredient_desc=request.form['ingredient_desc12']
-                )
-                db.session.add(ingredient12)
-                db.session.commit()
-            # Return error if database write was unsuccessful
-            except:
-                output.append("Ingredient12 did not add to database :(")
+        return(render_template('recipe_confirm.html', recipe_id=recipe.id, recipe_desc=request.form['recipe_desc']))
 
     return render_template('add.html', output=output)
 
