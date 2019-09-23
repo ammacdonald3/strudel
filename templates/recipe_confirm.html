@@ -4,7 +4,7 @@ active
 {% endblock %}
 
 {% block heading %}
-Add New Recipe
+Recipe Added
 {% endblock %}
 
 {% block body %}
@@ -13,12 +13,15 @@ Add New Recipe
         {{ recipe_desc }} was sucessfully added!
     </div>
 
-    <div>
-        <a href="{{ url_for('recipe_detail', recipe_id=recipe_id) }}">Click here</a> to view.
-    </div>
-
-    <div>
-        <a href="{{ url_for('add_recipe') }}">Click here</a> to add another recipe.
+    <div class="container" style="padding-top: 20px;">
+        <div class="row" style="padding-top: 20px;">
+            <a href="{{ url_for('recipe_detail', recipe_id=recipe_id) }}"><button type="button"
+                    class="btn btn-outline-primary">View Recipe</button></a>
+        </div>
+        <div class="row" style="padding-top: 20px;">
+            <a href="{{ url_for('add_recipe') }}"><button type="button" class="btn btn-outline-danger">Add
+                    Another</button></a>
+        </div>
     </div>
 </div>
 

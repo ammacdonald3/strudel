@@ -27,6 +27,7 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
+        {% if current_user.is_active %}
         <li class="nav-item {% block nav_home %}{% endblock %}">
           <a class="nav-link" href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
         </li>
@@ -39,11 +40,12 @@
         <li class="nav-item {% block nav_current %}{% endblock %}">
           <a class="nav-link" href="#">Current Meals</a>
         </li>
+        {% endif %}
 
       </ul>
       <form class="form-inline">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
+          <li class="nav-item active d-none d-lg-block">
             {% if current_user.is_active %}
             <a class="nav-link" href="#">Welcome, {{ current_user.first_name }}!</a>
             {% endif %}

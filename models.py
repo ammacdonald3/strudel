@@ -17,16 +17,18 @@ class Recipe(db.Model):
     recipe_desc = db.Column(db.String())
     recipe_prep_time = db.Column(db.Integer())
     recipe_cook_time = db.Column(db.Integer())
+    serving_size = db.Column(db.Integer())
     ingredient = db.relationship('Ingredient', backref='recipe', lazy=True)
     recipe_step = db.relationship('Recipe_Step', backref='recipe_step', lazy=True)
     user_recipe = db.relationship('User_Recipe', backref='user_recipe', lazy=True)
 
 
-    def __init__(self, recipe_name, recipe_desc, recipe_prep_time, recipe_cook_time):
+    def __init__(self, recipe_name, recipe_desc, recipe_prep_time, recipe_cook_time, serving_size):
         self.recipe_name = recipe_name
         self.recipe_desc = recipe_desc
         self.recipe_prep_time = recipe_prep_time
         self.recipe_cook_time = recipe_cook_time
+        self.serving_size = serving_size
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -56,12 +58,10 @@ class Recipe_Step(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.id'), nullable=False)
-    step_order = db.Column(db.Integer())
     step_desc = db.Column(db.String())
 
-    def __init__(self, recipe_id, step_order, step_desc):
+    def __init__(self, recipe_id, step_desc):
         self.recipe_id = recipe_id
-        self.step_order = step_order
         self.step_desc = step_desc
 
     def __repr__(self):

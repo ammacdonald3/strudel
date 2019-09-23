@@ -33,7 +33,8 @@ def add_recipe():
                 recipe_name=request.form['recipe_name'],
                 recipe_desc=request.form['recipe_desc'],
                 recipe_prep_time=request.form['recipe_prep_time'],
-                recipe_cook_time=request.form['recipe_cook_time']
+                recipe_cook_time=request.form['recipe_cook_time'],
+                serving_size=request.form['serving_size']
             )
             db.session.add(recipe)
             db.session.flush()
@@ -56,6 +57,18 @@ def add_recipe():
             # Return error if database write was unsuccessful
             except:
                 output.append("Ingredient " + str(x) + " did not add to database!!")
+
+        for x in range(1, 12):
+            try:
+                recipe_step = Recipe_Step(
+                    recipe_id=recipe.id,
+                    step_desc=request.form['step_desc' + str(x)]
+                )
+                db.session.add(recipe_step)
+                db.session.commit()
+            # Return error if database write was unsuccessful
+            except:
+                output.append("Recipe Step " + str(x) + " did not add to database!!")
 
         return(render_template('recipe_confirm.html', recipe_id=recipe.id, recipe_desc=request.form['recipe_desc']))
 
