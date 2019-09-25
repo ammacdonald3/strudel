@@ -10,7 +10,7 @@ var MaxStepInputs = 12; //maximum input boxes allowed
 var StepInputsWrapper = $("#StepInputsWrapper"); //Input boxes wrapper ID
 var AddStepButton = $("#addstepfield"); //Add button ID
     
-var x = StepInputsWrapper.length; //initial text box count
+var y = StepInputsWrapper.length; //initial text box count
 var StepFieldCount = 1; //to keep track of text box added
 
 $(AddIngredientButton).click(function (e) //on add input button click
@@ -31,7 +31,7 @@ $(AddStepButton).click(function (g) //on add input button click
         if (y <= StepFieldCount) {
             StepFieldCount++; //text box added increment
             //add input box
-            $('<div class="form-group"><p>Ingredient ' + StepFieldCount + '</p><div class="row"><div class="form-group col-sm"><input type="text" name="ingredient_qty' + StepFieldCount + '" id="ingredient_qty' + StepFieldCount + '" placeholder="Qty ' + StepFieldCount + '" class="form-control col"/></div><div class="form-group col-sm"><input type="text" name="ingredient_measurement' + StepFieldCount + '" id="ingredient_measurement' + StepFieldCount + '" placeholder="Measurement ' + StepFieldCount + '" class="form-control col"/></div><div class="form-group col-sm"><input type="text" name="ingredient_desc' + StepFieldCount + '" id="ingredient_desc' + StepFieldCount + '" placeholder="Ingredient' + StepFieldCount + '" class="form-control col"/></div><div class="form-group col-sm"><button class="removeclass btn btn-outline-danger col">Delete</button></div></div></div>').insertBefore(StepInputsWrapper);
+            $('<div class="form-group"><div class="row"><div class="form-group col-lg-1">Step ' + StepFieldCount + '</div><div class="form-group col-lg-8"><input name="recipe_step' + StepFieldCount + '" class="form-control col" placeholder="Step ' + StepFieldCount + '"></div><div class="form-group col-lg-3"><button class="removeclass btn btn-outline-danger col">Delete</button></div></div></div>').insertBefore(StepInputsWrapper);
             y++; //text box increment
         }
         return false;

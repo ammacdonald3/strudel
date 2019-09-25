@@ -34,7 +34,11 @@ def add_recipe():
                 recipe_desc=request.form['recipe_desc'],
                 recipe_prep_time=request.form['recipe_prep_time'],
                 recipe_cook_time=request.form['recipe_cook_time'],
-                serving_size=request.form['serving_size']
+                serving_size=request.form['serving_size'],
+                diet_vegetarian=request.form.get('diet_vegetarian'),
+                diet_vegan=request.form.get('diet_vegan'),
+                diet_gluten=request.form.get('diet_gluten'),
+                meal_time=request.form.get('meal_time')
             )
             db.session.add(recipe)
             db.session.flush()
@@ -62,7 +66,7 @@ def add_recipe():
             try:
                 recipe_step = Recipe_Step(
                     recipe_id=recipe.id,
-                    step_desc=request.form['step_desc' + str(x)]
+                    step_desc=request.form['recipe_step' + str(x)]
                 )
                 db.session.add(recipe_step)
                 db.session.commit()
@@ -70,24 +74,27 @@ def add_recipe():
             except:
                 output.append("Recipe Step " + str(x) + " did not add to database!!")
 
-        return(render_template('recipe_confirm.html', recipe_id=recipe.id, recipe_desc=request.form['recipe_desc']))
+        return(render_template('recipe_confirm.html', recipe_id=recipe.id, recipe_name=request.form['recipe_name']))
 
     return render_template('add.html', output=output)
 
 
 # Define route for page to view all recipes
 @app.route('/all_recipes', methods=['GET', 'POST'])
+@login_required
 def all_recipes():
-    recipe_list = Recipe.query.all()
+    recipe_list = Recipe.query.order_by(Recipe.recipe_desc).all()
     return render_template("all_recipes.html", recipe_list=recipe_list)
 
 
 # Define route for page to view detailed info about one recipe
 @app.route('/recipe/<recipe_id>')
+@login_required
 def recipe_detail(recipe_id):
     recipe = Recipe.query.filter_by(id=recipe_id).first_or_404()
     ingredient_list = Ingredient.query.filter_by(recipe_id=recipe_id)
-    return render_template('recipe_detail.html', recipe=recipe, ingredient_list=ingredient_list)
+    step_list = Recipe_Step.query.filter_by(recipe_id=recipe_id)
+    return render_template('recipe_detail.html', recipe=recipe, ingredient_list=ingredient_list, step_list=step_list)
     
 # Define route for login page
 @app.route('/login', methods=['GET', 'POST'])

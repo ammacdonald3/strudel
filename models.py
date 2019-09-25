@@ -18,17 +18,25 @@ class Recipe(db.Model):
     recipe_prep_time = db.Column(db.Integer())
     recipe_cook_time = db.Column(db.Integer())
     serving_size = db.Column(db.Integer())
+    diet_vegetarian = db.Column(db.String())
+    diet_vegan = db.Column(db.Boolean())
+    diet_gluten = db.Column(db.String())
+    meal_time = db.Column(db.String())
     ingredient = db.relationship('Ingredient', backref='recipe', lazy=True)
     recipe_step = db.relationship('Recipe_Step', backref='recipe_step', lazy=True)
     user_recipe = db.relationship('User_Recipe', backref='user_recipe', lazy=True)
 
 
-    def __init__(self, recipe_name, recipe_desc, recipe_prep_time, recipe_cook_time, serving_size):
+    def __init__(self, recipe_name, recipe_desc, recipe_prep_time, recipe_cook_time, serving_size, diet_vegetarian, diet_vegan, diet_gluten, meal_time):
         self.recipe_name = recipe_name
         self.recipe_desc = recipe_desc
         self.recipe_prep_time = recipe_prep_time
         self.recipe_cook_time = recipe_cook_time
         self.serving_size = serving_size
+        self.diet_vegetarian = diet_vegetarian
+        self.diet_vegan = diet_vegan
+        self.diet_gluten = diet_gluten
+        self.meal_time = meal_time
 
     def __repr__(self):
         return '<id {}>'.format(self.id)

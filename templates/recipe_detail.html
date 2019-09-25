@@ -16,14 +16,27 @@ active
     <br>
     Serving Size: {{ recipe.serving_size }} servings
   </p>
+  <br>
   <p>{{ recipe.recipe_desc }}</p>
 
   <br>
   <div class="container">
     <h4>Ingredients:</h4>
+    <ul>
     {% for ingredient in ingredient_list %}
-      <li>{{ ingredient.ingredient_qty }} {{ ingredient.ingredient_measurement }} {{ ingredient.ingredient_desc }}</li>
+    <li>{{ ingredient.ingredient_qty }} {{ ingredient.ingredient_measurement }} {{ ingredient.ingredient_desc }}</li>
     {% endfor %}
+  </ul>
+  </div>
+  <br>
+  <br>
+  <div class="container">
+    <h4>Method:</h4>
+    <ol>
+      {% for step in step_list %}
+      <li>{{ step.step_desc }}</li>
+      {% endfor %}
+    </ol>
   </div>
   <br>
   <div>

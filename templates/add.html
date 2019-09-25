@@ -44,6 +44,45 @@ Add New Recipe
         <small id="size_help" class="form-text text-muted">Enter number of servings.</small>
       </div>
     </div>
+    <br>
+    <br>
+    
+
+    <div class="row">
+
+      <div class="form-group col-md">
+        <h3>Dietary Restrictions</h3>
+        <div class="form-check form-check">
+          <input class="form-check-input" type="checkbox" name="diet_vegan" id="diet_vegan" value=True>
+          <label class="form-check-label" for="diet_vegan">Vegan</label>
+        </div>
+        <div class="form-check form-check">
+          <input class="form-check-input" type="checkbox" name="diet_vegetarian" id="diet_vegetarian" value=True>
+          <label class="form-check-label" for="diet_vegetarian">Vegetarian</label>
+        </div>
+        <div class="form-check form-check">
+          <input class="form-check-input" type="checkbox" name="diet_gluten" id="diet_gluten" value=True>
+          <label class="form-check-label" for="diet_gluten">Gluten-free</label>
+        </div>
+      </div>
+
+      <br>
+      <div class="form-group col-md">
+        <h3>Meal Time</h3>
+        <div class="form-check form-check">
+          <input class="form-check-input" type="radio" name="meal_time" id="lunch" value="lunch">
+          <label class="form-check-label" for="meal_time">Lunch</label>
+        </div>
+        <div class="form-check form-check">
+          <input class="form-check-input" type="radio" name="meal_time" id="dinner" value="dinner">
+          <label class="form-check-label" for="meal_time">Dinner</label>
+        </div>
+        <div class="form-check form-check">
+          <input class="form-check-input" type="radio" name="meal_time" id="both" value="both">
+          <label class="form-check-label" for="meal_time">Both</label>
+        </div>
+      </div>
+    </div>
 
     <br>
     <br>
@@ -87,8 +126,7 @@ Add New Recipe
         <div class="row">
           <div class="form-group col-lg-1">Step 1</div>
           <div class="form-group col-lg-8">
-            <input name="recipe_step1" class="form-control col" placeholder="Step 1" aria-describedby="step_help">
-            <small id="step_help" class="form-text text-muted">Enter the first step of the recipe.</small>
+            <input name="recipe_step1" class="form-control col" placeholder="Step 1">
           </div>
           <div class="form-group col-lg-3">
             <button class="removeclass btn btn-outline-danger col">Delete</button>
