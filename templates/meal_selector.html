@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block nav_current %}
+active
+{% endblock %}
+{% block nav_meal_selector %}
+active
+{% endblock %}
+
+{% block heading %}
+Meal Selector
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    hello
+
+    {% for recipe in meal_plan_list %}
+        <h4>Day {{ recipe.Current_Meal.day_number }}: <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.id) }}">{{ recipe.Recipe.recipe_name }}</a></h4>
+        <p>{{ recipe.Ingredient.ingredient_desc }}</p>
+    {% endfor %}
+
+</div>
+
+{% endblock %}
+
+
+{% block footer %}
+<script type="text/javascript" src="{{ url_for('static', filename='ingredients.js') }}"></script>
+{% endblock %}

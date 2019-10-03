@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
+import sys
 import os
 
 app = Flask(__name__)
@@ -11,13 +12,34 @@ login = LoginManager(app)
 login.login_view = 'login'
 db = SQLAlchemy(app)
 
-from models import Recipe, Ingredient, Recipe_Step, User, LoginForm, RegistrationForm
+from models import Recipe, Ingredient, Recipe_Step, User, LoginForm, RegistrationForm, Current_Meal
 
 
 # Define route for landing page
 @app.route('/')
 def index():
     return render_template('index.html')
+
+# Define route for landing page
+@app.route('/meal_selector')
+def meal_selector():
+    return render_template('meal_selector.html')
+
+
+# Define route for landing page
+@app.route('/meal_plan', methods=['GET', 'POST'])
+@login_required
+def meal_plan():
+    meal_plan_list = (db.session.query(Recipe, Current_Meal).join(Current_Meal, Recipe.id==Current_Meal.recipe_id).filter(Current_Meal.active_ind=='Y')).all()
+    return render_template('meal_plan.html', meal_plan_list=meal_plan_list)
+
+    
+
+# Define route for landing page
+@app.route('/shopping_list')
+def shopping_list():
+    shop_list = (db.session.query(Ingredient, Recipe, Current_Meal).join(Recipe, Recipe.id==Ingredient.recipe_id).join(Current_Meal, Recipe.id==Current_Meal.recipe_id).filter(Current_Meal.active_ind=='Y')).all()
+    return render_template('shopping_list.html', shop_list=shop_list)
 
 
 # Define route for page to add recipes

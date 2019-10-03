@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block nav_current %}
+active
+{% endblock %}
+{% block nav_shopping_list %}
+active
+{% endblock %}
+
+{% block heading %}
+Shopping List
+{% endblock %}
+
+{% block body %}
+<div class="container">
+
+
+    {% for ingredient in shop_list %}
+    <ul>
+        <li>{{ ingredient.Ingredient.ingredient_qty }} {{ ingredient.Ingredient.ingredient_measurement }} {{ ingredient.Ingredient.ingredient_desc }}</li>
+    </ul>
+    {% endfor %}
+
+
+</div>
+
+{% endblock %}
+
+
+{% block footer %}
+<script type="text/javascript" src="{{ url_for('static', filename='ingredients.js') }}"></script>
+{% endblock %}

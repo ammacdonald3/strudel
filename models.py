@@ -19,12 +19,13 @@ class Recipe(db.Model):
     recipe_cook_time = db.Column(db.Integer())
     serving_size = db.Column(db.Integer())
     diet_vegetarian = db.Column(db.String())
-    diet_vegan = db.Column(db.Boolean())
+    diet_vegan = db.Column(db.String())
     diet_gluten = db.Column(db.String())
     meal_time = db.Column(db.String())
     ingredient = db.relationship('Ingredient', backref='recipe', lazy=True)
     recipe_step = db.relationship('Recipe_Step', backref='recipe_step', lazy=True)
     user_recipe = db.relationship('User_Recipe', backref='user_recipe', lazy=True)
+    current_meal = db.relationship('Current_Meal', backref='current_meal', lazy=True)
 
 
     def __init__(self, recipe_name, recipe_desc, recipe_prep_time, recipe_cook_time, serving_size, diet_vegetarian, diet_vegan, diet_gluten, meal_time):
@@ -110,6 +111,22 @@ class User_Recipe(db.Model):
         self.user_id = user_id
         self.user_rating = user_rating
         self.owner_ind = owner_ind
+
+    def __repr__(self):
+        return '<id {}>'.format(self.id)
+
+class Current_Meal(db.Model):
+    __tablename__ = 'current_meal'
+
+    id = db.Column(db.Integer, primary_key=True)
+    recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.id'), nullable=False)
+    day_number = db.Column(db.Integer())
+    active_ind = db.Column(db.Boolean())
+
+    def __init__(self, recipe_id, day_number, active_ind):
+        self.recipe_id = recipe_id
+        self.day_number = day_number
+        self.active_ind = active_ind
 
     def __repr__(self):
         return '<id {}>'.format(self.id)

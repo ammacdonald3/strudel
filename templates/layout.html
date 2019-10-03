@@ -37,8 +37,19 @@
         <li class="nav-item {% block nav_recipes %}{% endblock %}">
           <a class="nav-link" href="{{ url_for('all_recipes') }}">Recipes</a>
         </li>
-        <li class="nav-item {% block nav_current %}{% endblock %}">
-          <a class="nav-link" href="#">Current Meals</a>
+        <li class="nav-item {% block nav_current %}{% endblock %} dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Current Week
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item {% block nav_meal_selector %}{% endblock %}"
+              href="{{ url_for('meal_selector') }}">Meal Selector</a>
+            <a class="dropdown-item {% block nav_meal_plan %}{% endblock %}" href="{{ url_for('meal_plan') }}">Meal
+              Plan</a>
+            <a class="dropdown-item {% block nav_shopping_list %}{% endblock %}"
+              href="{{ url_for('shopping_list') }}">Shopping List</a>
+          </div>
         </li>
         {% endif %}
 
