@@ -16,16 +16,19 @@ Shopping List
 
     {% for ingredient in shop_list %}
     <ul>
-        <li>{{ ingredient.Ingredient.ingredient_qty }} {{ ingredient.Ingredient.ingredient_measurement }} {{ ingredient.Ingredient.ingredient_desc }}</li>
+        <li>{{ ingredient.Ingredient.ingredient_qty }} {{ ingredient.Ingredient.ingredient_measurement }}
+            {{ ingredient.Ingredient.ingredient_desc }}</li>
     </ul>
     {% endfor %}
 
 
 </div>
 
+
+
 {% endblock %}
 
 
 {% block footer %}
-<script type="text/javascript" src="{{ url_for('static', filename='ingredients.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='shopping_list.js') }}"></script>
 {% endblock %}

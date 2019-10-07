@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: c59a377f93d5
+Revision ID: 6ac212db9273
 Revises: 
-Create Date: 2019-09-14 22:29:47.216529
+Create Date: 2019-10-06 10:51:42.569055
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'c59a377f93d5'
+revision = '6ac212db9273'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,6 +24,11 @@ def upgrade():
     sa.Column('recipe_desc', sa.String(), nullable=True),
     sa.Column('recipe_prep_time', sa.Integer(), nullable=True),
     sa.Column('recipe_cook_time', sa.Integer(), nullable=True),
+    sa.Column('serving_size', sa.Integer(), nullable=True),
+    sa.Column('diet_vegetarian', sa.String(), nullable=True),
+    sa.Column('diet_vegan', sa.String(), nullable=True),
+    sa.Column('diet_gluten', sa.String(), nullable=True),
+    sa.Column('meal_time', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user',
@@ -37,6 +42,14 @@ def upgrade():
     )
     op.create_index(op.f('ix_user_email'), 'user', ['email'], unique=True)
     op.create_index(op.f('ix_user_username'), 'user', ['username'], unique=True)
+    op.create_table('current_meal',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('recipe_id', sa.Integer(), nullable=False),
+    sa.Column('day_number', sa.Integer(), nullable=True),
+    sa.Column('active_ind', sa.Boolean(), nullable=True),
+    sa.ForeignKeyConstraint(['recipe_id'], ['recipe.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('ingredient',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('recipe_id', sa.Integer(), nullable=False),
@@ -49,7 +62,6 @@ def upgrade():
     op.create_table('recipe_step',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('recipe_id', sa.Integer(), nullable=False),
-    sa.Column('step_order', sa.Integer(), nullable=True),
     sa.Column('step_desc', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['recipe_id'], ['recipe.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -58,8 +70,8 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('recipe_id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('user_rating', sa.String(), nullable=True),
-    sa.Column('owner_ind', sa.String(), nullable=True),
+    sa.Column('user_rating', sa.Integer(), nullable=True),
+    sa.Column('owner_ind', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['recipe_id'], ['recipe.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -72,6 +84,7 @@ def downgrade():
     op.drop_table('user_recipe')
     op.drop_table('recipe_step')
     op.drop_table('ingredient')
+    op.drop_table('current_meal')
     op.drop_index(op.f('ix_user_username'), table_name='user')
     op.drop_index(op.f('ix_user_email'), table_name='user')
     op.drop_table('user')

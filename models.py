@@ -24,7 +24,7 @@ class Recipe(db.Model):
     meal_time = db.Column(db.String())
     ingredient = db.relationship('Ingredient', backref='recipe', lazy=True)
     recipe_step = db.relationship('Recipe_Step', backref='recipe_step', lazy=True)
-    user_recipe = db.relationship('User_Recipe', backref='user_recipe', lazy=True)
+    user_recipe = db.relationship('User_Recipe', backref='recipe_user', lazy=True)
     current_meal = db.relationship('Current_Meal', backref='current_meal', lazy=True)
 
 
@@ -86,6 +86,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     first_name = db.Column(db.String)
     last_name = db.Column(db.String)
+    user_recipe = db.relationship('User_Recipe', backref='user_recipe', lazy=True)
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -103,8 +104,8 @@ class User_Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.id'), nullable=False)
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
-    user_rating = db.Column(db.String())
-    owner_ind = db.Column(db.String())
+    user_rating = db.Column(db.Integer())
+    owner_ind = db.Column(db.Boolean())
 
     def __init__(self, recipe_id, user_id, user_rating, owner_ind):
         self.recipe_id = recipe_id
@@ -134,7 +135,7 @@ class Current_Meal(db.Model):
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
-    remember_me = BooleanField('Remember Me')
+    remember_me = BooleanField('Stay logged in')
     submit = SubmitField('Sign In')
 
 class RegistrationForm(FlaskForm):
