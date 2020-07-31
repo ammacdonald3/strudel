@@ -14,14 +14,14 @@
         <h4><a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.id) }}">{{ recipe.Recipe.recipe_name }}</a></h4>
         <p>{{ recipe.Recipe.recipe_desc }}</p>
     {% endfor %}
-  </div>
+</div>
 
-  <div class="container">
-      <h4>Other Recipes</h4>
-        {% for recipe in other_recipe_list %}
-            <h4><a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.id) }}">{{ recipe.Recipe.recipe_name }}</a></h4>
-            <p>{{ recipe.Recipe.recipe_desc }}</p>
-        {% endfor %}
-  </div>
+<div class="container">
+  <h4>Other Recipes</h4>
+    {% for recipe in other_recipe_list %}
+        <h4><a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.id) }}">{{ recipe.Recipe.recipe_name }}</a></h4>
+        <p>{{ recipe.Recipe.recipe_desc }}</p>
+    {% endfor %}
+</div>
   
 {% endblock %}

@@ -73,6 +73,7 @@ def add_recipe():
                 recipe_prep_time=request.form['recipe_prep_time'],
                 recipe_cook_time=request.form['recipe_cook_time'],
                 serving_size=request.form['serving_size'],
+                recipe_url=request.form['recipe_url'],
                 diet_vegetarian=request.form.get('diet_vegetarian'),
                 diet_vegan=request.form.get('diet_vegan'),
                 diet_gluten=request.form.get('diet_gluten'),

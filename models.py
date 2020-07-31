@@ -22,6 +22,7 @@ class Recipe(db.Model):
     diet_vegan = db.Column(db.String())
     diet_gluten = db.Column(db.String())
     meal_time = db.Column(db.String())
+    recipe_url = db.Column(db.String())
     ingredient = db.relationship('Ingredient', backref='recipe', lazy=True)
     recipe_step = db.relationship('Recipe_Step', backref='recipe_step', lazy=True)
     user_recipe = db.relationship('User_Recipe', backref='recipe_user', lazy=True)
@@ -38,6 +39,7 @@ class Recipe(db.Model):
         self.diet_vegan = diet_vegan
         self.diet_gluten = diet_gluten
         self.meal_time = meal_time
+        self.recipe_url = recipe.url
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
