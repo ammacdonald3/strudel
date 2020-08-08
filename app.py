@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, flash, redirect, url_for
-from flask_sqlalchemy import SQLAlchemy
+#from Flask_SQLAlchemy import SQLAlchemy
+import flask_sqlalchemy
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 import random
 import sys
@@ -11,7 +12,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_DATABASE_URL'] = ['DATABASE_URL']
 login = LoginManager(app)
 login.login_view = 'login'
-db = SQLAlchemy(app)
+db = flask_sqlalchemy.SQLAlchemy(app)
 
 from models import Recipe, Ingredient, Recipe_Step, User, LoginForm, RegistrationForm, Current_Meal, User_Recipe
 
@@ -62,7 +63,7 @@ def shopping_list():
 @app.route('/add', methods=['GET', 'POST'])
 @login_required
 def add_recipe():
-    output = []
+    #output = []
     # If user submits data on input form, write to DB
     if request.method == "POST":
         # Write recipe info
@@ -82,10 +83,11 @@ def add_recipe():
             db.session.add(recipe)
             db.session.flush()
             db.session.commit()
-            output.append("Recipe successfully added!")
+            #output.append("Recipe successfully added!")
         # Return error if database write was unsuccessful
         except:
-            output.append("Recipe did not add to database :(")
+            #output.append("Recipe did not add to database :(")
+            pass
 
         for x in range(1, 12):
             try:
@@ -99,7 +101,8 @@ def add_recipe():
                 db.session.commit()
             # Return error if database write was unsuccessful
             except:
-                output.append("Ingredient " + str(x) + " did not add to database!!")
+                #output.append("Ingredient " + str(x) + " did not add to database!!")
+                pass
 
         for x in range(1, 12):
             try:
@@ -111,7 +114,8 @@ def add_recipe():
                 db.session.commit()
             # Return error if database write was unsuccessful
             except:
-                output.append("Recipe Step " + str(x) + " did not add to database!!")
+                #output.append("Recipe Step " + str(x) + " did not add to database!!")
+                pass
 
         # Write user_recipe info
         try:
@@ -124,14 +128,16 @@ def add_recipe():
             db.session.add(user_recipe)
             db.session.flush()
             db.session.commit()
-            output.append("User_Recipe successfully added!")
+            #output.append("User_Recipe successfully added!")
         # Return error if database write was unsuccessful
         except:
-            output.append("User_Recipe did not add to database :(")
+            #output.append("User_Recipe did not add to database :(")
+            pass
 
         return(render_template('recipe_confirm.html', recipe_id=recipe.id, recipe_name=request.form['recipe_name']))
 
-    return render_template('add.html', output=output)
+    #return render_template('add.html', output=output)
+    return render_template('add.html')
 
 
 # Define route for page to view all recipes

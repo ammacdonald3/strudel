@@ -29,7 +29,7 @@ class Recipe(db.Model):
     current_meal = db.relationship('Current_Meal', backref='current_meal', lazy=True)
 
 
-    def __init__(self, recipe_name, recipe_desc, recipe_prep_time, recipe_cook_time, serving_size, diet_vegetarian, diet_vegan, diet_gluten, meal_time):
+    def __init__(self, recipe_name, recipe_desc, recipe_prep_time, recipe_cook_time, serving_size, diet_vegetarian, diet_vegan, diet_gluten, meal_time, recipe_url):
         self.recipe_name = recipe_name
         self.recipe_desc = recipe_desc
         self.recipe_prep_time = recipe_prep_time
@@ -39,7 +39,7 @@ class Recipe(db.Model):
         self.diet_vegan = diet_vegan
         self.diet_gluten = diet_gluten
         self.meal_time = meal_time
-        self.recipe_url = recipe.url
+        self.recipe_url = recipe_url
 
     def __repr__(self):
         return '<id {}>'.format(self.id)

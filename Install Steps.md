@@ -5,7 +5,10 @@
 3. Activate virtual environment
     * MAC OS: ```source recipe-venv/bin/activate```
     * WINDOWS: ```recipe-venv\Scripts\Activate.ps1```
-4. Install Postgres on local machine
+4. Install requirements.txt into virtual machine
+    * MAC OS: ```pip install -r recipe-app/requirements.txt```
+    * WINDOWS:
+5. Install Postgres on local machine
 5. Add Postgres bin directory to PATH envrionment variable
 6. Create Postgres database
     * ```psql```
@@ -13,6 +16,9 @@
     * ```\q```
 7. Set environment variables
     * MAC OS
+        * ```export FLASK_APP="app.py"```
+        * ```export APP_SETTINGS="config.DevelopmentConfig"```
+        * ```export DATABASE_URL="postgresql:///recipe-dev"```
     * WINDOWS
         * ```$env:FLASK_APP="app.py"```
         * ```$env:APP_SETTINGS="config.DevelopmentConfig"```
