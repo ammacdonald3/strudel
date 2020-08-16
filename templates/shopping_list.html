@@ -11,14 +11,20 @@ Shopping List
 {% endblock %}
 
 {% block body %}
+<br>
+
 <div class="container">
 
 
     {% for ingredient in shop_list %}
-    <ul>
-        <li>{{ ingredient.Ingredient.ingredient_qty }} {{ ingredient.Ingredient.ingredient_measurement }}
-            {{ ingredient.Ingredient.ingredient_desc }}</li>
-    </ul>
+    <h4>
+        <dl>
+            <dt id="rr-element">
+                <input type="checkbox" class="big-checkbox" value="1" id="rr-1" name="rr[]">                                       
+                {{ ingredient.Ingredient.ingredient_qty }} {{ ingredient.Ingredient.ingredient_measurement }} {{ ingredient.Ingredient.ingredient_desc }}
+            </dt>
+        </dl>
+    </h4>
     {% endfor %}
 
 

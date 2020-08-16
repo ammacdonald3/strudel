@@ -31,12 +31,26 @@
         <li class="nav-item {% block nav_home %}{% endblock %}">
           <a class="nav-link" href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item {% block nav_add %}{% endblock %}">
-          <a class="nav-link" href="{{ url_for('add_recipe') }}">Add</a>
-        </li>
+
+        <!-- Add New Recipes menu-->
+        <li class="nav-item {% block nav_add_menu %}{% endblock %} dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Add New Recipes
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item {% block nav_auto_import %}{% endblock %}"
+                href="{{ url_for('auto_import') }}">Auto Import</a>
+              <a class="dropdown-item {% block nav_add %}{% endblock %}" href="{{ url_for('add_recipe') }}">Manual Entry</a>
+            </div>
+          </li>
+
+
         <li class="nav-item {% block nav_recipes %}{% endblock %}">
-          <a class="nav-link" href="{{ url_for('all_recipes') }}">Recipes</a>
+          <a class="nav-link" href="{{ url_for('all_recipes') }}">View All Recipes</a>
         </li>
+
+        <!-- Current Week menu -->
         <li class="nav-item {% block nav_current %}{% endblock %} dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">

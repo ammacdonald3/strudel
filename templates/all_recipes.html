@@ -8,21 +8,42 @@
 {% endblock %}
 
 {% block body %}
+<br>
+
+<!-- User's personal recipes -->
 <div class="container">
-  <h4>Your Recipes</h4>
-    {% for recipe in your_recipe_list %}
-        <h4><a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.id) }}">{{ recipe.Recipe.recipe_name }}</a></h4>
-        <p>{{ recipe.Recipe.recipe_desc }}</p>
-    {% endfor %}
+  <h3><u>Your Recipes</u></h3>
+    <dl>
+      {% for recipe in your_recipe_list %}
+        <dt>
+          <h4><a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.id) }}">{{ recipe.Recipe.recipe_name }}</a></h4>
+          
+          <h6><a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank">{{ recipe.Recipe.recipe_url }}</a></h6>
+        </dt>
+        <dd>
+          <p>{{ recipe.Recipe.recipe_desc }}</p>
+        </dd>
+      {% endfor %}
+    </dl>
 </div>
 <br>
 <br>
+
+<!-- Other (public) recipes input by other users -->
 <div class="container">
-  <h4>Other Recipes</h4>
-    {% for recipe in other_recipe_list %}
-        <h4><a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.id) }}">{{ recipe.Recipe.recipe_name }}</a></h4>
-        <p>{{ recipe.Recipe.recipe_desc }}</p>
-    {% endfor %}
+  <h3><u>Other Recipes</u></h3>
+    <dl>
+        {% for recipe in other_recipe_list %}
+          <dt>
+            <h4><a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.id) }}">{{ recipe.Recipe.recipe_name }}</a></h4>
+            
+            <h6><a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank">{{ recipe.Recipe.recipe_url }}</a></h6>
+          </dt>
+          <dd>
+            <p>{{ recipe.Recipe.recipe_desc }}</p>
+          </dd>
+        {% endfor %}
+      </dl>
 </div>
   
 {% endblock %}

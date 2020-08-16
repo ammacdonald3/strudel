@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block nav_auto_import %}
+active
+{% endblock %}
+
+{% block heading %}
+Add New Recipe from Website
+{% endblock %}
+
+{% block body %}
+<div class="container">
+  <form role="form" method='POST'>
+    <div class="row">
+      <!-- Recipe URL input -->
+      <div class="form-group col-lg">
+        <label for="recipe_url_box">URL</label>
+        <input type="text" name="recipe_url" class="form-control" id="recipe_url_box" placeholder="Enter recipe URL"
+          style="max-width: 1000px;" autofocus required>
+      </div>
+    </div>
+    <br>
+    <button type="submit" class="btn btn-outline-primary">Submit</button>
+  </form>
+
+  {% for item in output %}
+    <h4>{{ item }}</h4>
+  {% endfor %}
+
+</div>
+
+{% endblock %}

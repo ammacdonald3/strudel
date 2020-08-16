@@ -22,13 +22,19 @@ Meal Plan
 
 </div>
 -->
+<br>
 <div class="container">
-        <h4>Your Recipes</h4>
-        {% for recipe in selected_meals_list %}
-        <h4><a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.id) }}">{{ recipe.Recipe.recipe_name }}</a></h4>
-        <p>{{ recipe.Recipe.recipe_desc }}</p>
-        {% endfor %}
-    </div>
+    <ul>
+      {% for recipe in selected_meals_list %}
+        <li>
+          <h4>Day {{ recipe.Current_Meal.day_number }} - <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.id) }}">{{ recipe.Recipe.recipe_name }}</a></h4>
+          
+          <h5><a href="https://{{ recipe.Recipe.recipe_url }}">{{ recipe.Recipe.recipe_url }}</a></h5>
+          <p>{{ recipe.Recipe.recipe_desc }}</p>
+        </li>
+      {% endfor %}
+    </ul>
+</div>
 
 {% endblock %}
 

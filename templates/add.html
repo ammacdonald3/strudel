@@ -10,19 +10,25 @@ Add New Recipe
 {% block body %}
 <div class="container">
   <form role="form" method='POST'>
+
     <div class="row">
+      <!-- Recipe Name input -->
       <div class="form-group col-md">
         <label for="recipe_name_box">Recipe</label>
         <input type="text" name="recipe_name" class="form-control" id="recipe_name_box" placeholder="Enter recipe name"
           style="max-width: 500px;" autofocus required>
       </div>
+      <!-- Recipe Description input -->
       <div class="form-group col-md">
         <label for="recipe_desc_box">Description</label>
         <input type="text" name="recipe_desc" class="form-control" id="recipe_desc_box"
           placeholder="Enter recipe description" style="max-width: 500px;" autofocus required>
       </div>
     </div>
+
+
     <div class="row">
+      <!-- Recipe Prep Time input -->
       <div class="form-group col-sm">
         <label for="recipe_prep_box">Prep Time</label>
         <input type="text" name="recipe_prep_time" class="form-control" id="recipe_prep_box"
@@ -30,6 +36,7 @@ Add New Recipe
           required>
         <small id="prep_help" class="form-text text-muted">Enter prep time in minutes.</small>
       </div>
+      <!-- Recipe Cook Time input -->
       <div class="form-group col-sm">
         <label for="recipe_cook_box">Cook Time</label>
         <input type="text" name="recipe_cook_time" class="form-control" id="recipe_cook_box"
@@ -37,6 +44,7 @@ Add New Recipe
           required>
         <small id="cook_help" class="form-text text-muted">Enter cook time in minutes.</small>
       </div>
+      <!-- Recipe Serving Size input -->
       <div class="form-group col-sm">
         <label for="serving_size_box">Serving Size</label>
         <input type="text" name="serving_size" class="form-control" id="serving_size_box"
@@ -44,18 +52,21 @@ Add New Recipe
         <small id="size_help" class="form-text text-muted">Enter number of servings.</small>
       </div>
     </div>
-    
+
     <div class="row">
+      <!-- Recipe URL input -->
       <div class="form-group col-lg">
-        <label for="recipe_url_box">Recipe</label>
+        <label for="recipe_url_box">URL</label>
         <input type="text" name="recipe_url" class="form-control" id="recipe_url_box" placeholder="Enter recipe URL"
           style="max-width: 1000px;" autofocus required>
       </div>
     </div>
-    
+
+
+
     <br>
     <br>
-    
+
 
     <div class="row">
 

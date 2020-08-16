@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, flash, redirect, url_for
 #from Flask_SQLAlchemy import SQLAlchemy
 import flask_sqlalchemy
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
+from recipe_scrapers import scrape_me
 import random
 import sys
 import os
@@ -16,6 +17,18 @@ db = flask_sqlalchemy.SQLAlchemy(app)
 
 from models import Recipe, Ingredient, Recipe_Step, User, LoginForm, RegistrationForm, Current_Meal, User_Recipe
 
+# Clean URL input
+def clean(url_input):
+    if url_input[:12] == 'https://www.':
+        clean_url = url_input[12:]
+    elif url_input[:11] == 'http://www.':
+        clean_url = url_input[11:]
+    elif url_input[:4] == 'www.':
+        clean_url = url_input[4:]
+    else:
+        clean_url = url_input
+    return clean_url
+
 
 # Define route for landing page
 @app.route('/')
@@ -29,33 +42,49 @@ def meal_selector():
     selected_meals_list = []
     if request.method == "POST":
         try:
+            active_recipes = (db.session.query(Current_Meal).update(dict(active_ind=False)))
             your_recipe_list = (db.session.query(Recipe, User_Recipe).join(User_Recipe, Recipe.id==User_Recipe.recipe_id).filter(User_Recipe.owner_ind==True).filter(User_Recipe.user_id==current_user.id)).order_by(Recipe.recipe_desc).all()
 
-            selected_meals_list = random.sample(your_recipe_list, 4)
+            selected_meals_list = random.sample(your_recipe_list, 3)
+            
+            day_counter = 0
+            for val in selected_meals_list:
+                day_counter += 1
+                current_meal = Current_Meal(
+                    recipe_id=val.Recipe.id,
+                    day_number=day_counter,
+                    active_ind=True
+                )
+                db.session.add(current_meal)
+                db.session.flush()
+                db.session.commit()
 
             print("selected_meals " + str(selected_meals_list), file=sys.stderr)
 
         except:
             output.append("Meals not selected")
 
-        return render_template('meal_plan.html', output=output, selected_meals_list=selected_meals_list)
+        #return render_template('meal_plan.html', output=output, selected_meals_list=selected_meals_list)
+        return redirect('meal_plan')
 
-    return render_template('meal_selector.html', output=output, selected_meals_list=selected_meals_list)
+    #return render_template('meal_selector.html', output=output, selected_meals_list=selected_meals_list)
+    return render_template('meal_selector.html', output=output)
 
 
 # Define route for meal plan page
 @app.route('/meal_plan', methods=['GET', 'POST'])
 @login_required
 def meal_plan():
-    meal_plan_list = (db.session.query(Recipe, Current_Meal).join(Current_Meal, Recipe.id==Current_Meal.recipe_id).filter(Current_Meal.active_ind=='Y')).all()
-    return render_template('meal_plan.html', meal_plan_list=meal_plan_list)
+    selected_meals_list = (db.session.query(Recipe, Current_Meal).join(Current_Meal, Recipe.id==Current_Meal.recipe_id).filter(Current_Meal.active_ind==True)).all()
+    return render_template('meal_plan.html', selected_meals_list=selected_meals_list)
 
     
 
 # Define route for shopping list page
 @app.route('/shopping_list')
+@login_required
 def shopping_list():
-    shop_list = (db.session.query(Ingredient, Recipe, Current_Meal).join(Recipe, Recipe.id==Ingredient.recipe_id).join(Current_Meal, Recipe.id==Current_Meal.recipe_id).filter(Current_Meal.active_ind=='Y')).all()
+    shop_list = (db.session.query(Ingredient, Recipe, Current_Meal).join(Recipe, Recipe.id==Ingredient.recipe_id).join(Current_Meal, Recipe.id==Current_Meal.recipe_id).filter(Current_Meal.active_ind==True)).all()
     return render_template('shopping_list.html', shop_list=shop_list)
 
 
@@ -68,13 +97,17 @@ def add_recipe():
     if request.method == "POST":
         # Write recipe info
         try:
+            # Parse recipe URLs
+            url_input = request.form['recipe_url']
+            manual_input_clean_url = clean(url_input)
+            
             recipe = Recipe(
                 recipe_name=request.form['recipe_name'],
                 recipe_desc=request.form['recipe_desc'],
                 recipe_prep_time=request.form['recipe_prep_time'],
                 recipe_cook_time=request.form['recipe_cook_time'],
                 serving_size=request.form['serving_size'],
-                recipe_url=request.form['recipe_url'],
+                recipe_url=manual_input_clean_url,
                 diet_vegetarian=request.form.get('diet_vegetarian'),
                 diet_vegan=request.form.get('diet_vegan'),
                 diet_gluten=request.form.get('diet_gluten'),
@@ -139,14 +172,69 @@ def add_recipe():
     #return render_template('add.html', output=output)
     return render_template('add.html')
 
+@app.route('/auto_import', methods=['GET', 'POST'])
+@login_required
+def auto_import():
+    output = []
+    # If user inputs URL, scrape website for recipe data and write to DB:
+    if request.method == "POST":
+        # Write recipe info
+        try:
+            url_input = request.form['recipe_url']
+            auto_import_clean_url = clean(url_input)
+            scraper = scrape_me(url_input)
+        except:
+            output.append("Recipe didn't scrape")
+        
+        try:
+            output.append(scraper.title())
+        except:
+            output.append("couldn't figure out title")
+
+        try:
+            recipe = Recipe(
+                recipe_name='test123',
+                #recipe_desc=request.form['recipe_desc'],
+                #recipe_prep_time=request.form['recipe_prep_time'],
+                #recipe_cook_time=scraper.total_time(),
+                #serving_size=scraper.yields(),
+                #recipe_url=auto_import_clean_url,
+                #diet_vegetarian=request.form.get('diet_vegetarian'),
+                #diet_vegan=request.form.get('diet_vegan'),
+                #diet_gluten=request.form.get('diet_gluten'),
+                #meal_time=request.form.get('meal_time')
+            )
+            try:
+                db.session.add(recipe)
+            except Exception as e:
+                db.session.rollback()
+                print(str(e))
+            try:
+                db.session.flush()
+            except Exception as e:
+                db.session.rollback()
+                print(str(e))
+            try:
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                print(str(e))
+
+
+        except:
+            output.append("Recipe didn't write to DB")
+
+    return render_template("auto_import.html", output=output)
 
 # Define route for page to view all recipes
 @app.route('/all_recipes', methods=['GET', 'POST'])
 @login_required
 def all_recipes():
     your_recipe_list = (db.session.query(Recipe, User_Recipe).join(User_Recipe, Recipe.id==User_Recipe.recipe_id).filter(User_Recipe.owner_ind==True).filter(User_Recipe.user_id==current_user.id)).order_by(Recipe.recipe_desc).all()
+    #your_recipe_list = (db.session.query(Recipe, User_Recipe).join(User_Recipe, Recipe.id==User_Recipe.recipe_id).filter(User_Recipe.user_id==current_user.id)).order_by(Recipe.recipe_desc).all()
 
     other_recipe_list = (db.session.query(Recipe, User_Recipe).join(User_Recipe, Recipe.id==User_Recipe.recipe_id).filter(User_Recipe.owner_ind==False).filter(User_Recipe.user_id==current_user.id)).order_by(Recipe.recipe_desc).all()
+    #other_recipe_list = (db.session.query(Recipe, User_Recipe).join(User_Recipe, Recipe.id==User_Recipe.recipe_id).filter(User_Recipe.user_id==current_user.id)).order_by(Recipe.recipe_desc).all()
 
 
     return render_template("all_recipes.html", your_recipe_list=your_recipe_list, other_recipe_list=other_recipe_list)
@@ -160,6 +248,7 @@ def recipe_detail(recipe_id):
     ingredient_list = Ingredient.query.filter_by(recipe_id=recipe_id)
     step_list = Recipe_Step.query.filter_by(recipe_id=recipe_id)
     return render_template('recipe_detail.html', recipe=recipe, ingredient_list=ingredient_list, step_list=step_list)
+    
     
 # Define route for login page
 @app.route('/login', methods=['GET', 'POST'])

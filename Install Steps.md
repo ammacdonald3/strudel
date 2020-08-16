@@ -3,7 +3,9 @@
 1. Clone repository
 2. Create virtual environment outside of repo (```python3 -m venv recipe-venv```)
 3. Activate virtual environment
-    * MAC OS: ```source recipe-venv/bin/activate```
+    * MAC OS: 
+        * ```cd Google_Drive/"Software Dev"/git```
+        * ```source recipe-venv/bin/activate```
     * WINDOWS: ```recipe-venv\Scripts\Activate.ps1```
 4. Install requirements.txt into virtual machine
     * MAC OS: ```pip install -r recipe-app/requirements.txt```

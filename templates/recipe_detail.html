@@ -9,6 +9,8 @@ active
 
 {% block body %}
 <div class="container">
+  <h4><a href="https://{{ recipe.recipe_url }}" target="_blank">{{ recipe.recipe_url }}</a></h4>
+  <br>
   <p>
     Prep Time: {{ recipe.recipe_prep_time}} minutes
     <br>
@@ -23,10 +25,10 @@ active
   <div class="container">
     <h4>Ingredients:</h4>
     <ul>
-    {% for ingredient in ingredient_list %}
-    <li>{{ ingredient.ingredient_qty }} {{ ingredient.ingredient_measurement }} {{ ingredient.ingredient_desc }}</li>
-    {% endfor %}
-  </ul>
+      {% for ingredient in ingredient_list %}
+      <li>{{ ingredient.ingredient_qty }} {{ ingredient.ingredient_measurement }} {{ ingredient.ingredient_desc }}</li>
+      {% endfor %}
+    </ul>
   </div>
   <br>
   <br>
