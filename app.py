@@ -82,7 +82,7 @@ def meal_selector():
 @app.route('/meal_plan', methods=['GET', 'POST'])
 @login_required
 def meal_plan():
-    selected_meals_list = (db.session.query(Recipe, Current_Meal).join(Current_Meal, Recipe.id==Current_Meal.recipe_id).filter(Current_Meal.active_ind==True)).all()
+    selected_meals_list = (db.session.query(Recipe, Current_Meal).join(Current_Meal, Recipe.id==Current_Meal.recipe_id).filter(Current_Meal.user_id==current_user.id).filter(Current_Meal.active_ind==True)).all()
     return render_template('meal_plan.html', selected_meals_list=selected_meals_list)
 
     
@@ -91,7 +91,7 @@ def meal_plan():
 @app.route('/shopping_list')
 @login_required
 def shopping_list():
-    shop_list = (db.session.query(Ingredient, Recipe, Current_Meal).join(Recipe, Recipe.id==Ingredient.recipe_id).join(Current_Meal, Recipe.id==Current_Meal.recipe_id).filter(Current_Meal.active_ind==True)).all()
+    shop_list = (db.session.query(Ingredient, Recipe, Current_Meal).join(Recipe, Recipe.id==Ingredient.recipe_id).join(Current_Meal, Recipe.id==Current_Meal.recipe_id).filter(Current_Meal.user_id==current_user.id).filter(Current_Meal.active_ind==True)).all()
     return render_template('shopping_list.html', shop_list=shop_list)
 
 
