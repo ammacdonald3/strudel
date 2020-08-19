@@ -2,28 +2,28 @@ html {
 	height: 100%;
 }
 
-body {
+/* body {
 	font-family: 'Lato', sans-serif;
 	color: rgb(218, 215, 210);
 	background-color:rgb(24, 26, 27);
-}
+} */
 
 button {
     border-color: #575757;
 }
 
-.form-control {
+/* .form-control {
     color: rgb(202, 198, 190);
 	background-color: rgb(24, 26, 27);
 	border-color: rgb(54, 63, 72);
-}
+} */
 
-.form-control:focus {
+/* .form-control:focus {
     color: rgb(202, 198, 190);
 	background-color: rgb(24, 26, 27);
 	border-color: rgb(54, 63, 72);
 	border: 1px solid #ced4da;
-}
+} */
 
 #index {
 	background-image: url("title_image.jpg");
@@ -63,6 +63,7 @@ hr {
 
 
 :root {
+    /* color-scheme: light dark; */
     --blue: #007bff;
     --indigo: #6610f2;
     --purple: #6f42c1;
@@ -117,7 +118,7 @@ dd {
 
 
  /* Style the button that is used to open and close the collapsible content */
- .collapsible {
+/*  .collapsible {
     background-color: #eee;
     color: #444;
     cursor: pointer;
@@ -127,17 +128,17 @@ dd {
     text-align: left;
     outline: none;
     font-size: 15px;
-  }
+  } */
   
   /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-  .active, .collapsible:hover {
-    background-color: #ccc;
-  }
+/*   .active, .collapsible:hover {
+    background-color: #ccc; 
+  } */
   
   /* Style the collapsible content. Note: hidden by default */
-  .content {
+/*   .content {
     padding: 0 18px;
     display: none;
     overflow: hidden;
     background-color: #f1f1f1;
-  } 
+  }  */

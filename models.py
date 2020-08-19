@@ -123,11 +123,13 @@ class Current_Meal(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.id'), nullable=False)
+    user_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
     day_number = db.Column(db.Integer())
     active_ind = db.Column(db.Boolean())
 
-    def __init__(self, recipe_id, day_number, active_ind):
+    def __init__(self, recipe_id, user_id, day_number, active_ind):
         self.recipe_id = recipe_id
+        self.user_id = user_id
         self.day_number = day_number
         self.active_ind = active_ind
 

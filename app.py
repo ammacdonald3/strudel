@@ -48,16 +48,17 @@ def meal_selector():
     selected_meals_list = []
     if request.method == "POST":
         try:
-            active_recipes = (db.session.query(Current_Meal).update(dict(active_ind=False)))
+            active_recipes = (db.session.query(Current_Meal).filter(Current_Meal.user_id==current_user.id).update(dict(active_ind=False)))
             your_recipe_list = (db.session.query(Recipe, User_Recipe).join(User_Recipe, Recipe.id==User_Recipe.recipe_id).filter(User_Recipe.owner_ind==True).filter(User_Recipe.user_id==current_user.id)).order_by(Recipe.recipe_desc).all()
 
-            selected_meals_list = random.sample(your_recipe_list, 3)
+            selected_meals_list = random.sample(your_recipe_list, 5)
             
             day_counter = 0
             for val in selected_meals_list:
                 day_counter += 1
                 current_meal = Current_Meal(
                     recipe_id=val.Recipe.id,
+                    user_id=current_user.id,
                     day_number=day_counter,
                     active_ind=True
                 )
@@ -290,10 +291,10 @@ def auto_import():
 @app.route('/all_recipes', methods=['GET', 'POST'])
 @login_required
 def all_recipes():
-    your_recipe_list = (db.session.query(Recipe, User_Recipe).join(User_Recipe, Recipe.id==User_Recipe.recipe_id).filter(User_Recipe.owner_ind==True).filter(User_Recipe.user_id==current_user.id)).order_by(Recipe.recipe_desc).all()
+    your_recipe_list = (db.session.query(Recipe, User_Recipe).join(User_Recipe, Recipe.id==User_Recipe.recipe_id).filter(User_Recipe.owner_ind==True).filter(User_Recipe.user_id==current_user.id)).order_by(Recipe.recipe_name).all()
     #your_recipe_list = (db.session.query(Recipe, User_Recipe).join(User_Recipe, Recipe.id==User_Recipe.recipe_id).filter(User_Recipe.user_id==current_user.id)).order_by(Recipe.recipe_desc).all()
 
-    other_recipe_list = (db.session.query(Recipe, User_Recipe).join(User_Recipe, Recipe.id==User_Recipe.recipe_id).filter(User_Recipe.owner_ind==False).filter(User_Recipe.user_id==current_user.id)).order_by(Recipe.recipe_desc).all()
+    other_recipe_list = (db.session.query(Recipe, User_Recipe).join(User_Recipe, Recipe.id==User_Recipe.recipe_id).filter(User_Recipe.owner_ind==False).filter(User_Recipe.user_id==current_user.id)).order_by(Recipe.recipe_name).all()
     #other_recipe_list = (db.session.query(Recipe, User_Recipe).join(User_Recipe, Recipe.id==User_Recipe.recipe_id).filter(User_Recipe.user_id==current_user.id)).order_by(Recipe.recipe_desc).all()
 
 
