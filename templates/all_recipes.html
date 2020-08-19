@@ -18,7 +18,7 @@
         <dt>
           <h4><a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.id) }}">{{ recipe.Recipe.recipe_name }}</a></h4>
           
-          <h6><a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank">{{ recipe.Recipe.recipe_url }}</a></h6>
+          <h6><a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank">Source Website</a></h6>
         </dt>
         <dd>
           <p>{{ recipe.Recipe.recipe_desc }}</p>
@@ -37,7 +37,7 @@
           <dt>
             <h4><a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.id) }}">{{ recipe.Recipe.recipe_name }}</a></h4>
             
-            <h6><a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank">{{ recipe.Recipe.recipe_url }}</a></h6>
+            <h6><a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank">Source Website</a></h6>
           </dt>
           <dd>
             <p>{{ recipe.Recipe.recipe_desc }}</p>

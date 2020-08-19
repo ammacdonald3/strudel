@@ -14,22 +14,31 @@ Recipe Added
     </div>
 
     <div class="container" style="padding-top: 20px;">
-        <div class="row" style="padding-top: 20px;">
-            <a href="{{ url_for('recipe_detail', recipe_id=recipe_id) }}"><button type="button"
-                    class="btn btn-outline-primary">View Recipe</button></a>
-        </div>
-        <div class="row" style="padding-top: 20px;">
-            <a href="{{ url_for('add_recipe') }}"><button type="button" class="btn btn-outline-danger">Add
-                    Another</button></a>
+        <div class="form-group">
+            <div class="row" style="padding-top: 20px;">
+                <div style="padding-right: 10px;" class="form-group col-sm">
+                    <a href="{{ url_for('recipe_detail', recipe_id=recipe_id) }}"><button type="button"
+                            class="btn btn-outline-primary">View Recipe</button></a>
+                </div>
+                <!--<div class="row" style="padding-top: 20px;">-->
+                <div style="padding-right: 10px;" class="form-group col-sm">
+                    <a href="{{ url_for('auto_import') }}"><button type="button" class="btn btn-outline-danger">Add
+                            Another (Import)</button></a>
+                </div>
+                <div style="padding-right: 10px;" class="form-group col-sm">
+                    <a href="{{ url_for('add_recipe') }}"><button type="button" class="btn btn-outline-danger">Add
+                            Another (Manual)</button></a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<!--
+
 {% for item in output %}
 <h4>{{ item }}</h4>
 {% endfor %}
--->
+
 
 {% endblock %}
 

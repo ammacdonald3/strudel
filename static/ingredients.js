@@ -19,7 +19,7 @@ $(AddIngredientButton).click(function (e) //on add input button click
         if (x <= IngredientFieldCount) {
             IngredientFieldCount++; //text box added increment
             //add input box
-            $('<div class="form-group"><p>Ingredient ' + IngredientFieldCount + '</p><div class="row"><div class="form-group col-sm"><input type="text" name="ingredient_qty' + IngredientFieldCount + '" id="ingredient_qty' + IngredientFieldCount + '" placeholder="Qty ' + IngredientFieldCount + '" class="form-control col"/></div><div class="form-group col-sm"><input type="text" name="ingredient_measurement' + IngredientFieldCount + '" id="ingredient_measurement' + IngredientFieldCount + '" placeholder="Measurement ' + IngredientFieldCount + '" class="form-control col"/></div><div class="form-group col-sm"><input type="text" name="ingredient_desc' + IngredientFieldCount + '" id="ingredient_desc' + IngredientFieldCount + '" placeholder="Ingredient' + IngredientFieldCount + '" class="form-control col"/></div><div class="form-group col-sm"><button class="removeclass btn btn-outline-danger col">Delete</button></div></div></div>').insertBefore(IngredientInputsWrapper);
+            $('<div class="form-group"><div class="row"><div class="form-group col-lg-2">Ingredient ' + IngredientFieldCount + '</div><div class="form-group col-lg-7"><input name="ingredient_desc' + IngredientFieldCount + '" class="form-control col" placeholder="Ingredient ' + IngredientFieldCount + '"></div><div class="form-group col-lg-3"><button class="removeclass btn btn-outline-danger col">Delete</button></div></div></div>').insertBefore(IngredientInputsWrapper);
             x++; //text box increment
         }
         return false;

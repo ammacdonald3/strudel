@@ -3,6 +3,8 @@ from flask import Flask, render_template, request, flash, redirect, url_for
 import flask_sqlalchemy
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from recipe_scrapers import scrape_me
+from datetime import datetime
+import re
 import random
 import sys
 import os
@@ -23,6 +25,10 @@ def clean(url_input):
         clean_url = url_input[12:]
     elif url_input[:11] == 'http://www.':
         clean_url = url_input[11:]
+    elif url_input[:8] == 'https://':
+        clean_url = url_input[8:]
+    elif url_input[:7] == 'http://':
+        clean_url = url_input[7:]
     elif url_input[:4] == 'www.':
         clean_url = url_input[4:]
     else:
@@ -100,18 +106,23 @@ def add_recipe():
             # Parse recipe URLs
             url_input = request.form['recipe_url']
             manual_input_clean_url = clean(url_input)
+            prep_time = request.form['recipe_prep_time']
+            cook_time = request.form['recipe_cook_time']
+            total_time = prep_time + cook_time
             
             recipe = Recipe(
                 recipe_name=request.form['recipe_name'],
                 recipe_desc=request.form['recipe_desc'],
-                recipe_prep_time=request.form['recipe_prep_time'],
-                recipe_cook_time=request.form['recipe_cook_time'],
+                recipe_prep_time=prep_time,
+                recipe_cook_time=cook_time,
+                recipe_total_time=total_time,
                 serving_size=request.form['serving_size'],
                 recipe_url=manual_input_clean_url,
                 diet_vegetarian=request.form.get('diet_vegetarian'),
                 diet_vegan=request.form.get('diet_vegan'),
                 diet_gluten=request.form.get('diet_gluten'),
-                meal_time=request.form.get('meal_time')
+                meal_time=request.form.get('meal_time'),
+                insert_datetime=datetime.utcnow
             )
             db.session.add(recipe)
             db.session.flush()
@@ -126,8 +137,6 @@ def add_recipe():
             try:
                 ingredient = Ingredient(
                     recipe_id=recipe.id,
-                    ingredient_qty=request.form['ingredient_qty' + str(x)],
-                    ingredient_measurement=request.form['ingredient_measurement' + str(x)],
                     ingredient_desc=request.form['ingredient_desc' + str(x)]
                 )
                 db.session.add(ingredient)
@@ -183,46 +192,97 @@ def auto_import():
             url_input = request.form['recipe_url']
             auto_import_clean_url = clean(url_input)
             scraper = scrape_me(url_input)
+            yields = scraper.yields()
+            clean_yields = re.sub('[^0-9]','', yields)
         except:
             output.append("Recipe didn't scrape")
-        
-        try:
-            output.append(scraper.title())
-        except:
-            output.append("couldn't figure out title")
+
 
         try:
             recipe = Recipe(
-                recipe_name='test123',
-                #recipe_desc=request.form['recipe_desc'],
-                #recipe_prep_time=request.form['recipe_prep_time'],
-                #recipe_cook_time=scraper.total_time(),
-                #serving_size=scraper.yields(),
-                #recipe_url=auto_import_clean_url,
-                #diet_vegetarian=request.form.get('diet_vegetarian'),
-                #diet_vegan=request.form.get('diet_vegan'),
-                #diet_gluten=request.form.get('diet_gluten'),
-                #meal_time=request.form.get('meal_time')
+                recipe_name=scraper.title(),
+                recipe_desc='Imported from external website',
+                recipe_prep_time=0,
+                recipe_cook_time=0,
+                recipe_total_time=scraper.total_time(),
+                serving_size=clean_yields,
+                recipe_url=auto_import_clean_url,
+                diet_vegetarian=None,
+                diet_vegan=None,
+                diet_gluten=None,
+                meal_time='both',
+                insert_datetime=datetime.utcnow()
+                #insert_datetime=None
             )
+
+            db.session.add(recipe)
+            db.session.flush()
+            db.session.commit()
+
+            
+        except Exception as e:
+            db.session.rollback()
+            output.append("Application encountered an error, and the recipe didn't write to the database. Better luck in the future!")
+            output.append(str(e))
+
+
+        for item in scraper.ingredients():
             try:
-                db.session.add(recipe)
-            except Exception as e:
-                db.session.rollback()
-                print(str(e))
-            try:
+                #quantity = float(re.sub('[^0-9]','', item))
+                #desc = re.sub(r'\d+','', item)
+                #quantity = item.partition(' ')[0]
+                #desc = item.partition(' ')[2]
+                ingredient = Ingredient(
+                    recipe_id=recipe.id,
+                    ingredient_desc=item
+                )
+                db.session.add(ingredient)
                 db.session.flush()
-            except Exception as e:
-                db.session.rollback()
-                print(str(e))
-            try:
                 db.session.commit()
+            # Return error if database write was unsuccessful
             except Exception as e:
                 db.session.rollback()
-                print(str(e))
+                output.append("Application encountered an error, and the ingredients didn't write to the database. Better luck in the future!")
+                output.append(str(e))
 
 
-        except:
-            output.append("Recipe didn't write to DB")
+        instructions = scraper.instructions().split('\n')
+        for step in instructions:
+            try:
+                recipe_step = Recipe_Step(
+                    recipe_id=recipe.id,
+                    step_desc=step
+                )
+                db.session.add(recipe_step)
+                db.session.flush()
+                db.session.commit()
+            # Return error if database write was unsuccessful
+            except Exception as e:
+                db.session.rollback()
+                output.append("Application encountered an error, and the instructions didn't write to the database. Better luck in the future!")
+                output.append(str(e))
+
+
+        try:
+            user_recipe = User_Recipe(
+                recipe_id=recipe.id,
+                user_id=current_user.id,
+                user_rating=5,
+                owner_ind=True
+            )
+            db.session.add(user_recipe)
+            db.session.flush()
+            db.session.commit()
+            #output.append("User_Recipe successfully added!")
+
+            return(render_template('recipe_confirm.html', recipe_id=recipe.id, recipe_name=scraper.title()))
+
+        # Return error if database write was unsuccessful
+        except Exception as e:
+            db.session.rollback()
+            output.append("Application encountered an error, and the user recipe didn't write to the database. Better luck in the future!")
+            output.append(str(e))
+        
 
     return render_template("auto_import.html", output=output)
 

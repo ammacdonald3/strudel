@@ -17,29 +17,33 @@ class Recipe(db.Model):
     recipe_desc = db.Column(db.String())
     recipe_prep_time = db.Column(db.Integer())
     recipe_cook_time = db.Column(db.Integer())
+    recipe_total_time = db.Column(db.Integer())
     serving_size = db.Column(db.Integer())
     diet_vegetarian = db.Column(db.String())
     diet_vegan = db.Column(db.String())
     diet_gluten = db.Column(db.String())
     meal_time = db.Column(db.String())
     recipe_url = db.Column(db.String())
+    insert_datetime = db.Column(db.DateTime())
     ingredient = db.relationship('Ingredient', backref='recipe', lazy=True)
     recipe_step = db.relationship('Recipe_Step', backref='recipe_step', lazy=True)
     user_recipe = db.relationship('User_Recipe', backref='recipe_user', lazy=True)
     current_meal = db.relationship('Current_Meal', backref='current_meal', lazy=True)
 
 
-    def __init__(self, recipe_name, recipe_desc, recipe_prep_time, recipe_cook_time, serving_size, diet_vegetarian, diet_vegan, diet_gluten, meal_time, recipe_url):
+    def __init__(self, recipe_name, recipe_desc, recipe_prep_time, recipe_cook_time, recipe_total_time, serving_size, diet_vegetarian, diet_vegan, diet_gluten, meal_time, recipe_url, insert_datetime):
         self.recipe_name = recipe_name
         self.recipe_desc = recipe_desc
         self.recipe_prep_time = recipe_prep_time
         self.recipe_cook_time = recipe_cook_time
+        self.recipe_total_time = recipe_total_time
         self.serving_size = serving_size
         self.diet_vegetarian = diet_vegetarian
         self.diet_vegan = diet_vegan
         self.diet_gluten = diet_gluten
         self.meal_time = meal_time
         self.recipe_url = recipe_url
+        self.insert_datetime = insert_datetime
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -50,14 +54,10 @@ class Ingredient(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.id'), nullable=False)
-    ingredient_qty = db.Column(db.Integer())
-    ingredient_measurement = db.Column(db.String())
     ingredient_desc = db.Column(db.String())
 
-    def __init__(self, recipe_id, ingredient_qty, ingredient_measurement, ingredient_desc):
+    def __init__(self, recipe_id, ingredient_desc):
         self.recipe_id = recipe_id
-        self.ingredient_qty = ingredient_qty
-        self.ingredient_measurement = ingredient_measurement
         self.ingredient_desc = ingredient_desc
 
     def __repr__(self):
