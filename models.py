@@ -9,10 +9,36 @@ from app import login
 from app import db
 
 
+class App_User(UserMixin, db.Model):
+    __tablename__ = 'app_user'
+
+    id = db.Column(db.Integer, primary_key=True)
+    app_username = db.Column(db.String(64), index=True, unique=True)
+    app_email = db.Column(db.String(120), index=True, unique=True)
+    password_hash = db.Column(db.String(128))
+    first_name = db.Column(db.String)
+    last_name = db.Column(db.String)
+    insert_datetime = db.Column(db.DateTime())
+    user_recipe = db.relationship('User_Recipe', backref='user_recipe2', lazy=True)
+    current_meal = db.relationship('Current_Meal', backref='current_meal2', lazy=True)
+    favorite_recipe = db.relationship('Favorite_Recipe', backref='favorite_recipe2', lazy=True)
+    recipe = db.relationship('Recipe', backref='recipe', lazy=True)
+
+    def __repr__(self):
+        return '<User {}>'.format(self.app_username)
+    
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+
+
 class Recipe(db.Model):
     __tablename__ = 'recipe'
 
-    id = db.Column(db.Integer, primary_key=True)
+    recipe_id = db.Column(db.Integer, primary_key=True)
     recipe_name = db.Column(db.String())
     recipe_desc = db.Column(db.String())
     recipe_prep_time = db.Column(db.Integer())
@@ -24,14 +50,16 @@ class Recipe(db.Model):
     diet_gluten = db.Column(db.String())
     meal_time = db.Column(db.String())
     recipe_url = db.Column(db.String())
+    created_by = db.Column(db.Integer(), db.ForeignKey('app_user.id'), nullable=False)
     insert_datetime = db.Column(db.DateTime())
-    ingredient = db.relationship('Ingredient', backref='recipe', lazy=True)
+    ingredient = db.relationship('Ingredient', backref='ingredient', lazy=True)
     recipe_step = db.relationship('Recipe_Step', backref='recipe_step', lazy=True)
-    user_recipe = db.relationship('User_Recipe', backref='recipe_user', lazy=True)
-    current_meal = db.relationship('Current_Meal', backref='current_meal', lazy=True)
+    user_recipe = db.relationship('User_Recipe', backref='user_recipe1', lazy=True)
+    current_meal = db.relationship('Current_Meal', backref='current_meal1', lazy=True)
+    favorite_recipe = db.relationship('Favorite_Recipe', backref='favorite_recipe1', lazy=True)
 
 
-    def __init__(self, recipe_name, recipe_desc, recipe_prep_time, recipe_cook_time, recipe_total_time, serving_size, diet_vegetarian, diet_vegan, diet_gluten, meal_time, recipe_url, insert_datetime):
+    def __init__(self, recipe_name, recipe_desc, recipe_prep_time, recipe_cook_time, recipe_total_time, serving_size, diet_vegetarian, diet_vegan, diet_gluten, meal_time, recipe_url, created_by, insert_datetime):
         self.recipe_name = recipe_name
         self.recipe_desc = recipe_desc
         self.recipe_prep_time = recipe_prep_time
@@ -43,125 +71,141 @@ class Recipe(db.Model):
         self.diet_gluten = diet_gluten
         self.meal_time = meal_time
         self.recipe_url = recipe_url
+        self.created_by = created_by
         self.insert_datetime = insert_datetime
 
     def __repr__(self):
-        return '<id {}>'.format(self.id)
+        return '<id {}>'.format(self.recipe_id)
+
 
 
 class Ingredient(db.Model):
     __tablename__ = 'ingredient'
 
-    id = db.Column(db.Integer, primary_key=True)
-    recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.id'), nullable=False)
+    ingredient_id = db.Column(db.Integer, primary_key=True)
+    recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.recipe_id'), nullable=False)
     ingredient_desc = db.Column(db.String())
+    insert_datetime = db.Column(db.DateTime())
 
-    def __init__(self, recipe_id, ingredient_desc):
+    def __init__(self, recipe_id, ingredient_desc, insert_datetime):
         self.recipe_id = recipe_id
         self.ingredient_desc = ingredient_desc
+        self.insert_datetime = insert_datetime
 
     def __repr__(self):
-        return 'id {}>'.format(self.id)
+        return 'id {}>'.format(self.ingredient_id)
+
 
 
 class Recipe_Step(db.Model):
     __tablename__ = 'recipe_step'
 
-    id = db.Column(db.Integer, primary_key=True)
-    recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.id'), nullable=False)
+    recipe_step_id = db.Column(db.Integer, primary_key=True)
+    recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.recipe_id'), nullable=False)
     step_desc = db.Column(db.String())
+    insert_datetime = db.Column(db.DateTime())
 
-    def __init__(self, recipe_id, step_desc):
+    def __init__(self, recipe_id, step_desc, insert_datetime):
         self.recipe_id = recipe_id
         self.step_desc = step_desc
+        self.insert_datetime = insert_datetime
 
     def __repr__(self):
-        return 'id {}>'.format(self.id)
+        return 'id {}>'.format(self.recipe_step_id)
 
-
-class User(UserMixin, db.Model):
-    __tablename__ = 'user'
-
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), index=True, unique=True)
-    email = db.Column(db.String(120), index=True, unique=True)
-    password_hash = db.Column(db.String(128))
-    first_name = db.Column(db.String)
-    last_name = db.Column(db.String)
-    user_recipe = db.relationship('User_Recipe', backref='user_recipe', lazy=True)
-
-    def __repr__(self):
-        return '<User {}>'.format(self.username)
-    
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
 
 
 class User_Recipe(db.Model):
     __tablename__ = 'user_recipe'
 
-    id = db.Column(db.Integer, primary_key=True)
-    recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.id'), nullable=False)
-    user_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
+    user_recipe_id = db.Column(db.Integer, primary_key=True)
+    recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.recipe_id'), nullable=False)
+    app_user_id = db.Column(db.Integer(), db.ForeignKey('app_user.id'), nullable=False)
     user_rating = db.Column(db.Integer())
     owner_ind = db.Column(db.Boolean())
+    insert_datetime = db.Column(db.DateTime())
 
-    def __init__(self, recipe_id, user_id, user_rating, owner_ind):
+    def __init__(self, recipe_id, app_user_id, user_rating, owner_ind, insert_datetime):
         self.recipe_id = recipe_id
-        self.user_id = user_id
+        self.app_user_id = app_user_id
         self.user_rating = user_rating
         self.owner_ind = owner_ind
+        self.insert_datetime = insert_datetime
 
     def __repr__(self):
-        return '<id {}>'.format(self.id)
+        return '<id {}>'.format(self.user_recipe_id)
+
+
+class Favorite_Recipe(db.Model):
+    __tablename__ = 'favorite_recipe'
+
+    favorite_recipe_id = db.Column(db.Integer, primary_key=True)
+    recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.recipe_id'), nullable=False)
+    app_user_id = db.Column(db.Integer(), db.ForeignKey('app_user.id'), nullable=False)
+    owner_ind = db.Column(db.Boolean())
+    insert_datetime = db.Column(db.DateTime())
+
+    def __init__(self, recipe_id, app_user_id, owner_ind, insert_datetime):
+        self.recipe_id = recipe_id
+        self.app_user_id = app_user_id
+        self.owner_ind = owner_ind
+        self.insert_datetime = insert_datetime
+
+    def __repr__(self):
+        return '<id {}>'.format(self.favorite_recipe_id)
+
+
 
 class Current_Meal(db.Model):
     __tablename__ = 'current_meal'
 
-    id = db.Column(db.Integer, primary_key=True)
-    recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.id'), nullable=False)
-    user_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
+    current_meal_id = db.Column(db.Integer, primary_key=True)
+    recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.recipe_id'), nullable=False)
+    app_user_id = db.Column(db.Integer(), db.ForeignKey('app_user.id'), nullable=False)
     day_number = db.Column(db.Integer())
     active_ind = db.Column(db.Boolean())
+    insert_datetime = db.Column(db.DateTime())
 
-    def __init__(self, recipe_id, user_id, day_number, active_ind):
+    def __init__(self, recipe_id, app_user_id, day_number, active_ind, insert_datetime):
         self.recipe_id = recipe_id
-        self.user_id = user_id
+        self.app_user_id = app_user_id
         self.day_number = day_number
         self.active_ind = active_ind
+        self.insert_datetime = insert_datetime
 
     def __repr__(self):
-        return '<id {}>'.format(self.id)
+        return '<id {}>'.format(self.current_meal_id)
+
+
 
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
+    app_username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Stay logged in')
     submit = SubmitField('Sign In')
 
+
+
 class RegistrationForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])
-    username = StringField('Username', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(), Email()])
+    app_username = StringField('Username', validators=[DataRequired()])
+    app_email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField(
         'Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Register')
 
-    def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user is not None:
+    def validate_username(self, app_username):
+        app_user = App_User.query.filter_by(app_username=app_username.data).first()
+        if app_user is not None:
             raise ValidationError('Please use a different username.')
 
-    def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
-        if user is not None:
+    def validate_email(self, app_email):
+        app_user = App_User.query.filter_by(app_email=app_email.data).first()
+        if app_user is not None:
             raise ValidationError('Please use a different email address.')
 
 @login.user_loader
 def load_user(id):
-    return User.query.get(id)
+    return App_User.query.get(id)

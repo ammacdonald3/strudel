@@ -27,7 +27,7 @@ Meal Selector
 <div class="container">
     <h4>Manual Meal Selection</h4>
     {% for recipe in selected_meals_list %}
-    <h4><a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.id) }}">{{ recipe.Recipe.recipe_name }}</a></h4>
+    <h4><a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}">{{ recipe.Recipe.recipe_name }}</a></h4>
     <p>{{ recipe.Recipe.recipe_desc }}</p>
     {% endfor %}
 </div>
