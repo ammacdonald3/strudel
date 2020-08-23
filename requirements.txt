@@ -79,3 +79,4 @@ wrapt==1.11.2
 WTForms==2.2.1
 Flask-WTF==0.14.2
 Flask-Login==0.4.1
+recipe-scrapers==9.0.3  
