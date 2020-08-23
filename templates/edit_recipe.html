@@ -7,7 +7,7 @@ active
 {% endblock %}
 
 {% block heading %}
-Add New Recipe
+Edit Recipe
 {% endblock %}
 
 {% block body %}
@@ -18,7 +18,7 @@ Add New Recipe
       <!-- Recipe Name input -->
       <div class="form-group col-lg">
         <label for="recipe_name_box">Recipe</label>
-        <input type="text" name="recipe_name" class="form-control" id="recipe_name_box" placeholder="Enter recipe name" autofocus required>
+        <input type="text" name="recipe_name" class="form-control" id="recipe_name_box" placeholder="Enter recipe name" value="{{ recipe.recipe_name }}" autofocus required>
       </div>
     </div>
 
@@ -26,7 +26,7 @@ Add New Recipe
       <!-- Recipe Description input -->
       <div class="form-group col-lg">
         <label for="recipe_desc_box">Description</label>
-        <textarea name="recipe_desc" class="form-control" id="recipe_desc_box" placeholder="Enter recipe description" rows="3" autofocus required></textarea>
+        <textarea name="recipe_desc" class="form-control" id="recipe_desc_box" placeholder="Enter recipe description" value="{{ recipe.recipe_desc }}" rows="3" autofocus required></textarea>
         <!-- <input type="text" name="recipe_desc" class="form-control" id="recipe_desc_box"
           placeholder="Enter recipe description" style="max-width: 500px;" autofocus required> -->
       </div>
@@ -38,7 +38,7 @@ Add New Recipe
       <div class="form-group col-sm">
         <label for="recipe_prep_box">Prep Time</label>
         <input type="text" name="recipe_prep_time" class="form-control" id="recipe_prep_box"
-          placeholder="Enter recipe prep time" style="max-width: 300px;" aria-describedby="prep_help" autofocus
+          placeholder="Enter recipe prep time" value="{{ recipe.recipe_prep_time }}" style="max-width: 300px;" aria-describedby="prep_help" autofocus
           required>
         <small id="prep_help" class="form-text text-muted">Enter prep time in minutes.</small>
       </div>
@@ -46,7 +46,7 @@ Add New Recipe
       <div class="form-group col-sm">
         <label for="recipe_cook_box">Cook Time</label>
         <input type="text" name="recipe_cook_time" class="form-control" id="recipe_cook_box"
-          placeholder="Enter recipe cook time" style="max-width: 300px;" aria-describedby="cook_help" autofocus
+          placeholder="Enter recipe cook time" value="{{ recipe.recipe_cook_time }}" style="max-width: 300px;" aria-describedby="cook_help" autofocus
           required>
         <small id="cook_help" class="form-text text-muted">Enter cook time in minutes.</small>
       </div>
@@ -54,7 +54,7 @@ Add New Recipe
       <div class="form-group col-sm">
         <label for="serving_size_box">Serving Size</label>
         <input type="text" name="serving_size" class="form-control" id="serving_size_box"
-          placeholder="Enter serving size" style="max-width: 300px;" aria-describedby="size_help" autofocus required>
+          placeholder="Enter serving size" value="{{ recipe.serving_size }}" style="max-width: 300px;" aria-describedby="size_help" autofocus required>
         <small id="size_help" class="form-text text-muted">Enter number of servings.</small>
       </div>
     </div>
@@ -63,7 +63,7 @@ Add New Recipe
       <!-- Recipe URL input -->
       <div class="form-group col-lg">
         <label for="recipe_url_box">URL</label>
-        <input type="text" name="recipe_url" class="form-control" id="recipe_url_box" placeholder="Enter recipe URL"
+        <input type="text" name="recipe_url" class="form-control" id="recipe_url_box" placeholder="Enter recipe URL" value="{{ recipe.recipe_url }}"
           style="max-width: 1000px;" autofocus required>
       </div>
     </div>
@@ -79,15 +79,27 @@ Add New Recipe
       <div class="form-group col-md">
         <h3>Dietary Restrictions</h3>
         <div class="form-check form-check">
-          <input class="form-check-input" type="checkbox" name="diet_vegan" id="diet_vegan" value=True>
+          <input class="form-check-input" type="checkbox" name="diet_vegan" id="diet_vegan" value=True
+            {% if recipe.diet_vegan == True %}
+              checked
+            {% endif %}
+          >
           <label class="form-check-label" for="diet_vegan">Vegan</label>
         </div>
         <div class="form-check form-check">
-          <input class="form-check-input" type="checkbox" name="diet_vegetarian" id="diet_vegetarian" value=True>
+          <input class="form-check-input" type="checkbox" name="diet_vegetarian" id="diet_vegetarian" value=True
+            {% if recipe.diet_vegetarian == True %}
+              checked
+            {% endif %}
+          >
           <label class="form-check-label" for="diet_vegetarian">Vegetarian</label>
         </div>
         <div class="form-check form-check">
-          <input class="form-check-input" type="checkbox" name="diet_gluten" id="diet_gluten" value=True>
+          <input class="form-check-input" type="checkbox" name="diet_gluten" id="diet_gluten" value=True
+          {% if recipe.diet_gluten == True %}
+              checked
+          {% endif %}
+          >
           <label class="form-check-label" for="diet_gluten">Gluten-free</label>
         </div>
       </div>
@@ -96,15 +108,27 @@ Add New Recipe
       <div class="form-group col-md">
         <h3>Meal Time</h3>
         <div class="form-check form-check">
-          <input class="form-check-input" type="radio" name="meal_time" id="lunch" value="lunch">
+          <input class="form-check-input" type="radio" name="meal_time" id="lunch" value="lunch"
+            {% if recipe.meal_time == 'lunch' %}
+              checked
+            {% endif %}
+          >
           <label class="form-check-label" for="meal_time">Lunch</label>
         </div>
         <div class="form-check form-check">
-          <input class="form-check-input" type="radio" name="meal_time" id="dinner" value="dinner">
+          <input class="form-check-input" type="radio" name="meal_time" id="dinner" value="dinner"
+            {% if recipe.meal_time == 'dinner' %}
+              checked
+            {% endif %}
+          >
           <label class="form-check-label" for="meal_time">Dinner</label>
         </div>
         <div class="form-check form-check">
-          <input class="form-check-input" type="radio" name="meal_time" id="both" value="both">
+          <input class="form-check-input" type="radio" name="meal_time" id="both" value="both"
+            {% if recipe.meal_time == 'both' %}
+              checked
+            {% endif %}
+          >
           <label class="form-check-label" for="meal_time">Both</label>
         </div>
       </div>

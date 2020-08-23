@@ -36,6 +36,14 @@ def clean(url_input):
     return clean_url
 
 
+# Function to convert form input true/false to python boolean
+def convert_bool(form_input):
+    if form_input == 'True':
+        return True
+    else:
+        return False
+
+
 # Define route for landing page
 @app.route('/')
 def index():
@@ -49,16 +57,29 @@ def meal_selector():
     selected_meals_list = []
     if request.method == "POST":
         try:
-            active_recipes = (db.session.query(Current_Meal).filter(Current_Meal.app_user_id==current_user.id).update(dict(active_ind=False)))
+            # Update user's current meal list to inactivate all meals
+            db.session.query(Current_Meal).filter(Current_Meal.app_user_id==current_user.id).update(dict(active_ind=False))
+
+            # Retrieve a list of all recipes uploaded by user
+            # TO BE CHANGED in future to be a list of user's favorite meals
             your_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id)).order_by(Recipe.recipe_name).all()
 
-            selected_meals_list = random.sample(your_recipe_list, 5)
+            # Retrieve number of days of meals to generate per user input form
+            num_days = int(request.form['num_days'])
             
+            # If the total number of user's recipes is <= number of days' meals needed, just return entire list of user's recipes
+            # Otherwise, randomly pick unique recipes based on number of days' meals needed
+            if len(your_recipe_list) > num_days:
+                selected_meals_list = random.sample(your_recipe_list, num_days)
+            else:
+                selected_meals_list = your_recipe_list
+
+
             day_counter = 0
             for val in selected_meals_list:
                 day_counter += 1
                 current_meal = Current_Meal(
-                    recipe_id=val.Recipe.recipe_id,
+                    recipe_id=val.recipe_id,
                     app_user_id=current_user.id,
                     day_number=day_counter,
                     active_ind=True,
@@ -70,11 +91,16 @@ def meal_selector():
 
             print("selected_meals " + str(selected_meals_list), file=sys.stderr)
 
-        except:
-            output.append("Meals not selected")
+        except Exception as e:
+            db.session.rollback()
+            output.append("Application encountered an error, and your meals were not selected. Better luck in the future!")
+            output.append(str(e))
 
         # Redirect to meal_plan.html page so that data pulls from database
         return redirect('meal_plan')
+
+        # Comment out above line and uncomment below line to see application errors
+        #return render_template('meal_plan.html', output=output)
 
     # When not posting form, render the meal_selector.html template (main page for this route)
     return render_template('meal_selector.html', output=output)
@@ -102,7 +128,7 @@ def shopping_list():
 @app.route('/add', methods=['GET', 'POST'])
 @login_required
 def add_recipe():
-    #output = []
+    output = []
     # If user submits data on input form, write to DB
     if request.method == "POST":
         # Write recipe info
@@ -125,16 +151,130 @@ def add_recipe():
                 recipe_total_time=total_time,
                 serving_size=request.form['serving_size'],
                 recipe_url=manual_input_clean_url,
-                diet_vegetarian=request.form.get('diet_vegetarian'),
-                diet_vegan=request.form.get('diet_vegan'),
-                diet_gluten=request.form.get('diet_gluten'),
+                diet_vegan=convert_bool(request.form.get('diet_vegan')),
+                diet_vegetarian=convert_bool(request.form.get('diet_vegetarian')),
+                diet_gluten=convert_bool(request.form.get('diet_gluten')),
                 meal_time=request.form.get('meal_time'),
+                created_by=current_user.id,
                 insert_datetime=datetime.now()
             )
             db.session.add(recipe)
             db.session.flush()
             db.session.commit()
             #output.append("Recipe successfully added!")
+        # Return error if database write was unsuccessful
+        except Exception as e:
+            db.session.rollback()
+            output.append("Application encountered an error, and the recipe didn't write to the database. Better luck in the future!")
+            output.append(str(e))
+            
+
+        # Insert data to INGREDIENT table
+        for x in range(1, 12):
+            try:
+                ingredient = Ingredient(
+                    recipe_id=recipe.recipe_id,
+                    ingredient_desc=request.form['ingredient_desc' + str(x)],
+                    insert_datetime=datetime.now()
+                )
+                db.session.add(ingredient)
+                db.session.commit()
+            # Return error if database write was unsuccessful
+            except Exception as e:
+                db.session.rollback()
+                output.append("Application encountered an error, and the ingredients didn't write to the database. Better luck in the future!")
+                output.append(str(e))
+
+        # Insert data to RECIPE_STEP table
+        for x in range(1, 12):
+            try:
+                recipe_step = Recipe_Step(
+                    recipe_id=recipe.recipe_id,
+                    step_desc=request.form['recipe_step' + str(x)],
+                    insert_datetime=datetime.now()
+                )
+                db.session.add(recipe_step)
+                db.session.commit()
+            # Return error if database write was unsuccessful
+            except Exception as e:
+                db.session.rollback()
+                output.append("Application encountered an error, and the instructions didn't write to the database. Better luck in the future!")
+                output.append(str(e))
+
+        # Insert data to USER_RECIPE table
+        try:
+            user_recipe = User_Recipe(
+                recipe_id=recipe.recipe_id,
+                app_user_id=current_user.id,
+                user_rating=5,
+                owner_ind=True,
+                insert_datetime=datetime.now()
+            )
+            db.session.add(user_recipe)
+            db.session.flush()
+            db.session.commit()
+            #output.append("User_Recipe successfully added!")
+
+        # Return error if database write was unsuccessful
+        except Exception as e:
+            db.session.rollback()
+            output.append("Application encountered an error, and the user/recipe info didn't write to the database. Better luck in the future!")
+            output.append(str(e))
+
+        # Render recipe_confirm.html template after recipe is written to DB    
+        return(render_template('recipe_confirm.html', recipe_id=recipe.recipe_id, recipe_name=request.form['recipe_name']))
+
+    # When not posting form, render the add.html template (main page for this route)
+    #return render_template('add.html', output=output)
+    return render_template('add.html')
+
+
+
+# Define route for page to modify existing recipes
+@app.route('/edit/<recipe_id>', methods=['GET', 'POST'])
+@login_required
+def edit_recipe(recipe_id):
+    #output = []
+
+    recipe = db.session.query(Recipe).filter_by(recipe_id=recipe_id).join(App_User).first()
+
+    ingredient_list = Ingredient.query.filter_by(recipe_id=recipe_id)
+    step_list = Recipe_Step.query.filter_by(recipe_id=recipe_id)
+
+    # If user submits data on input form, write to DB
+    if request.method == "POST":
+        # Write recipe info
+        try:
+            # Parse recipe URLs
+            url_input = request.form['recipe_url']
+            manual_input_clean_url = clean(url_input)
+
+            # Calculate recipe "total time" as this is not a user-input field. This field is necessary for auto-import library.
+            prep_time = request.form['recipe_prep_time']
+            cook_time = request.form['recipe_cook_time']
+            total_time = prep_time + cook_time
+            
+            # Insert data to RECIPE table
+            recipe = Recipe(
+                recipe_name=request.form['recipe_name'],
+                recipe_desc=request.form['recipe_desc'],
+                recipe_prep_time=prep_time,
+                recipe_cook_time=cook_time,
+                recipe_total_time=total_time,
+                serving_size=request.form['serving_size'],
+                recipe_url=manual_input_clean_url,
+                diet_vegan=convert_bool(request.form.get('diet_vegan')),
+                diet_vegetarian=convert_bool(request.form.get('diet_vegetarian')),
+                diet_gluten=convert_bool(request.form.get('diet_gluten')),
+                meal_time=request.form.get('meal_time'),
+                created_by=current_user.id,
+                insert_datetime=datetime.now()
+            )
+            db.session.add(recipe)
+            db.session.flush()
+            db.session.commit()
+            #output.append("Recipe successfully added!")
+            
         # Return error if database write was unsuccessful
         except:
             #output.append("Recipe did not add to database :(")
@@ -193,7 +333,9 @@ def add_recipe():
 
     # When not posting form, render the add.html template (main page for this route)
     #return render_template('add.html', output=output)
-    return render_template('add.html')
+    return render_template('edit_recipe.html', recipe=recipe, ingredient_list=ingredient_list, step_list=step_list)
+
+
 
 
 # Define route to auto import / scrape recipe from external website
@@ -219,7 +361,7 @@ def auto_import():
                 recipe_name=scraper.title(),
                 recipe_desc='Imported from external website',
                 recipe_prep_time=0,
-                recipe_cook_time=0,
+                recipe_cook_time=scraper.total_time(),
                 recipe_total_time=scraper.total_time(),
                 serving_size=clean_yields,
                 recipe_url=auto_import_clean_url,
@@ -294,7 +436,7 @@ def auto_import():
             #output.append("User_Recipe successfully added!")
 
             # Render recipe_confirm.html template after recipe is written to DB
-        return(render_template('recipe_confirm.html', recipe_id=recipe.recipe_id, recipe_name=scraper.title()))
+        return(render_template('recipe_confirm.html', recipe_id=recipe.recipe_id, recipe_name=scraper.title(), output=output))
 
         # Return error if database write was unsuccessful
         """ except Exception as e:
@@ -311,11 +453,13 @@ def auto_import():
 @app.route('/all_recipes', methods=['GET', 'POST'])
 @login_required
 def all_recipes():
+    # Your favorite recipes (created both by you and others)
     favorite_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id)).order_by(Recipe.recipe_name).all()
     
+    # Recipes created by you
     your_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id)).order_by(Recipe.recipe_name).all()
 
-    # NEED TO UPDATE BELOW WITH SUBQUERY
+    # Recipes created by others
     other_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by!=current_user.id)).order_by(Recipe.recipe_name).all()
 
     # Render the all_recipes.html template (main page for this route)
@@ -326,9 +470,15 @@ def all_recipes():
 @app.route('/recipe/<recipe_id>')
 @login_required
 def recipe_detail(recipe_id):
-    recipe = Recipe.query.filter_by(recipe_id=recipe_id).first_or_404()
+    #recipe = Recipe.query.filter_by(recipe_id=recipe_id)
+    #recipe = (db.session.query(Recipe).filter(Recipe.recipe_id==recipe_id)).order_by(Recipe.recipe_name).all()
+    #Recipe.query.filter_by(recipe_id=recipe_id).first_or_404()
     # BELOW COMMENT is an attempt to display "uploaded by username" on Recipe Detail page - DOES NOT WORK
-    # recipe = (db.session.query(Recipe, User_Recipe, User).join(User_Recipe, Recipe.id==User_Recipe.recipe_id).join(User, User_Recipe.user_id==User.id).filter_by(id=recipe_id))
+    #recipe = (db.session.query(Recipe, App_User).join(App_User, Recipe.created_by==App_User.id).filter_by(id=recipe_id)).all()
+    recipe = db.session.query(Recipe).filter_by(recipe_id=recipe_id).join(App_User).first()
+    #recipe = db.session.query(Recipe).filter_by(recipe_id=recipe_id)
+    #recipe = Recipe.query.filter_by(recipe_id=recipe_id)
+
     ingredient_list = Ingredient.query.filter_by(recipe_id=recipe_id)
     step_list = Recipe_Step.query.filter_by(recipe_id=recipe_id)
     return render_template('recipe_detail.html', recipe=recipe, ingredient_list=ingredient_list, step_list=step_list)

@@ -12,10 +12,16 @@ Meal Selector
 
 {% block body %}
 <div class="container">
-    <h4>Automatic Meal Generation</h4>
-    <br>
     <div>
         <form role="form" method='POST'>
+            <div class="row">
+                <!-- Recipe Name input -->
+                <div class="form-group col-md">
+                    <label for="num_days">Number of Days</label>
+                    <input type="number" name="num_days" min="1" max="7" class="form-control" id="recipe_name_box"
+                        placeholder="Enter number of days that need meals" style="max-width: 500px;" autofocus required>
+                </div>
+            </div>
             <button type="submit" class="btn btn-outline-primary">Generate Recipes</button>
         </form>
     </div>
@@ -24,14 +30,15 @@ Meal Selector
 <br>
 <br>
 
-<div class="container">
+<!-- <div class="container">
     <h4>Manual Meal Selection</h4>
     {% for recipe in selected_meals_list %}
-    <h4><a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}">{{ recipe.Recipe.recipe_name }}</a></h4>
+    <h4><a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}">{{ recipe.Recipe.recipe_name }}</a>
+    </h4>
     <p>{{ recipe.Recipe.recipe_desc }}</p>
     {% endfor %}
 </div>
-
+ -->
 
 
 
