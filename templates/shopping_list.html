@@ -16,18 +16,18 @@ Shopping List
 
 <div class="container">
 
-
+    <h5>
     {% for ingredient in shop_list %}
-    <h4>
+
         <dl>
             <dt id="rr-element">
                 <input type="checkbox" class="big-checkbox" value="1" id="rr-1" name="rr[]">                                       
                 {{ ingredient.Ingredient.ingredient_desc }}
             </dt>
         </dl>
-    </h4>
-    {% endfor %}
 
+    {% endfor %}
+    </h5>
 
 </div>
 

@@ -12,13 +12,30 @@ active
   <!-- IMPORTANT NOTE FOR REFERENCE: -->
   <!-- In the below query, the 'recipe.recipe.app_username' references the variable from the app.py DB query plus the name of the backref relationship in models.py! -->
   <p>Uploaded by {{ recipe.recipe.first_name }} {{ recipe.recipe.last_name }}</p>
+  <div class="container">
+    <div class="form-group">
+      <div class="row" style="padding-top: 20px;">
+        <div class="form-group col-sm">
+          <form role="form" method='POST'>
+            <button type="submit" class="btn btn-block 
+            {% if favorite == None %}
+              btn-outline-primary">Add to Favorites
+              {% else %}
+              btn-outline-danger">Remove from Favorites
+              {% endif %}</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <!-- Header info (cook time, etc.) -->
 
-  <!-- Header info (recipe URL, cook time, etc.) -->
-  <h4><a href="https://{{ recipe.recipe_url }}" target="_blank">Source Website</a></h4>
-  
   <br>
+  <br>
+</div>
 
+<div class="container">
   <p>
     Prep Time: {{ recipe.recipe_prep_time}} minutes
     <br>
@@ -30,44 +47,57 @@ active
   </p>
   <br>
   <p>{{ recipe.recipe_desc }}</p>
+</div>
+<br>
 
-  <br>
+<div class="container">
+  <!-- Recipe ingredients -->
+  <h4>Ingredients:</h4>
+  <ul>
+    {% for ingredient in ingredient_list %}
+    <li>{{ ingredient.ingredient_desc }}</li>
+    {% endfor %}
+  </ul>
+</div>
 
-  <div class="container">
-    <!-- Recipe ingredients -->
-    <h4>Ingredients:</h4>
-    <ul>
-      {% for ingredient in ingredient_list %}
-      <li>{{ ingredient.ingredient_desc }}</li>
-      {% endfor %}
-    </ul>
-  </div>
+<br>
+<br>
 
-  <br>
-  <br>
+<div class="container">
+  <!-- Recipe steps / method -->
+  <h4>Method:</h4>
+  <ol>
+    {% for step in step_list %}
+    <li>{{ step.step_desc }}</li>
+    {% endfor %}
+  </ol>
+</div>
 
-  <div class="container">
-    <!-- Recipe steps / method -->
-    <h4>Method:</h4>
-    <ol>
-      {% for step in step_list %}
-      <li>{{ step.step_desc }}</li>
-      {% endfor %}
-    </ol>
-  </div>
+<br>
 
-  <br>
 
-  <!-- Display button so that user can edit the recipe -->
-  <div class="container">
-      <div class="form-group">
-          <div class="row" style="padding-top: 20px;">
-              <div class="form-group col-sm">
-                  <a href="{{ url_for('edit_recipe', recipe_id=recipe.recipe_id) }}"><button type="button"
-                          class="btn btn-outline-danger">Edit Recipe</button></a>
-              </div>
-          </div>
+<div class="container">
+  <div class="form-group">
+    <!-- Display button so that user can view recipe's source website -->
+    <div class="row" style="padding-top: 20px;">
+      <div class="form-group col-sm">
+        <a href="https://{{ recipe.recipe_url }}" target="_blank" class="btn btn-outline-primary btn-block">Source
+          Website</a>
       </div>
+    </div>
+
+    <!-- Display button so that user can edit the recipe -->
+    <div class="row" style="padding-top: 20px;">
+      <div class="form-group col-sm">
+        <a href="{{ url_for('edit_recipe', recipe_id=recipe.recipe_id) }}" class="btn btn-outline-danger btn-block">Edit
+          Recipe</a>
+      </div>
+    </div>
   </div>
 </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript" src="{{ url_for('static', filename='favorite.js') }}"></script>
 {% endblock %}

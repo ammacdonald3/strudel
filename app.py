@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
 #from Flask_SQLAlchemy import SQLAlchemy
 import flask_sqlalchemy
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
@@ -151,22 +151,27 @@ def add_recipe():
                 recipe_total_time=total_time,
                 serving_size=request.form['serving_size'],
                 recipe_url=manual_input_clean_url,
-                diet_vegan=convert_bool(request.form.get('diet_vegan')),
-                diet_vegetarian=convert_bool(request.form.get('diet_vegetarian')),
-                diet_gluten=convert_bool(request.form.get('diet_gluten')),
-                meal_time=request.form.get('meal_time'),
+                diet_vegan=bool(request.form['diet_vegan']),
+                diet_vegetarian=bool(request.form['diet_vegetarian']),
+                diet_gluten=bool(request.form['diet_gluten']),
+                meal_breakfast=bool(request.form['meal_breakfast']),
+                meal_lunch=bool(request.form['meal_lunch']),
+                meal_dinner=bool(request.form['meal_dinner']),
                 created_by=current_user.id,
                 insert_datetime=datetime.now()
             )
+
             db.session.add(recipe)
             db.session.flush()
             db.session.commit()
             #output.append("Recipe successfully added!")
+
         # Return error if database write was unsuccessful
         except Exception as e:
             db.session.rollback()
             output.append("Application encountered an error, and the recipe didn't write to the database. Better luck in the future!")
             output.append(str(e))
+            print(output)
             
 
         # Insert data to INGREDIENT table
@@ -184,6 +189,7 @@ def add_recipe():
                 db.session.rollback()
                 output.append("Application encountered an error, and the ingredients didn't write to the database. Better luck in the future!")
                 output.append(str(e))
+                print(output)
 
         # Insert data to RECIPE_STEP table
         for x in range(1, 12):
@@ -200,6 +206,7 @@ def add_recipe():
                 db.session.rollback()
                 output.append("Application encountered an error, and the instructions didn't write to the database. Better luck in the future!")
                 output.append(str(e))
+                print(output)
 
         # Insert data to USER_RECIPE table
         try:
@@ -220,6 +227,7 @@ def add_recipe():
             db.session.rollback()
             output.append("Application encountered an error, and the user/recipe info didn't write to the database. Better luck in the future!")
             output.append(str(e))
+            print(output)
 
         # Render recipe_confirm.html template after recipe is written to DB    
         return(render_template('recipe_confirm.html', recipe_id=recipe.recipe_id, recipe_name=request.form['recipe_name']))
@@ -242,9 +250,10 @@ def edit_recipe(recipe_id):
     step_list = Recipe_Step.query.filter_by(recipe_id=recipe_id)
 
     # If user submits data on input form, write to DB
-    if request.method == "POST":
+    if request.method == "POST" and recipe.created_by == current_user.id:
         # Write recipe info
         try:
+            output = []
             # Parse recipe URLs
             url_input = request.form['recipe_url']
             manual_input_clean_url = clean(url_input)
@@ -255,30 +264,68 @@ def edit_recipe(recipe_id):
             total_time = prep_time + cook_time
             
             # Insert data to RECIPE table
-            recipe = Recipe(
-                recipe_name=request.form['recipe_name'],
-                recipe_desc=request.form['recipe_desc'],
-                recipe_prep_time=prep_time,
-                recipe_cook_time=cook_time,
-                recipe_total_time=total_time,
-                serving_size=request.form['serving_size'],
-                recipe_url=manual_input_clean_url,
-                diet_vegan=convert_bool(request.form.get('diet_vegan')),
-                diet_vegetarian=convert_bool(request.form.get('diet_vegetarian')),
-                diet_gluten=convert_bool(request.form.get('diet_gluten')),
-                meal_time=request.form.get('meal_time'),
-                created_by=current_user.id,
-                insert_datetime=datetime.now()
-            )
-            db.session.add(recipe)
+            # recipe = Recipe(
+            #     recipe_name=request.form['recipe_name'],
+            #     recipe_desc=request.form['recipe_desc'],
+            #     recipe_prep_time=prep_time,
+            #     recipe_cook_time=cook_time,
+            #     recipe_total_time=total_time,
+            #     serving_size=request.form['serving_size'],
+            #     recipe_url=manual_input_clean_url,
+            #     diet_vegan=convert_bool(request.form.get('diet_vegan')),
+            #     diet_vegetarian=convert_bool(request.form.get('diet_vegetarian')),
+            #     diet_gluten=convert_bool(request.form.get('diet_gluten')),
+            #     meal_breakfast=convert_bool(request.form.get('meal_breakfast')),
+            #     meal_lunch=convert_bool(request.form.get('meal_lunch')),
+            #     meal_dinner=convert_bool(request.form.get('meal_dinner')),
+            #     created_by=current_user.id,
+            #     insert_datetime=datetime.now()
+            # )
+            # print("PRINT PRINT PRINT")
+            # print(request.form['recipe_name']),
+            # print(request.form['recipe_desc']),
+            # print(prep_time),
+            # print(cook_time),
+            # print(total_time),
+            # print(request.form['serving_size']),
+            # print(manual_input_clean_url),
+            # print(bool(request.form['diet_vegan']),),
+            # print(bool(request.form['diet_vegetarian'])),
+            # print(bool(request.form['diet_gluten'])),
+            # print(bool(request.form['meal_breakfast'])),
+            # print(bool(request.form['meal_lunch'])),
+            # print(bool(request.form['meal_dinner'])),
+            # print(current_user.id),
+            # print(datetime.now())
+
+            recipe.recipe_name=request.form['recipe_name']
+            recipe.recipe_desc=request.form['recipe_desc']
+            recipe.recipe_prep_time=prep_time
+            recipe.recipe_cook_time=cook_time
+            recipe.recipe_total_time=total_time
+            recipe.serving_size=request.form['serving_size']
+            recipe.recipe_url=manual_input_clean_url
+            recipe.diet_vegan=bool(request.form['diet_vegan'])
+            recipe.diet_vegetarian=bool(request.form['diet_vegetarian'])
+            recipe.diet_gluten=bool(request.form['diet_gluten'])
+            recipe.meal_breakfast=bool(request.form['meal_breakfast'])
+            recipe.meal_lunch=bool(request.form['meal_lunch'])
+            recipe.meal_dinner=bool(request.form['meal_dinner'])
+            recipe.created_by=current_user.id
+            recipe.insert_datetime=datetime.now()
+
+            #db.session.add(recipe)
+            db.session.merge(recipe)
             db.session.flush()
             db.session.commit()
             #output.append("Recipe successfully added!")
-            
+
         # Return error if database write was unsuccessful
-        except:
-            #output.append("Recipe did not add to database :(")
-            pass
+        except Exception as e:
+            db.session.rollback()
+            output.append("Application encountered an error, and the recipe didn't write to the database. Better luck in the future!")
+            output.append(str(e))
+            print(str(e))
 
         # Insert data to INGREDIENT table
         for x in range(1, 12):
@@ -365,10 +412,12 @@ def auto_import():
                 recipe_total_time=scraper.total_time(),
                 serving_size=clean_yields,
                 recipe_url=auto_import_clean_url,
-                diet_vegetarian=None,
-                diet_vegan=None,
-                diet_gluten=None,
-                meal_time='both',
+                diet_vegetarian=False,
+                diet_vegan=False,
+                diet_gluten=False,
+                meal_breakfast=False,
+                meal_lunch=False,
+                meal_dinner=False,
                 created_by=current_user.id,
                 insert_datetime=datetime.now()
             )
@@ -455,7 +504,7 @@ def auto_import():
 def all_recipes():
     # Your favorite recipes (created both by you and others)
     favorite_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id)).order_by(Recipe.recipe_name).all()
-    
+    #print(favorite_recipe_list)
     # Recipes created by you
     your_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id)).order_by(Recipe.recipe_name).all()
 
@@ -467,7 +516,7 @@ def all_recipes():
 
 
 # Define route for page to view detailed info about one recipe
-@app.route('/recipe/<recipe_id>')
+@app.route('/recipe/<recipe_id>', methods=['GET', 'POST'])
 @login_required
 def recipe_detail(recipe_id):
     #recipe = Recipe.query.filter_by(recipe_id=recipe_id)
@@ -478,10 +527,60 @@ def recipe_detail(recipe_id):
     recipe = db.session.query(Recipe).filter_by(recipe_id=recipe_id).join(App_User).first()
     #recipe = db.session.query(Recipe).filter_by(recipe_id=recipe_id)
     #recipe = Recipe.query.filter_by(recipe_id=recipe_id)
-
+    favorite = db.session.query(Favorite_Recipe).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).first()
     ingredient_list = Ingredient.query.filter_by(recipe_id=recipe_id)
     step_list = Recipe_Step.query.filter_by(recipe_id=recipe_id)
-    return render_template('recipe_detail.html', recipe=recipe, ingredient_list=ingredient_list, step_list=step_list)
+
+    output = []
+    # If user selects 'add to favorites' button, add the user/recipe combo to favorites table:
+    if request.method == "POST" and favorite == None:
+        # Scrape external website and clean data for write to the DB
+        try:
+            favorite_recipe = Favorite_Recipe(
+                recipe_id=recipe_id,
+                app_user_id=current_user.id,
+                owner_ind=True,
+                insert_datetime=datetime.now()
+            )
+
+            db.session.add(favorite_recipe)
+            db.session.flush()
+            db.session.commit()
+
+            favorite = favorite_recipe
+
+            return render_template('recipe_detail.html', recipe=recipe, ingredient_list=ingredient_list, step_list=step_list, favorite=favorite)
+
+            
+        except Exception as e:
+            db.session.rollback()
+            output.append("Application encountered an error, and the recipe didn't write to the database. Better luck in the future!")
+            output.append(str(e))
+            print('ERROR ERROR ERROR')
+            print(output)
+        
+
+    # If user select 'remove from favorites' button, delete the user/recipe combo from the favorites table:
+    elif request.method == "POST":
+        try:
+            #db.session.query(Favorite_Recipe).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).delete()
+            db.session.delete(favorite)
+            db.session.flush()
+            db.session.commit()
+
+            favorite = None
+
+            return render_template('recipe_detail.html', recipe=recipe, ingredient_list=ingredient_list, step_list=step_list, favorite=favorite)
+        
+        except Exception as e:
+            db.session.rollback()
+            output.append("Application encountered an error, and the favorite wasn't deleted from the database. Better luck in the future!")
+            output.append(str(e))
+            print('ERROR ERROR ERROR')
+            print(output)
+
+    # Render the recipe_detail.html template (main page for this route)
+    return render_template('recipe_detail.html', recipe=recipe, ingredient_list=ingredient_list, step_list=step_list, favorite=favorite)
     
     
 
@@ -538,6 +637,7 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
 
 
 

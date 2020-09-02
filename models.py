@@ -48,7 +48,9 @@ class Recipe(db.Model):
     diet_vegan = db.Column(db.Boolean())
     diet_vegetarian = db.Column(db.Boolean())
     diet_gluten = db.Column(db.Boolean())
-    meal_time = db.Column(db.String())
+    meal_breakfast = db.Column(db.Boolean())
+    meal_lunch = db.Column(db.Boolean())
+    meal_dinner = db.Column(db.Boolean())
     recipe_url = db.Column(db.String())
     created_by = db.Column(db.Integer(), db.ForeignKey('app_user.id'), nullable=False)
     insert_datetime = db.Column(db.DateTime())
@@ -59,7 +61,7 @@ class Recipe(db.Model):
     favorite_recipe = db.relationship('Favorite_Recipe', backref='favorite_recipe1', lazy=True)
 
 
-    def __init__(self, recipe_name, recipe_desc, recipe_prep_time, recipe_cook_time, recipe_total_time, serving_size, diet_vegetarian, diet_vegan, diet_gluten, meal_time, recipe_url, created_by, insert_datetime):
+    def __init__(self, recipe_name, recipe_desc, recipe_prep_time, recipe_cook_time, recipe_total_time, serving_size, diet_vegetarian, diet_vegan, diet_gluten, meal_breakfast, meal_lunch, meal_dinner, recipe_url, created_by, insert_datetime):
         self.recipe_name = recipe_name
         self.recipe_desc = recipe_desc
         self.recipe_prep_time = recipe_prep_time
@@ -69,7 +71,9 @@ class Recipe(db.Model):
         self.diet_vegetarian = diet_vegetarian
         self.diet_vegan = diet_vegan
         self.diet_gluten = diet_gluten
-        self.meal_time = meal_time
+        self.meal_breakfast = meal_breakfast
+        self.meal_lunch = meal_lunch
+        self.meal_dinner = meal_dinner
         self.recipe_url = recipe_url
         self.created_by = created_by
         self.insert_datetime = insert_datetime
