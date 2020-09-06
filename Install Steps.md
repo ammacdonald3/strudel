@@ -33,5 +33,8 @@
 10. Run flask app
     * MAC OS: ```flask run```
     * WINDOWS: ```python -m flask run```
+11. Update Heroku database
+    * ``` heroku run python manage.py db upgrade --app recipe-stage ```
+    * ``` heroku run python manage.py db upgrade --app recipe-prod ```
 
 

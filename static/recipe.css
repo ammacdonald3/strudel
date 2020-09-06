@@ -1,3 +1,119 @@
+/* BELOW IS FOR FAVORITE STAR */
+@import url(//fonts.googleapis.com/css?family=Open+Sans:600,400&subset=latin,cyrillic);
+
+/* h4 {
+	text-align: center;
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 400;
+	opacity: 0.7;
+} */
+
+.click {
+	font-size: 33px;
+	color: rgba(0,0,0,.5);
+    /* width: 38px; */
+    width: 5px;
+	height: 38px;
+	margin: 0 auto;
+	margin-top: 20px;
+	position: relative;
+	cursor: pointer;
+}
+
+/* body {
+	padding-top: 20px;
+} */
+
+.click span {
+	margin-left: 4px;
+	margin-top: 3px;
+	z-index: 999;
+	position: absolute;
+}
+
+span:hover {
+	opacity: 0.8;
+}
+
+span:active {
+	transform: scale(0.93,0.93) translateY(2px)
+}
+
+.ring, .ring2 {
+	opacity: 0;
+	background: grey;
+	width: 1px;
+	height: 1px;
+	position: absolute;
+	top: 19px;
+    /* left: 18px; */
+    left: 2px;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+.active span, .active-2 span {
+	color: #F5CC27 !important;
+}
+
+.active-2 .ring {
+    /* width: 58px !important; */
+    width: 26px !important;
+	height: 58px !important;
+	top: -10px !important;
+    /* left: -10px !important; */
+    left: -5px !important;
+	position: absolute;
+	border-radius: 50%;
+	opacity: 1 !important;
+}
+
+.active-2 .ring {
+	background: #F5CC27 !important;
+}
+
+.active-2 .ring2 {
+	background: #fff !important;
+}
+
+.active-3 .ring2 {
+	width: 60px !important;
+	height: 60px !important;
+	top: -11px !important;
+    /* left: -11px !important; */
+    left: -5.5px !important;
+	position: absolute;
+	border-radius: 50%;
+	opacity: 1 !important;
+}
+
+.info {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 12px;
+	font-weight: 600;
+	text-transform: uppercase;
+	white-space: nowrap;
+	color: grey;
+	position: relative;
+	top: 30px;
+    /* left: -46px; */
+    left: -23px;
+	opacity: 0;
+	transition: all 0.3s ease;
+}
+
+.info-tog {
+	color: #F5CC27;
+	position: relative;
+	top: 45px;
+	opacity: 1;
+}
+
+* {
+	transition: all .32s ease;
+}
+/* END OF FAVORITE STAR */
+
 html {
 	height: 100%;
 }
@@ -62,8 +178,8 @@ hr {
 }
 
 
-:root {
-    /* color-scheme: light dark; */
+/* :root {
+     color-scheme: light dark;
     --blue: #007bff;
     --indigo: #6610f2;
     --purple: #6f42c1;
@@ -92,8 +208,10 @@ hr {
     --breakpoint-xl: 1200px;
     --font-family-sans-serif: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
 	--font-family-monospace: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-}
+} */
 
+
+/* BELOW IS FOR INGREDIENT LIST CHECKBOXES */
 .completed {
     text-decoration: line-through;
 }
@@ -115,6 +233,8 @@ hr {
 dd {
     margin-bottom: 40px;
 }
+/* END OF INGREDIENT LIST CHECKBOXES */
+
 
 
  /* Style the button that is used to open and close the collapsible content */
@@ -142,3 +262,6 @@ dd {
     overflow: hidden;
     background-color: #f1f1f1;
   }  */
+
+
+

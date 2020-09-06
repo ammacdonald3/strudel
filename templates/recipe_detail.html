@@ -5,9 +5,24 @@ active
 
 {% block heading %}
 {{ recipe.recipe_name }}
+<!-- <div class="click">
+  <span class="fa fa-star-o"></span>
+  <div class="ring"></div>
+  <div class="ring2"></div>
+  <p class="info">Added to favourites!</p>
+</div> -->
 {% endblock %}
 
 {% block body %}
+<!-- <div class="click" id="title">
+
+  <h2><span class="fa fa-star-o">{{ recipe.recipe_name }}</span></h2>
+  <div class="ring"></div>
+  <div class="ring2"></div>
+  <p class="info">Added to favourites!</p>
+</div> -->
+
+
 <div class="container">
   <!-- IMPORTANT NOTE FOR REFERENCE: -->
   <!-- In the below query, the 'recipe.recipe.app_username' references the variable from the app.py DB query plus the name of the backref relationship in models.py! -->
@@ -28,6 +43,8 @@ active
       </div>
     </div>
   </div>
+
+
 
   <!-- Header info (cook time, etc.) -->
 
@@ -89,10 +106,12 @@ active
     <!-- Display button so that user can edit the recipe -->
     <div class="row" style="padding-top: 20px;">
       <div class="form-group col-sm">
-        <a href="{{ url_for('edit_recipe', recipe_id=recipe.recipe_id) }}" class="btn btn-outline-danger btn-block">Edit
+        <a href="{{ url_for('edit_recipe', recipe_id=recipe.recipe_id) }}" class="btn btn-outline-warning btn-block">Edit
           Recipe</a>
       </div>
     </div>
+
+
   </div>
 </div>
 </div>

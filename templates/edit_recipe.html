@@ -132,25 +132,55 @@ Edit Recipe
     <br>
     <br>
 
+    <!-- <h1>{{ len_i }}</h1> -->
+    <h3>{{ ingredient_list.count() }}</h3>
+
+    
+
+    <div class="container">
+        <!-- Recipe ingredients -->
+        <h4>Ingredients:</h4>
+        <ul>
+          {% for ingredient in ingredient_list %}
+          <li>{{ ingredient.ingredient_desc }}</li>
+          {% endfor %}
+        </ul>
+      </div>
 
     <div>
       <h3>Ingredients</h3>
       <p>Add your ingredients.</p>
-      <div class="form-group">
+      <!-- <div class="form-group">
         <div class="row">
           <div class="form-group col-lg-2">Ingredient 1</div>
           <div class="form-group col-lg-7">
-            <input name="ingredient_desc1" class="form-control col" placeholder="Ingredient 1">
+            <input name="ingredient_desc1" class="form-control col" placeholder="Ingredient 1" value="{{ ingredient_list[0].ingredient_desc }}">
           </div>
           <div class="form-group col-lg-3">
             <button class="removeclass btn btn-outline-danger col">Delete</button>
           </div>
         </div>
-      </div>
+      </div> -->
+
+
+      {% for ingredient in ingredient_list %}
+      <div class="form-group">
+          <div class="row">
+            <div class="form-group col-lg-2">Ingredient {{ loop.index }}</div>
+            <div class="form-group col-lg-7">
+              <input name="ingredient_desc{{ loop.index }}" class="form-control col" placeholder="Ingredient {{ loop.index }}" value="{{ ingredient.ingredient_desc }}">
+            </div>
+            <div class="form-group col-lg-3">
+              <button class="removeclass btn btn-outline-danger col">Delete</button>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+      
       <div id="IngredientInputsWrapper"></div>
       <br>
 
-      <button type="button" id="addingredientfield" class="btn btn-outline-success">Add ingredient</button>
+      <button type="button" id="addingredientfield" class="btn btn-outline-success btn-block">Add ingredient</button>
 
     </div>
 
@@ -161,21 +191,25 @@ Edit Recipe
     <div>
       <h3>Recipe Steps</h3>
       <p>Add the recipe method.</p>
+
+      {% for step in step_list %}
       <div class="form-group">
         <div class="row">
-          <div class="form-group col-lg-1">Step 1</div>
+          <div class="form-group col-lg-1">Step {{ loop.index }}</div>
           <div class="form-group col-lg-8">
-            <input name="recipe_step1" class="form-control col" placeholder="Step 1">
+            <input name="recipe_step{{ loop.index }}" class="form-control col" placeholder="Step {{ loop.index }}" value="{{ step.step_desc }}">
           </div>
           <div class="form-group col-lg-3">
             <button class="removeclass btn btn-outline-danger col">Delete</button>
           </div>
         </div>
       </div>
+      {% endfor %}
+
       <div id="StepInputsWrapper"></div>
       <br />
 
-      <button type="button" id="addstepfield" class="btn btn-outline-success">Add step</button>
+      <button type="button" id="addstepfield" class="btn btn-outline-success btn-block">Add step</button>
 
     </div>
 
@@ -183,7 +217,7 @@ Edit Recipe
     <br>
     <br>
 
-    <button type="submit" class="btn btn-outline-primary">Submit</button>
+    <button type="submit" class="btn btn-outline-primary btn-block">Submit</button>
   </form> <br>
   <br>
 </div>

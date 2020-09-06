@@ -56,30 +56,37 @@ def meal_selector():
     output = []
     selected_meals_list = []
     if request.method == "POST":
+        
         try:
             # Update user's current meal list to inactivate all meals
             db.session.query(Current_Meal).filter(Current_Meal.app_user_id==current_user.id).update(dict(active_ind=False))
 
+            db.session.flush()
+            db.session.commit()
+
             # Retrieve a list of all recipes uploaded by user
             # TO BE CHANGED in future to be a list of user's favorite meals
-            your_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id)).order_by(Recipe.recipe_name).all()
+            # your_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id)).order_by(Recipe.recipe_name).all()
 
+            # Retrieve a list of user's favorite recipes
+            favorite_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id)).order_by(Recipe.recipe_name).all()
+        
             # Retrieve number of days of meals to generate per user input form
             num_days = int(request.form['num_days'])
             
             # If the total number of user's recipes is <= number of days' meals needed, just return entire list of user's recipes
             # Otherwise, randomly pick unique recipes based on number of days' meals needed
-            if len(your_recipe_list) > num_days:
-                selected_meals_list = random.sample(your_recipe_list, num_days)
+            if len(favorite_recipe_list) > num_days:
+                selected_meals_list = random.sample(favorite_recipe_list, num_days)
             else:
-                selected_meals_list = your_recipe_list
+                selected_meals_list = favorite_recipe_list
 
 
             day_counter = 0
             for val in selected_meals_list:
                 day_counter += 1
                 current_meal = Current_Meal(
-                    recipe_id=val.recipe_id,
+                    recipe_id=val.Recipe.recipe_id,
                     app_user_id=current_user.id,
                     day_number=day_counter,
                     active_ind=True,
@@ -95,6 +102,7 @@ def meal_selector():
             db.session.rollback()
             output.append("Application encountered an error, and your meals were not selected. Better luck in the future!")
             output.append(str(e))
+            print(output)
 
         # Redirect to meal_plan.html page so that data pulls from database
         return redirect('meal_plan')
@@ -249,6 +257,8 @@ def edit_recipe(recipe_id):
     ingredient_list = Ingredient.query.filter_by(recipe_id=recipe_id)
     step_list = Recipe_Step.query.filter_by(recipe_id=recipe_id)
 
+    #len_i = len(ingredient_list)
+
     # If user submits data on input form, write to DB
     if request.method == "POST" and recipe.created_by == current_user.id:
         # Write recipe info
@@ -327,9 +337,15 @@ def edit_recipe(recipe_id):
             output.append(str(e))
             print(str(e))
 
+        # Delete existing ingredients
+        Ingredient.query.filter_by(recipe_id=recipe_id).delete()
+        db.session.flush()
+        db.session.commit()
+
         # Insert data to INGREDIENT table
-        for x in range(1, 12):
+        for x in range(1, 50):
             try:
+                # Insert new ingredients
                 ingredient = Ingredient(
                     recipe_id=recipe.recipe_id,
                     ingredient_desc=request.form['ingredient_desc' + str(x)],
@@ -342,9 +358,15 @@ def edit_recipe(recipe_id):
                 #output.append("Ingredient " + str(x) + " did not add to database!!")
                 pass
 
+        # Delete exising recipe steps
+        Recipe_Step.query.filter_by(recipe_id=recipe_id).delete()
+        db.session.flush()
+        db.session.commit()
+
         # Insert data to RECIPE_STEP table
-        for x in range(1, 12):
+        for x in range(1, 50):
             try:
+                # Insert new recipe steps
                 recipe_step = Recipe_Step(
                     recipe_id=recipe.recipe_id,
                     step_desc=request.form['recipe_step' + str(x)],
