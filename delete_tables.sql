@@ -7,6 +7,7 @@ delete from current_meal;
 delete from recipe;
 commit;
 
+drop table shopping_list;
 drop table user_recipe;
 drop table recipe_step;
 drop table favorite_recipe;

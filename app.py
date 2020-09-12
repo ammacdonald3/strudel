@@ -407,7 +407,7 @@ def add_recipe():
             
 
         # Insert data to INGREDIENT table
-        for x in range(1, 12):
+        for x in range(1, 50):
             try:
                 ingredient = Ingredient(
                     recipe_id=recipe.recipe_id,
@@ -424,7 +424,7 @@ def add_recipe():
                 print(output)
 
         # Insert data to RECIPE_STEP table
-        for x in range(1, 12):
+        for x in range(1, 50):
             try:
                 recipe_step = Recipe_Step(
                     recipe_id=recipe.recipe_id,
