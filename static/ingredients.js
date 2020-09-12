@@ -47,3 +47,5 @@ $("body").on("click", ".removeclass", function (e) { //user click on remove text
     }
     return false;
 })
+
+

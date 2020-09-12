@@ -17,7 +17,7 @@ login = LoginManager(app)
 login.login_view = 'login'
 db = flask_sqlalchemy.SQLAlchemy(app)
 
-from models import Recipe, Ingredient, Recipe_Step, App_User, LoginForm, RegistrationForm, Current_Meal, User_Recipe, Favorite_Recipe
+from models import Recipe, Ingredient, Recipe_Step, App_User, LoginForm, RegistrationForm, Current_Meal, User_Recipe, Favorite_Recipe, Shopping_List
 
 # Function to clean URL input
 def clean(url_input):
@@ -68,27 +68,53 @@ def meal_selector():
             # TO BE CHANGED in future to be a list of user's favorite meals
             # your_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id)).order_by(Recipe.recipe_name).all()
 
-            # Retrieve a list of user's favorite recipes
-            favorite_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id)).order_by(Recipe.recipe_name).all()
-        
+            # Retrieve a list of user's favorite breakfast recipes
+            favorite_bfast_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.meal_breakfast==True)).order_by(Recipe.recipe_name).all()
+
+            # Retrieve a list of user's favorite lunch recipes
+            favorite_lunch_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.meal_lunch==True)).order_by(Recipe.recipe_name).all()
+
+            # Retrieve a list of user's favorite dinner recipes
+            favorite_dinner_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.meal_dinner==True)).order_by(Recipe.recipe_name).all()
+
+
             # Retrieve number of days of meals to generate per user input form
-            num_days = int(request.form['num_days'])
+            num_bfast_meals = int(request.form['num_bfast_meals'])
+            num_lunch_meals = int(request.form['num_lunch_meals'])
+            num_dinner_meals = int(request.form['num_dinner_meals'])
+
             
             # If the total number of user's recipes is <= number of days' meals needed, just return entire list of user's recipes
             # Otherwise, randomly pick unique recipes based on number of days' meals needed
-            if len(favorite_recipe_list) > num_days:
-                selected_meals_list = random.sample(favorite_recipe_list, num_days)
+
+            # Breakfast
+            if len(favorite_bfast_recipe_list) > num_bfast_meals:
+                selected_bfast_meals_list = random.sample(favorite_bfast_recipe_list, num_bfast_meals)
             else:
-                selected_meals_list = favorite_recipe_list
+                selected_bfast_meals_list = favorite_bfast_recipe_list
+
+            # Lunch
+            if len(favorite_lunch_recipe_list) > num_lunch_meals:
+                selected_lunch_meals_list = random.sample(favorite_lunch_recipe_list, num_lunch_meals)
+            else:
+                selected_lunch_meals_list = favorite_lunch_recipe_list
+
+            # Dinner
+            if len(favorite_dinner_recipe_list) > num_dinner_meals:
+                selected_dinner_meals_list = random.sample(favorite_dinner_recipe_list, num_dinner_meals)
+            else:
+                selected_dinner_meals_list = favorite_dinner_recipe_list
 
 
+            # Insert selected breakfast meals to current_meal table
             day_counter = 0
-            for val in selected_meals_list:
+            for val in selected_bfast_meals_list:
                 day_counter += 1
                 current_meal = Current_Meal(
                     recipe_id=val.Recipe.recipe_id,
                     app_user_id=current_user.id,
                     day_number=day_counter,
+                    meal='breakfast',
                     active_ind=True,
                     insert_datetime=datetime.now()
                 )
@@ -96,7 +122,64 @@ def meal_selector():
                 db.session.flush()
                 db.session.commit()
 
-            print("selected_meals " + str(selected_meals_list), file=sys.stderr)
+            # Insert selected lunch meals to current_meal table
+            day_counter = 0
+            for val in selected_lunch_meals_list:
+                day_counter += 1
+                current_meal = Current_Meal(
+                    recipe_id=val.Recipe.recipe_id,
+                    app_user_id=current_user.id,
+                    day_number=day_counter,
+                    meal='lunch',
+                    active_ind=True,
+                    insert_datetime=datetime.now()
+                )
+                db.session.add(current_meal)
+                db.session.flush()
+                db.session.commit()
+
+            # Insert selected dinner meals to current_meal table
+            day_counter = 0
+            for val in selected_dinner_meals_list:
+                day_counter += 1
+                current_meal = Current_Meal(
+                    recipe_id=val.Recipe.recipe_id,
+                    app_user_id=current_user.id,
+                    day_number=day_counter,
+                    meal='dinner',
+                    active_ind=True,
+                    insert_datetime=datetime.now()
+                )
+                db.session.add(current_meal)
+                db.session.flush()
+                db.session.commit()
+
+
+            # Delete existing shopping list
+            Shopping_List.query.filter_by(app_user_id=current_user.id).delete()
+
+
+            # Retrieve a list of ingredients for current meals
+            shop_list = (db.session.query(Ingredient, Current_Meal).join(Current_Meal, Ingredient.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.app_user_id==current_user.id).filter(Current_Meal.active_ind==True)).all()
+
+
+            # Insert ingredients from selected meals into shopping_list table
+            ingredient_counter = 0
+            for item in shop_list:
+                shopping_list = Shopping_List(
+                    item_desc=item.Ingredient.ingredient_desc,
+                    recipe_id=item.Current_Meal.recipe_id,
+                    app_user_id=current_user.id,
+                    item_sort=ingredient_counter,
+                    checked_status=False,
+                    insert_datetime=datetime.now()
+                )
+                ingredient_counter += 1
+                db.session.add(shopping_list)
+                db.session.flush()
+                db.session.commit()
+
+            #print("selected_meals " + str(selected_meals_list), file=sys.stderr)
 
         except Exception as e:
             db.session.rollback()
@@ -118,8 +201,17 @@ def meal_selector():
 @app.route('/meal_plan', methods=['GET', 'POST'])
 @login_required
 def meal_plan():
-    selected_meals_list = (db.session.query(Recipe, Current_Meal).join(Current_Meal, Recipe.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.app_user_id==current_user.id).filter(Current_Meal.active_ind==True).order_by(Current_Meal.day_number)).all()
-    return render_template('meal_plan.html', selected_meals_list=selected_meals_list)
+    # Get list of user's selected breakfast meals
+    selected_bfast_meals_list = (db.session.query(Recipe, Current_Meal).join(Current_Meal, Recipe.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.app_user_id==current_user.id).filter(Current_Meal.active_ind==True).filter(Current_Meal.meal=='breakfast').order_by(Current_Meal.day_number)).all()
+
+    # Get list of user's selected lunch meals
+    selected_lunch_meals_list = (db.session.query(Recipe, Current_Meal).join(Current_Meal, Recipe.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.app_user_id==current_user.id).filter(Current_Meal.active_ind==True).filter(Current_Meal.meal=='lunch').order_by(Current_Meal.day_number)).all()
+
+    # Get list of user's selected dinner meals
+    selected_dinner_meals_list = (db.session.query(Recipe, Current_Meal).join(Current_Meal, Recipe.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.app_user_id==current_user.id).filter(Current_Meal.active_ind==True).filter(Current_Meal.meal=='dinner').order_by(Current_Meal.day_number)).all()
+
+
+    return render_template('meal_plan.html', selected_bfast_meals_list=selected_bfast_meals_list, selected_lunch_meals_list=selected_lunch_meals_list, selected_dinner_meals_list=selected_dinner_meals_list)
 
     
 
@@ -127,9 +219,81 @@ def meal_plan():
 @app.route('/shopping_list')
 @login_required
 def shopping_list():
-    shop_list = (db.session.query(Ingredient, Recipe, Current_Meal).join(Recipe, Recipe.recipe_id==Ingredient.recipe_id).join(Current_Meal, Recipe.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.app_user_id==current_user.id).filter(Current_Meal.active_ind==True)).all()
+    shop_list = (db.session.query(
+        Shopping_List, 
+        Recipe
+    ).join(
+        Recipe, Recipe.recipe_id==Shopping_List.recipe_id
+    ).filter(
+        Shopping_List.app_user_id==current_user.id
+    ).order_by(Shopping_List.item_sort).all())
+    
     return render_template('shopping_list.html', shop_list=shop_list)
 
+
+# Define route for checking off shopping list items
+@app.route('/_shopping_list_items', methods=['GET', 'POST'])
+@login_required
+def _shopping_list_items():
+    status = request.form.get('status')
+    s_list_id = request.form.get('s_list_id')
+
+    if status == 'checked':
+        db.session.query(Shopping_List).filter(Shopping_List.shopping_list_id==s_list_id).update(dict(checked_status=True))
+    elif status == 'unchecked':
+        db.session.query(Shopping_List).filter(Shopping_List.shopping_list_id==s_list_id).update(dict(checked_status=False))
+    
+    db.session.flush()
+    db.session.commit()
+
+    shop_list = (db.session.query(
+        Shopping_List, 
+        Recipe
+    ).join(
+        Recipe, Recipe.recipe_id==Shopping_List.recipe_id
+    ).filter(
+        Shopping_List.app_user_id==current_user.id
+    ).order_by(Shopping_List.item_sort).all())
+
+    return render_template('shopping_list.html', shop_list=shop_list)
+
+
+
+# Define route for resorting shopping list items
+@app.route('/_shopping_list_sort', methods=['GET', 'POST'])
+@login_required
+def _shopping_list_sort():
+    # status = request.form.get('status')
+    # s_list_id = request.form.get('s_list_id')
+
+    # if status == 'checked':
+    #     db.session.query(Shopping_List).filter(Shopping_List.shopping_list_id==s_list_id).update(dict(checked_status=True))
+    # elif status == 'unchecked':
+    #     db.session.query(Shopping_List).filter(Shopping_List.shopping_list_id==s_list_id).update(dict(checked_status=False))
+    
+    # db.session.flush()
+    # db.session.commit()
+    print('ITEM INDEX')
+    print(request.get_data())
+
+    shop_list = (db.session.query(
+        Shopping_List, 
+        Ingredient, 
+        Recipe, 
+        Current_Meal
+    ).join(
+        Ingredient, Ingredient.ingredient_id==Shopping_List.ingredient_id
+    ).join(
+        Recipe, Recipe.recipe_id==Ingredient.recipe_id
+    ).join(
+        Current_Meal, Recipe.recipe_id==Current_Meal.recipe_id
+    ).filter(
+        Current_Meal.app_user_id==current_user.id
+    ).filter(
+        Current_Meal.active_ind==True
+    ).order_by(Shopping_List.item_sort).all())
+
+    return render_template('shopping_list.html', shop_list=shop_list)
 
 
 # Define route for page to manually add recipes
@@ -139,6 +303,32 @@ def add_recipe():
     output = []
     # If user submits data on input form, write to DB
     if request.method == "POST":
+        if 'recipe_name' not in request.form:
+            print('RECIPE NAME MISSING')
+        if 'recipe_desc' not in request.form:
+            print('RECIPE DESC MISSING')
+        if 'recipe_prep_time' not in request.form:
+            print('RECIPE PREP TIME MISSING')
+        if 'recipe_cook_time' not in request.form:
+            print('RECIPE COOK TIME MISSING')
+        if 'recipe_url' not in request.form:
+            print('RECIPE URL MISSING')
+        if 'serving_size' not in request.form:
+            print('RECIPE SERVING SIZE MISSING')
+        if 'diet_vegan' not in request.form:
+            print('DIET VEGAN MISSING')
+        if 'diet_vegetarian' not in request.form:
+            print('DIET VEGETARIAN MISSING')
+        if 'diet_gluten' not in request.form:
+            print('DIET GLUTEN MISSING')
+        if 'meal_breakfast' not in request.form:
+            print('BREAKFAST MISSING')
+        if 'meal_lunch' not in request.form:
+            print('LUNCH MISSING')
+        if 'meal_dinner' not in request.form:
+            print('DINNER MISSING')
+
+
         # Write recipe info
         try:
             # Parse recipe URLs
@@ -149,6 +339,40 @@ def add_recipe():
             prep_time = request.form['recipe_prep_time']
             cook_time = request.form['recipe_cook_time']
             total_time = prep_time + cook_time
+
+
+            # HTML form only passes checked inputs
+            # Below code calculates boolean value if the input exists
+            if 'diet_vegan' in request.form:
+                diet_vegan_input = bool(request.form['diet_vegan'])
+            else:
+                diet_vegan_input = False
+
+            if 'diet_vegetarian' in request.form:
+                diet_vegetarian_input = bool(request.form['diet_vegetarian'])
+            else:
+                diet_vegetarian_input = False
+
+            if 'diet_gluten' in request.form:
+                diet_gluten_input = bool(request.form['diet_gluten'])
+            else:
+                diet_gluten_input = False
+
+            if 'meal_breakfast' in request.form:
+                meal_breakfast_input = bool(request.form['meal_breakfast'])
+            else:
+                meal_breakfast_input = False
+
+            if 'meal_lunch' in request.form:
+                meal_lunch_input = bool(request.form['meal_lunch'])
+            else:
+                meal_lunch_input = False
+
+            if 'meal_dinner' in request.form:
+                meal_dinner_input = bool(request.form['meal_dinner'])
+            else:
+                meal_dinner_input = False
+
             
             # Insert data to RECIPE table
             recipe = Recipe(
@@ -159,12 +383,12 @@ def add_recipe():
                 recipe_total_time=total_time,
                 serving_size=request.form['serving_size'],
                 recipe_url=manual_input_clean_url,
-                diet_vegan=bool(request.form['diet_vegan']),
-                diet_vegetarian=bool(request.form['diet_vegetarian']),
-                diet_gluten=bool(request.form['diet_gluten']),
-                meal_breakfast=bool(request.form['meal_breakfast']),
-                meal_lunch=bool(request.form['meal_lunch']),
-                meal_dinner=bool(request.form['meal_dinner']),
+                diet_vegan=diet_vegan_input,
+                diet_vegetarian=diet_vegetarian_input,
+                diet_gluten=diet_gluten_input,
+                meal_breakfast=meal_breakfast_input,
+                meal_lunch=meal_lunch_input,
+                meal_dinner=meal_dinner_input,
                 created_by=current_user.id,
                 insert_datetime=datetime.now()
             )
@@ -221,7 +445,7 @@ def add_recipe():
             user_recipe = User_Recipe(
                 recipe_id=recipe.recipe_id,
                 app_user_id=current_user.id,
-                user_rating=5,
+                user_rating=0,
                 owner_ind=True,
                 insert_datetime=datetime.now()
             )
@@ -308,6 +532,39 @@ def edit_recipe(recipe_id):
             # print(current_user.id),
             # print(datetime.now())
 
+
+            # HTML form only passes checked inputs
+            # Below code calculates boolean value if the input exists
+            if 'diet_vegan' in request.form:
+                diet_vegan_input = bool(request.form['diet_vegan'])
+            else:
+                diet_vegan_input = False
+
+            if 'diet_vegetarian' in request.form:
+                diet_vegetarian_input = bool(request.form['diet_vegetarian'])
+            else:
+                diet_vegetarian_input = False
+
+            if 'diet_gluten' in request.form:
+                diet_gluten_input = bool(request.form['diet_gluten'])
+            else:
+                diet_gluten_input = False
+
+            if 'meal_breakfast' in request.form:
+                meal_breakfast_input = bool(request.form['meal_breakfast'])
+            else:
+                meal_breakfast_input = False
+
+            if 'meal_lunch' in request.form:
+                meal_lunch_input = bool(request.form['meal_lunch'])
+            else:
+                meal_lunch_input = False
+
+            if 'meal_dinner' in request.form:
+                meal_dinner_input = bool(request.form['meal_dinner'])
+            else:
+                meal_dinner_input = False
+
             recipe.recipe_name=request.form['recipe_name']
             recipe.recipe_desc=request.form['recipe_desc']
             recipe.recipe_prep_time=prep_time
@@ -315,12 +572,12 @@ def edit_recipe(recipe_id):
             recipe.recipe_total_time=total_time
             recipe.serving_size=request.form['serving_size']
             recipe.recipe_url=manual_input_clean_url
-            recipe.diet_vegan=bool(request.form['diet_vegan'])
-            recipe.diet_vegetarian=bool(request.form['diet_vegetarian'])
-            recipe.diet_gluten=bool(request.form['diet_gluten'])
-            recipe.meal_breakfast=bool(request.form['meal_breakfast'])
-            recipe.meal_lunch=bool(request.form['meal_lunch'])
-            recipe.meal_dinner=bool(request.form['meal_dinner'])
+            recipe.diet_vegan=diet_vegan_input
+            recipe.diet_vegetarian=diet_vegetarian_input
+            recipe.diet_gluten=diet_gluten_input
+            recipe.meal_breakfast=meal_breakfast_input
+            recipe.meal_lunch=meal_lunch_input
+            recipe.meal_dinner=meal_dinner_input
             recipe.created_by=current_user.id
             recipe.insert_datetime=datetime.now()
 

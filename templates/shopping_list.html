@@ -16,18 +16,16 @@ Shopping List
 
 <div class="container">
 
-    <h5>
+    
+    <dl id="shop-list">
     {% for ingredient in shop_list %}
-
-        <dl>
-            <dt id="rr-element">
-                <input type="checkbox" class="big-checkbox" value="1" id="rr-1" name="rr[]">                                       
-                {{ ingredient.Ingredient.ingredient_desc }}
-            </dt>
-        </dl>
-
+        <dt>
+            <i class="fas fa-bars"></i>
+            <input type="checkbox" class="big-checkbox" value="1" id="{{ ingredient.Shopping_List.shopping_list_id }}" name="rr[]" {% if ingredient.Shopping_List.checked_status == True %} checked {% endif %}><span {% if ingredient.Shopping_List.checked_status == True %} class="completed" {% endif %}>{{ ingredient.Shopping_List.item_desc }} ({{ ingredient.Recipe.recipe_name }})</span>
+        </dt>
     {% endfor %}
-    </h5>
+    </dl>
+    
 
 </div>
 
@@ -38,4 +36,14 @@ Shopping List
 
 {% block footer %}
 <script type="text/javascript" src="{{ url_for('static', filename='shopping_list.js') }}"></script>
+
+<!-- Latest Sortable -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js"></script> -->
+<!-- <script src="https://raw.githack.com/SortableJS/Sortable/master/Sortable.js"></script> -->
+
+
+<!-- jQuery UI -->
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+
 {% endblock %}

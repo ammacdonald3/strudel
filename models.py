@@ -23,6 +23,7 @@ class App_User(UserMixin, db.Model):
     current_meal = db.relationship('Current_Meal', backref='current_meal2', lazy=True)
     favorite_recipe = db.relationship('Favorite_Recipe', backref='favorite_recipe2', lazy=True)
     recipe = db.relationship('Recipe', backref='recipe', lazy=True)
+    shopping_list = db.relationship('Shopping_List', backref="shopping_list3", lazy=True)
 
     def __repr__(self):
         return '<User {}>'.format(self.app_username)
@@ -59,6 +60,7 @@ class Recipe(db.Model):
     user_recipe = db.relationship('User_Recipe', backref='user_recipe1', lazy=True)
     current_meal = db.relationship('Current_Meal', backref='current_meal1', lazy=True)
     favorite_recipe = db.relationship('Favorite_Recipe', backref='favorite_recipe1', lazy=True)
+    shopping_list = db.relationship('Shopping_List', backref="shopping_list1", lazy=True)
 
 
     def __init__(self, recipe_name, recipe_desc, recipe_prep_time, recipe_cook_time, recipe_total_time, serving_size, diet_vegetarian, diet_vegan, diet_gluten, meal_breakfast, meal_lunch, meal_dinner, recipe_url, created_by, insert_datetime):
@@ -167,18 +169,43 @@ class Current_Meal(db.Model):
     recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.recipe_id'), nullable=False)
     app_user_id = db.Column(db.Integer(), db.ForeignKey('app_user.id'), nullable=False)
     day_number = db.Column(db.Integer())
+    meal = db.Column(db.String())
     active_ind = db.Column(db.Boolean())
     insert_datetime = db.Column(db.DateTime())
 
-    def __init__(self, recipe_id, app_user_id, day_number, active_ind, insert_datetime):
+    def __init__(self, recipe_id, app_user_id, day_number, meal, active_ind, insert_datetime):
         self.recipe_id = recipe_id
         self.app_user_id = app_user_id
         self.day_number = day_number
+        self.meal = meal
         self.active_ind = active_ind
         self.insert_datetime = insert_datetime
 
     def __repr__(self):
         return '<id {}>'.format(self.current_meal_id)
+
+
+class Shopping_List(db.Model):
+    __tablename__ = 'shopping_list'
+
+    shopping_list_id = db.Column(db.Integer, primary_key=True)
+    item_desc = db.Column(db.String())
+    recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.recipe_id'), nullable=False)
+    app_user_id = db.Column(db.Integer(), db.ForeignKey('app_user.id'), nullable=False)
+    item_sort = db.Column(db.Integer)
+    checked_status = db.Column(db.Boolean())
+    insert_datetime = db.Column(db.DateTime())
+
+    def __init__(self, item_desc, recipe_id, app_user_id, item_sort, checked_status, insert_datetime):
+        self.item_desc = item_desc
+        self.recipe_id = recipe_id
+        self.app_user_id = app_user_id
+        self.item_sort = item_sort
+        self.checked_status = checked_status
+        self.insert_datetime = insert_datetime
+
+    def __repr__(self):
+        return '<id {}>'.format(self.shopping_list_id)
 
 
 

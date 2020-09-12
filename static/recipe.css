@@ -216,23 +216,29 @@ hr {
     text-decoration: line-through;
 }
 
-#rr-element {
+/* #rr-element {
     white-space: nowrap;
 }
 
 #rr-element label {
    padding-left: 2.0em;
-}
+} */
 
 .big-checkbox {
-    width: 20px; 
-    height: 20px;
-    margin-right: 30px;
+    width: 15px; 
+	height: 15px;
+	margin-left: 20px;
+    margin-right: 20px;
 }
 
 dd {
     margin-bottom: 40px;
 }
+
+dt {
+    margin-bottom: 5px;
+}
+
 /* END OF INGREDIENT LIST CHECKBOXES */
 
 
