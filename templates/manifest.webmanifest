@@ -1,0 +1,22 @@
+{
+    "short_name": "Strudel",
+    "name": "Studel - Recipe Selector",
+    "description": "Store and select recipes",
+    "icons": [
+      {
+        "src": "/static/strudel_icon.jpg",
+        "type": "image/jpg",
+        "sizes": "192x192"
+      },
+      {
+        "src": "/static/strudel_icon.jpg",
+        "type": "image/jpg",
+        "sizes": "512x512"
+      }
+    ],
+    "start_url": "{{ url_for('static', filename='shopping_list.html') }}",
+    "background_color": "#262625",
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "#051675"
+  }

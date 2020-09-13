@@ -7,7 +7,7 @@
   </title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <!-- <meta name="apple-mobile-web-app-capable" content="yes"> -->
 
 
   <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" media="screen"> -->
@@ -26,10 +26,15 @@
   <link  href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
   
   <!-- Launch image -->
-  <link rel="apple-touch-startup-image" href="{{ url_for('static', filename='title_image.jpg') }}">
+  <!-- <link rel="apple-touch-startup-image" href="{{ url_for('static', filename='title_image.jpg') }}"> -->
   
   <!-- App icon -->
-  <link rel="apple-touch-icon" href="{{ url_for('static', filename='strudel_icon.jpg') }}">
+  <!-- <link rel="apple-touch-icon" href="{{ url_for('static', filename='strudel_icon.jpg') }}"> -->
+
+  <!-- Web App Manifest -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <!-- include PWACompat _after_ your manifest -->
+  <script async src="https://unpkg.com/pwacompat" crossorigin="anonymous"></script>
 
   <style>
     .container {
