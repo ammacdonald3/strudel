@@ -108,11 +108,13 @@ class Recipe_Step(db.Model):
 
     recipe_step_id = db.Column(db.Integer, primary_key=True)
     recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.recipe_id'), nullable=False)
+    step_order = db.Column(db.Integer())
     step_desc = db.Column(db.String())
     insert_datetime = db.Column(db.DateTime())
 
-    def __init__(self, recipe_id, step_desc, insert_datetime):
+    def __init__(self, recipe_id, step_order, step_desc, insert_datetime):
         self.recipe_id = recipe_id
+        self.step_order = step_order
         self.step_desc = step_desc
         self.insert_datetime = insert_datetime
 

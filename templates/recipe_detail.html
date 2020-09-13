@@ -44,26 +44,84 @@ active
     </div>
   </div>
 
+  <p>{{ recipe.recipe_desc }}</p>
 
 
-  <!-- Header info (cook time, etc.) -->
 
-  <br>
   <br>
 </div>
 
+
 <div class="container">
-  <p>
-    Prep Time: {{ recipe.recipe_prep_time}} minutes
-    <br>
-    Cook Time: {{ recipe.recipe_cook_time }} minutes
-    <br>
-    Total Time: {{ recipe.recipe_total_time }} minutes
-    <br>
-    Serving Size: {{ recipe.serving_size }} servings
-  </p>
+  <!-- Header info (cook time, etc.) -->
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Prep Time</th>
+        <th scope="col">Cook Time</th>
+        <th scope="col">Total Time</th>
+        <th scope="col">Servings</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ recipe.recipe_prep_time}}</td>
+        <td>{{ recipe.recipe_cook_time }}</td>
+        <td>{{ recipe.recipe_total_time }}</td>
+        <td>{{ recipe.serving_size }}</td>
+      </tr>
+    </tbody>
+  </table>
+
   <br>
-  <p>{{ recipe.recipe_desc }}</p>
+  <br>
+
+  <div class="row">
+    <!-- Dietary Restrictions -->
+    <div class="form-group col-md">
+      <h4>Dietary Restrictions:</h4>
+      <table class="table">
+        <tbody>
+          <tr>
+            <th scope="row">Vegan</th>
+            <td>{% if recipe.diet_vegan == True %} <i class="fas fa-check"></i> {% else %} <i class="fas fa-times error"></i>{% endif %}</td>
+          </tr>
+          <tr>
+            <th scope="row">Vegetarian</th>
+            <td>{% if recipe.diet_vegetarian == True %} <i class="fas fa-check"></i> {% else %} <i class="fas fa-times error"></i>{% endif %}</td>
+          </tr>
+          <tr>
+            <th scope="row">Gluten-free</th>
+            <td>{% if recipe.diet_gluten == True %} <i class="fas fa-check"></i> {% else %} <i class="fas fa-times error"></i>{% endif %}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Meal Time -->
+    <div class="form-group col-md">
+      <h4>Meal Time:</h4>
+      <table class="table">
+        <tbody>
+          <tr>
+            <th scope="row">Breakfast</th>
+            <td>{% if recipe.meal_breakfast == True %} <i class="fas fa-check"></i> {% else %} <i class="fas fa-times error"></i>{% endif %}</td>
+          </tr>
+          <tr>
+            <th scope="row">Lunch</th>
+            <td>{% if recipe.meal_lunch == True %} <i class="fas fa-check"></i> {% else %} <i class="fas fa-times error"></i>{% endif %}</td>
+          </tr>
+          <tr>
+            <th scope="row">Dinner</th>
+            <td>{% if recipe.meal_dinner == True %} <i class="fas fa-check"></i> {% else %} <i class="fas fa-times error"></i>{% endif %}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <br>
+
 </div>
 <br>
 
@@ -83,11 +141,23 @@ active
 <div class="container">
   <!-- Recipe steps / method -->
   <h4>Method:</h4>
-  <ol>
-    {% for step in step_list %}
-    <li>{{ step.step_desc }}</li>
-    {% endfor %}
-  </ol>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Step</th>
+        <th scope="col">Instructions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for step in step_list %}
+      <tr>
+        <td>{{ step.step_order }}</td>
+        <td>{{ step.step_desc }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
 </div>
 
 <br>
@@ -103,14 +173,16 @@ active
       </div>
     </div>
 
-    <!-- Display button so that user can edit the recipe -->
+    <!-- Display button so that user can edit the recipe if they're the owner -->
+    {% if owner_ind == True %}
     <div class="row" style="padding-top: 20px;">
       <div class="form-group col-sm">
-        <a href="{{ url_for('edit_recipe', recipe_id=recipe.recipe_id) }}" class="btn btn-outline-warning btn-block">Edit
+        <a href="{{ url_for('edit_recipe', recipe_id=recipe.recipe_id) }}"
+          class="btn btn-outline-warning btn-block">Edit
           Recipe</a>
       </div>
     </div>
-
+    {% endif %}
 
   </div>
 </div>

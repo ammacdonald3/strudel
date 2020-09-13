@@ -9,6 +9,8 @@ Sign In
 
 {% block body %}
 <div class="container">
+    <div class="error">{{ error }}</div>
+    <br>
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <div class="row">

@@ -15,7 +15,7 @@ Meal Selector
     <div>
         Automatically select meals for the week based on your favorite recipes! 
         <br>
-        NOTE: Selecting the button below will clear out your current meal plan.
+        <span class="error">NOTE: Selecting the button below will clear out your current meal plan.</span>
         <br>
         <br>
         <form role="form" method='POST'>
@@ -24,21 +24,21 @@ Meal Selector
                 <!-- Input for number of breakfast meals needed -->
                 <div class="form-group col-sm">
                     <label for="num_bfast_meals">Number of Breakfast Meals</label>
-                    <input type="number" name="num_bfast_meals" min="1" max="7" class="form-control" id="num_bfast_meals"
+                    <input type="number" name="num_bfast_meals" max="7" class="form-control" id="num_bfast_meals"
                         placeholder="Enter number of meals needed" autofocus required>
                 </div>
 
                 <!-- Input for number of lunch meals needed -->
                 <div class="form-group col-sm">
                     <label for="num_lunch_meals">Number of Lunch Meals</label>
-                    <input type="number" name="num_lunch_meals" min="1" max="7" class="form-control" id="num_lunch_meals"
+                    <input type="number" name="num_lunch_meals" max="7" class="form-control" id="num_lunch_meals"
                         placeholder="Enter number of meals needed" autofocus required>
                 </div>
 
                 <!-- Input for number of dinner meals needed -->
                 <div class="form-group col-sm">
                     <label for="num_dinner_meals">Number of Dinner Meals</label>
-                    <input type="number" name="num_dinner_meals" min="1" max="7" class="form-control" id="num_dinner_meals"
+                    <input type="number" name="num_dinner_meals" max="7" class="form-control" id="num_dinner_meals"
                         placeholder="Enter number of meals needed" autofocus required>
                 </div>
 

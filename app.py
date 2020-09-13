@@ -54,7 +54,6 @@ def index():
 @app.route('/meal_selector', methods=['GET', 'POST'])
 def meal_selector():
     output = []
-    selected_meals_list = []
     if request.method == "POST":
         
         try:
@@ -155,30 +154,6 @@ def meal_selector():
                 db.session.commit()
 
 
-            # Delete existing shopping list
-            Shopping_List.query.filter_by(app_user_id=current_user.id).delete()
-
-
-            # Retrieve a list of ingredients for current meals
-            shop_list = (db.session.query(Ingredient, Current_Meal).join(Current_Meal, Ingredient.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.app_user_id==current_user.id).filter(Current_Meal.active_ind==True)).all()
-
-
-            # Insert ingredients from selected meals into shopping_list table
-            ingredient_counter = 0
-            for item in shop_list:
-                shopping_list = Shopping_List(
-                    item_desc=item.Ingredient.ingredient_desc,
-                    recipe_id=item.Current_Meal.recipe_id,
-                    app_user_id=current_user.id,
-                    item_sort=ingredient_counter,
-                    checked_status=False,
-                    insert_datetime=datetime.now()
-                )
-                ingredient_counter += 1
-                db.session.add(shopping_list)
-                db.session.flush()
-                db.session.commit()
-
             #print("selected_meals " + str(selected_meals_list), file=sys.stderr)
 
         except Exception as e:
@@ -216,9 +191,46 @@ def meal_plan():
     
 
 # Define route for shopping list page
-@app.route('/shopping_list')
+@app.route('/shopping_list', methods=['GET', 'POST'])
 @login_required
 def shopping_list():
+    output = []
+    if request.method == "POST":
+        
+        try:
+            # Delete existing shopping list
+            Shopping_List.query.filter_by(app_user_id=current_user.id).delete()
+
+
+            # Retrieve a list of ingredients for current meals
+            shop_list = (db.session.query(Ingredient, Current_Meal).join(Current_Meal, Ingredient.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.app_user_id==current_user.id).filter(Current_Meal.active_ind==True)).all()
+
+
+            # Insert ingredients from selected meals into shopping_list table
+            ingredient_counter = 0
+            for item in shop_list:
+                shopping_list = Shopping_List(
+                    item_desc=item.Ingredient.ingredient_desc,
+                    recipe_id=item.Current_Meal.recipe_id,
+                    app_user_id=current_user.id,
+                    item_sort=ingredient_counter,
+                    checked_status=False,
+                    insert_datetime=datetime.now()
+                )
+                ingredient_counter += 1
+                db.session.add(shopping_list)
+                db.session.flush()
+                db.session.commit()
+
+
+        except Exception as e:
+            db.session.rollback()
+            output.append("Application encountered an error, and your shopping list was not generated. Better luck in the future!")
+            output.append(str(e))
+            print(output)
+
+
+
     shop_list = (db.session.query(
         Shopping_List, 
         Recipe
@@ -303,30 +315,30 @@ def add_recipe():
     output = []
     # If user submits data on input form, write to DB
     if request.method == "POST":
-        if 'recipe_name' not in request.form:
-            print('RECIPE NAME MISSING')
-        if 'recipe_desc' not in request.form:
-            print('RECIPE DESC MISSING')
-        if 'recipe_prep_time' not in request.form:
-            print('RECIPE PREP TIME MISSING')
-        if 'recipe_cook_time' not in request.form:
-            print('RECIPE COOK TIME MISSING')
-        if 'recipe_url' not in request.form:
-            print('RECIPE URL MISSING')
-        if 'serving_size' not in request.form:
-            print('RECIPE SERVING SIZE MISSING')
-        if 'diet_vegan' not in request.form:
-            print('DIET VEGAN MISSING')
-        if 'diet_vegetarian' not in request.form:
-            print('DIET VEGETARIAN MISSING')
-        if 'diet_gluten' not in request.form:
-            print('DIET GLUTEN MISSING')
-        if 'meal_breakfast' not in request.form:
-            print('BREAKFAST MISSING')
-        if 'meal_lunch' not in request.form:
-            print('LUNCH MISSING')
-        if 'meal_dinner' not in request.form:
-            print('DINNER MISSING')
+        # if 'recipe_name' not in request.form:
+        #     print('RECIPE NAME MISSING')
+        # if 'recipe_desc' not in request.form:
+        #     print('RECIPE DESC MISSING')
+        # if 'recipe_prep_time' not in request.form:
+        #     print('RECIPE PREP TIME MISSING')
+        # if 'recipe_cook_time' not in request.form:
+        #     print('RECIPE COOK TIME MISSING')
+        # if 'recipe_url' not in request.form:
+        #     print('RECIPE URL MISSING')
+        # if 'serving_size' not in request.form:
+        #     print('RECIPE SERVING SIZE MISSING')
+        # if 'diet_vegan' not in request.form:
+        #     print('DIET VEGAN MISSING')
+        # if 'diet_vegetarian' not in request.form:
+        #     print('DIET VEGETARIAN MISSING')
+        # if 'diet_gluten' not in request.form:
+        #     print('DIET GLUTEN MISSING')
+        # if 'meal_breakfast' not in request.form:
+        #     print('BREAKFAST MISSING')
+        # if 'meal_lunch' not in request.form:
+        #     print('LUNCH MISSING')
+        # if 'meal_dinner' not in request.form:
+        #     print('DINNER MISSING')
 
 
         # Write recipe info
@@ -426,11 +438,14 @@ def add_recipe():
         # Insert data to RECIPE_STEP table
         for x in range(1, 50):
             try:
+                counter = 1
                 recipe_step = Recipe_Step(
                     recipe_id=recipe.recipe_id,
+                    step_order=counter,
                     step_desc=request.form['recipe_step' + str(x)],
                     insert_datetime=datetime.now()
                 )
+                counter += 1
                 db.session.add(recipe_step)
                 db.session.commit()
             # Return error if database write was unsuccessful
@@ -858,34 +873,49 @@ def recipe_detail(recipe_id):
             print('ERROR ERROR ERROR')
             print(output)
 
+    # If user is the owner of the recipe, pass a flag to render the 'Edit' button
+    if recipe.created_by == current_user.id:
+        owner_ind = True
+    else:
+        owner_ind = False
+
     # Render the recipe_detail.html template (main page for this route)
-    return render_template('recipe_detail.html', recipe=recipe, ingredient_list=ingredient_list, step_list=step_list, favorite=favorite)
+    return render_template('recipe_detail.html', recipe=recipe, ingredient_list=ingredient_list, step_list=step_list, favorite=favorite, owner_ind=owner_ind)
     
     
 
 # Define route for login page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    error = None
     if current_user.is_authenticated:
         return redirect(url_for('index'))
+
     form = LoginForm()
+
     if form.validate_on_submit():
         app_user = App_User.query.filter_by(app_username=form.app_username.data).first()
         if app_user is None or not app_user.check_password(form.password.data):
-            flash('Invalid username or password')
-            return redirect(url_for('login'))
+            # flash('Invalid username or password')
+            error = 'Invalid username or password'
+            # return redirect(url_for('login'))
+            return render_template('login.html', title='Sign In', form=form, error=error)
         login_user(app_user, remember=form.remember_me.data)
         return redirect(url_for('index'))
+
     if form.validate_on_submit():
         app_user = App_User.query.filter_by(app_username=form.app_username.data).first()
         if app_user is None or not app_user.check_password(form.password.data):
-            flash('Invalid username or password')
-            return redirect(url_for('login'))
+            # flash('Invalid username or password')
+            error = 'Invalid username or password'
+            # return redirect(url_for('login'))
+            return render_template('login.html', title='Sign In', form=form, error=error)
         login_user(app_user, remember=form.remember_me.data)
         next_page = request.args.get('next')
         if not next_page:
             next_page = url_for('index')
         return redirect(next_page)
+
     return render_template('login.html', title='Sign In', form=form)
 
 

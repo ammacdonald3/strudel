@@ -15,17 +15,34 @@ Shopping List
 <br>
 
 <div class="container">
+    <div>
+        Automatically generate your shopping list based on this week's selected meals!
+        <br>
+        <span class="error">NOTE: Selecting the button below will clear out your current shopping list.</span>
+        <br>
+        <br>
 
-    
+        <form role="form" method='POST'>
+
+            <button type="submit" class="btn btn-outline-primary btn-block">Generate Shopping List</button>
+
+        </form>
+    </div>
+
+    <br>
+
     <dl id="shop-list">
-    {% for ingredient in shop_list %}
+        {% for ingredient in shop_list %}
         <dt>
             <i class="fas fa-bars"></i>
-            <input type="checkbox" class="big-checkbox" value="1" id="{{ ingredient.Shopping_List.shopping_list_id }}" name="rr[]" {% if ingredient.Shopping_List.checked_status == True %} checked {% endif %}><span {% if ingredient.Shopping_List.checked_status == True %} class="completed" {% endif %}>{{ ingredient.Shopping_List.item_desc }} ({{ ingredient.Recipe.recipe_name }})</span>
+            <input type="checkbox" class="big-checkbox" value="1" id="{{ ingredient.Shopping_List.shopping_list_id }}"
+                name="rr[]" {% if ingredient.Shopping_List.checked_status == True %} checked {% endif %}><span
+                {% if ingredient.Shopping_List.checked_status == True %} class="completed"
+                {% endif %}>{{ ingredient.Shopping_List.item_desc }} ({{ ingredient.Recipe.recipe_name }})</span>
         </dt>
-    {% endfor %}
+        {% endfor %}
     </dl>
-    
+
 
 </div>
 
@@ -44,6 +61,7 @@ Shopping List
 
 
 <!-- jQuery UI -->
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
+    integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
 
 {% endblock %}
