@@ -52,6 +52,7 @@ def index():
 
 # Define route for meal selector page
 @app.route('/meal_selector', methods=['GET', 'POST'])
+@login_required
 def meal_selector():
     output = []
     if request.method == "POST":

@@ -214,7 +214,7 @@ hr {
 /* BELOW IS FOR INGREDIENT LIST CHECKBOXES */
 .completed {
 	text-decoration: line-through;
-	color: #bfbfbf;
+	opacity: 0.2;
 }
 
 /* #rr-element {
@@ -244,6 +244,20 @@ dt {
 
 .error {
 	color: red;
+}
+
+.navbar-collapse {
+	text-align: center;
+	font-size: 20px;
+}
+
+.dropdown-item {
+	text-align: center;
+	font-size: 18px;
+}
+
+.nav-item {
+	margin-right: 18px;
 }
 
  /* Style the button that is used to open and close the collapsible content */

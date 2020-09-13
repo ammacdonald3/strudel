@@ -37,6 +37,7 @@ $(document).ready(function(){
         //         data: { s_list_id:$(this).attr("id"), item_index:ui.item.index() }
         //     });
         // }
+        handle: '.handle',
         axis: 'y',
         update: function (event, ui) {
             var data = $(this).sortable('serialize');

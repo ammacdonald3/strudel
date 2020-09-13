@@ -13,7 +13,6 @@ Shopping List
 
 {% block body %}
 <br>
-
 <div class="container">
     <div>
         Automatically generate your shopping list based on this week's selected meals!
@@ -30,11 +29,13 @@ Shopping List
     </div>
 
     <br>
+    <br>
+    <br>
 
     <dl id="shop-list">
         {% for ingredient in shop_list %}
         <dt>
-            <i class="fas fa-bars"></i>
+            <span class="handle"><i class="fas fa-bars"></i></span>
             <input type="checkbox" class="big-checkbox" value="1" id="{{ ingredient.Shopping_List.shopping_list_id }}"
                 name="rr[]" {% if ingredient.Shopping_List.checked_status == True %} checked {% endif %}><span
                 {% if ingredient.Shopping_List.checked_status == True %} class="completed"
