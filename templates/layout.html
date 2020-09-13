@@ -6,6 +6,10 @@
     Strudel
   </title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+
   <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" media="screen"> -->
   <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"> -->
   
@@ -20,6 +24,13 @@
   <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
   <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
   <link  href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- Launch image -->
+  <link rel="apple-touch-startup-image" href="{{ url_for('static', filename='title_image.jpg') }}">
+  
+  <!-- App icon -->
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='strudel_icon.jpg') }}">
+
   <style>
     .container {
       max-width: 1000px;
