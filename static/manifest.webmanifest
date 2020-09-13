@@ -14,7 +14,7 @@
         "sizes": "512x512"
       }
     ],
-    "start_url": "{{ url_for('static', filename='shopping_list.html') }}",
+    "start_url": "/",
     "background_color": "#262625",
     "display": "standalone",
     "scope": "/",
