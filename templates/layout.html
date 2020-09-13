@@ -32,7 +32,8 @@
   <!-- <link rel="apple-touch-icon" href="{{ url_for('static', filename='strudel_icon.jpg') }}"> -->
 
   <!-- Web App Manifest -->
-  <link rel="manifest" href="manifest.webmanifest" />
+  <!-- <link rel="manifest" href="manifest.webmanifest" /> -->
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}">
   <!-- include PWACompat _after_ your manifest -->
   <script async src="https://unpkg.com/pwacompat" crossorigin="anonymous"></script>
 

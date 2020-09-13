@@ -4,13 +4,13 @@
     "description": "Store and select recipes",
     "icons": [
       {
-        "src": "/static/strudel_icon.jpg",
-        "type": "image/jpg",
+        "src": "/static/breakfast4.png",
+        "type": "image/png",
         "sizes": "192x192"
       },
       {
-        "src": "/static/strudel_icon.jpg",
-        "type": "image/jpg",
+        "src": "/static/breakfast.svg",
+        "type": "image/svg",
         "sizes": "512x512"
       }
     ],
