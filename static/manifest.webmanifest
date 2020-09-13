@@ -1,21 +1,21 @@
 {
     "short_name": "Strudel",
-    "name": "Studel - Recipe Selector",
+    "name": "Strudel",
     "description": "Store and select recipes",
     "icons": [
       {
-        "src": "/static/breakfast4.png",
+        "src": "/static/pancakes192.png",
         "type": "image/png",
         "sizes": "192x192"
       },
       {
-        "src": "/static/breakfast.svg",
-        "type": "image/svg",
+        "src": "/static/pancakes512.png",
+        "type": "image/png",
         "sizes": "512x512"
       }
     ],
     "start_url": "/",
-    "background_color": "#262625",
+    "background_color": "#820000",
     "display": "standalone",
     "scope": "/",
     "theme_color": "#051675"
