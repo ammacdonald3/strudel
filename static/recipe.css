@@ -213,7 +213,8 @@ hr {
 
 /* BELOW IS FOR INGREDIENT LIST CHECKBOXES */
 .completed {
-    text-decoration: line-through;
+	text-decoration: line-through;
+	color: #bfbfbf;
 }
 
 /* #rr-element {
