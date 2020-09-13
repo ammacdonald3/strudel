@@ -14,7 +14,7 @@
         "sizes": "512x512"
       }
     ],
-    "start_url": "/",
+    "start_url": "{{ url_for('static', filename='all_recipes.html') }}",
     "background_color": "#820000",
     "display": "standalone",
     "scope": "/",
