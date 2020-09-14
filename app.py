@@ -349,8 +349,8 @@ def add_recipe():
             manual_input_clean_url = clean(url_input)
 
             # Calculate recipe "total time" as this is not a user-input field. This field is necessary for auto-import library.
-            prep_time = request.form['recipe_prep_time']
-            cook_time = request.form['recipe_cook_time']
+            prep_time = int(request.form['recipe_prep_time'])
+            cook_time = int(request.form['recipe_cook_time'])
             total_time = prep_time + cook_time
 
 
@@ -509,8 +509,8 @@ def edit_recipe(recipe_id):
             manual_input_clean_url = clean(url_input)
 
             # Calculate recipe "total time" as this is not a user-input field. This field is necessary for auto-import library.
-            prep_time = request.form['recipe_prep_time']
-            cook_time = request.form['recipe_cook_time']
+            prep_time = int(request.form['recipe_prep_time'])
+            cook_time = int(request.form['recipe_cook_time'])
             total_time = prep_time + cook_time
             
             # Insert data to RECIPE table
@@ -624,12 +624,17 @@ def edit_recipe(recipe_id):
                     ingredient_desc=request.form['ingredient_desc' + str(x)],
                     insert_datetime=datetime.now()
                 )
+                
                 db.session.add(ingredient)
                 db.session.commit()
             # Return error if database write was unsuccessful
-            except:
-                #output.append("Ingredient " + str(x) + " did not add to database!!")
-                pass
+            except Exception as e:
+                db.session.rollback()
+                output.append("Application encountered an error, and the Ingredient info didn't write to the database. Better luck in the future!")
+                output.append("Ingredient " + str(x) + " did not add to database!!")
+                output.append(str(e))
+                print(output)
+
 
         # Delete exising recipe steps
         Recipe_Step.query.filter_by(recipe_id=recipe_id).delete()
@@ -637,27 +642,34 @@ def edit_recipe(recipe_id):
         db.session.commit()
 
         # Insert data to RECIPE_STEP table
+        counter = 1
         for x in range(1, 50):
             try:
                 # Insert new recipe steps
                 recipe_step = Recipe_Step(
                     recipe_id=recipe.recipe_id,
+                    step_order=counter,
                     step_desc=request.form['recipe_step' + str(x)],
                     insert_datetime=datetime.now()
                 )
+                counter += 1
                 db.session.add(recipe_step)
                 db.session.commit()
             # Return error if database write was unsuccessful
-            except:
-                #output.append("Recipe Step " + str(x) + " did not add to database!!")
-                pass
+            except Exception as e:
+                db.session.rollback()
+                output.append("Application encountered an error, and the Recipe Step info didn't write to the database. Better luck in the future!")
+                output.append("Recipe Step " + str(x) + " did not add to database!!")
+                output.append(str(e))
+                print(output)
+
 
         # Insert data to USER_RECIPE table
         try:
             user_recipe = User_Recipe(
                 recipe_id=recipe.recipe_id,
                 app_user_id=current_user.id,
-                user_rating=5,
+                user_rating=0,
                 owner_ind=True,
                 insert_datetime=datetime.now()
             )
@@ -666,9 +678,12 @@ def edit_recipe(recipe_id):
             db.session.commit()
             #output.append("User_Recipe successfully added!")
         # Return error if database write was unsuccessful
-        except:
-            #output.append("User_Recipe did not add to database :(")
-            pass
+        except Exception as e:
+                db.session.rollback()
+                output.append("Application encountered an error, and the user/recipe info didn't write to the database. Better luck in the future!")
+                output.append(str(e))
+                print(output)
+
 
         # Render recipe_confirm.html template after recipe is written to DB    
         return(render_template('recipe_confirm.html', recipe_id=recipe.recipe_id, recipe_name=request.form['recipe_name']))
@@ -687,107 +702,112 @@ def auto_import():
     output = []
     # If user inputs URL, scrape website for recipe data and write to DB:
     if request.method == "POST":
-        # Scrape external website and clean data for write to the DB
         try:
-            url_input = request.form['recipe_url']
-            auto_import_clean_url = clean(url_input)
-            scraper = scrape_me(url_input)
-            yields = scraper.yields()
-            clean_yields = re.sub('[^0-9]','', yields)
-        except:
-            output.append("Recipe didn't scrape")
-
-        # Insert data to RECIPE table
-        try:
-            recipe = Recipe(
-                recipe_name=scraper.title(),
-                recipe_desc='Imported from external website',
-                recipe_prep_time=0,
-                recipe_cook_time=scraper.total_time(),
-                recipe_total_time=scraper.total_time(),
-                serving_size=clean_yields,
-                recipe_url=auto_import_clean_url,
-                diet_vegetarian=False,
-                diet_vegan=False,
-                diet_gluten=False,
-                meal_breakfast=False,
-                meal_lunch=False,
-                meal_dinner=False,
-                created_by=current_user.id,
-                insert_datetime=datetime.now()
-            )
-
-            db.session.add(recipe)
-            db.session.flush()
-            db.session.commit()
-
-            
-        except Exception as e:
-            db.session.rollback()
-            output.append("Application encountered an error, and the recipe didn't write to the database. Better luck in the future!")
-            output.append(str(e))
-
-
-        # Insert data to INGREDENT table
-        for item in scraper.ingredients():
+            # Scrape external website and clean data for write to the DB
             try:
-                ingredient = Ingredient(
-                    recipe_id=recipe.recipe_id,
-                    ingredient_desc=item,
+                url_input = request.form['recipe_url']
+                auto_import_clean_url = clean(url_input)
+                scraper = scrape_me(url_input)
+                yields = scraper.yields()
+                clean_yields = re.sub('[^0-9]','', yields)
+            except:
+                output.append("Recipe didn't scrape")
+
+            # Insert data to RECIPE table
+            try:
+                recipe = Recipe(
+                    recipe_name=scraper.title(),
+                    recipe_desc='Imported from external website',
+                    recipe_prep_time=0,
+                    recipe_cook_time=scraper.total_time(),
+                    recipe_total_time=scraper.total_time(),
+                    serving_size=clean_yields,
+                    recipe_url=auto_import_clean_url,
+                    diet_vegetarian=False,
+                    diet_vegan=False,
+                    diet_gluten=False,
+                    meal_breakfast=False,
+                    meal_lunch=False,
+                    meal_dinner=False,
+                    created_by=current_user.id,
                     insert_datetime=datetime.now()
                 )
-                db.session.add(ingredient)
+
+                db.session.add(recipe)
                 db.session.flush()
                 db.session.commit()
 
-            # Return error if database write was unsuccessful
+                
             except Exception as e:
                 db.session.rollback()
-                output.append("Application encountered an error, and the ingredients didn't write to the database. Better luck in the future!")
+                output.append("Application encountered an error, and the recipe didn't write to the database. Better luck in the future!")
                 output.append(str(e))
 
-        # Insert data to RECIPE_STEP table
-        instructions = scraper.instructions().split('\n')
-        for step in instructions:
-            try:
-                recipe_step = Recipe_Step(
+
+            # Insert data to INGREDENT table
+            for item in scraper.ingredients():
+                try:
+                    ingredient = Ingredient(
+                        recipe_id=recipe.recipe_id,
+                        ingredient_desc=item,
+                        insert_datetime=datetime.now()
+                    )
+                    db.session.add(ingredient)
+                    db.session.flush()
+                    db.session.commit()
+
+                # Return error if database write was unsuccessful
+                except Exception as e:
+                    db.session.rollback()
+                    output.append("Application encountered an error, and the ingredients didn't write to the database. Better luck in the future!")
+                    output.append(str(e))
+
+            # Insert data to RECIPE_STEP table
+            instructions = scraper.instructions().split('\n')
+            for step in instructions:
+                try:
+                    recipe_step = Recipe_Step(
+                        recipe_id=recipe.recipe_id,
+                        step_desc=step,
+                        insert_datetime=datetime.now()
+                    )
+                    db.session.add(recipe_step)
+                    db.session.flush()
+                    db.session.commit()
+                # Return error if database write was unsuccessful
+                except Exception as e:
+                    db.session.rollback()
+                    output.append("Application encountered an error, and the instructions didn't write to the database. Better luck in the future!")
+                    output.append(str(e))
+
+
+            # Insert data to USER_RECIPE table
+            """ try:
+                user_recipe = User_Recipe(
                     recipe_id=recipe.recipe_id,
-                    step_desc=step,
+                    app_user_id=current_user.id,
+                    user_rating=5,
+                    owner_ind=True,
                     insert_datetime=datetime.now()
                 )
-                db.session.add(recipe_step)
+                db.session.add(user_recipe)
                 db.session.flush()
-                db.session.commit()
-            # Return error if database write was unsuccessful
-            except Exception as e:
-                db.session.rollback()
-                output.append("Application encountered an error, and the instructions didn't write to the database. Better luck in the future!")
-                output.append(str(e))
-
-
-        # Insert data to USER_RECIPE table
-        """ try:
-            user_recipe = User_Recipe(
-                recipe_id=recipe.recipe_id,
-                app_user_id=current_user.id,
-                user_rating=5,
-                owner_ind=True,
-                insert_datetime=datetime.now()
-            )
-            db.session.add(user_recipe)
-            db.session.flush()
-            db.session.commit() """
-            #output.append("User_Recipe successfully added!")
+                db.session.commit() """
+                #output.append("User_Recipe successfully added!")
 
             # Render recipe_confirm.html template after recipe is written to DB
-        return(render_template('recipe_confirm.html', recipe_id=recipe.recipe_id, recipe_name=scraper.title(), output=output))
+            return(render_template('recipe_confirm.html', recipe_id=recipe.recipe_id, recipe_name=scraper.title(), output=output))
 
-        # Return error if database write was unsuccessful
-        """ except Exception as e:
-            db.session.rollback()
-            output.append("Application encountered an error, and the user recipe didn't write to the database. Better luck in the future!")
-            output.append(str(e)) """
-        
+            # Return error if database write was unsuccessful
+            """ except Exception as e:
+                db.session.rollback()
+                output.append("Application encountered an error, and the user recipe didn't write to the database. Better luck in the future!")
+                output.append(str(e)) """
+            
+        except:
+            error = 'This website is not supported at this time. Please manually add this recipe, and use the Auto Import function for one of the supported websites below.'
+            return render_template("auto_import.html", error=error)
+
     # When not posting form, render the auto_import.html template (main page for this route)
     return render_template("auto_import.html", output=output)
 
