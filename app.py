@@ -437,9 +437,9 @@ def add_recipe():
                 print(output)
 
         # Insert data to RECIPE_STEP table
+        counter = 1
         for x in range(1, 50):
             try:
-                counter = 1
                 recipe_step = Recipe_Step(
                     recipe_id=recipe.recipe_id,
                     step_order=counter,
