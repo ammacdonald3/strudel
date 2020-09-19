@@ -28,6 +28,17 @@ $(document).ready(function(){
             });
         }
     });
+    $('.fa-trash').click(function () {
+        var $this = $(this);
+        $(this).closest("dt").fadeOut(500,function(){
+            $(this).remove;
+        });
+        $.ajax({
+            url: '/_del_shopping_list_items',
+            type: 'POST',
+            data: { s_list_id:$(this).attr("id") }
+        });
+    })
     $('#shop-list').sortable({
         // stop: function(event, ui) {
         //     alert("New position: " + ui.item.index());

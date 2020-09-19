@@ -271,6 +271,28 @@ def _shopping_list_items():
     return render_template('shopping_list.html', shop_list=shop_list)
 
 
+# Define route for deleting shopping list items
+@app.route('/_del_shopping_list_items', methods=['GET', 'POST'])
+@login_required
+def _del_shopping_list_items():
+    s_list_id = request.form.get('s_list_id')
+
+    Shopping_List.query.filter_by(shopping_list_id=s_list_id).delete()
+
+    db.session.flush()
+    db.session.commit()
+
+    shop_list = (db.session.query(
+        Shopping_List, 
+        Recipe
+    ).join(
+        Recipe, Recipe.recipe_id==Shopping_List.recipe_id
+    ).filter(
+        Shopping_List.app_user_id==current_user.id
+    ).order_by(Shopping_List.item_sort).all())
+
+    return render_template('shopping_list.html', shop_list=shop_list)
+
 
 # Define route for resorting shopping list items
 @app.route('/_shopping_list_sort', methods=['GET', 'POST'])

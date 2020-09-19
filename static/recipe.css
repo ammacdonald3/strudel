@@ -260,6 +260,10 @@ dt {
 	margin-right: 18px;
 }
 
+.trash {
+	margin-right: 15px;
+}
+
  /* Style the button that is used to open and close the collapsible content */
 /*  .collapsible {
     background-color: #eee;

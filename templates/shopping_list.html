@@ -39,7 +39,9 @@ Shopping List
             <input type="checkbox" class="big-checkbox" value="1" id="{{ ingredient.Shopping_List.shopping_list_id }}"
                 name="rr[]" {% if ingredient.Shopping_List.checked_status == True %} checked {% endif %}><span
                 {% if ingredient.Shopping_List.checked_status == True %} class="completed"
-                {% endif %}>{{ ingredient.Shopping_List.item_desc }} ({{ ingredient.Recipe.recipe_name }})</span>
+                {% endif %}>
+            <span class="trash"><i class="fa fa-trash"  id="{{ ingredient.Shopping_List.shopping_list_id }}"></i></span>    
+            {{ ingredient.Shopping_List.item_desc }} ({{ ingredient.Recipe.recipe_name }})</span>
         </dt>
         {% endfor %}
     </dl>
