@@ -34,9 +34,9 @@ active
           <form role="form" method='POST'>
             <button type="submit" class="btn btn-block 
             {% if favorite == None %}
-              btn-outline-primary">Add to Favorites
+              btn-primary">Add to Favorites
               {% else %}
-              btn-outline-danger">Remove from Favorites
+              btn-danger">Remove from Favorites
               {% endif %}</button>
           </form>
         </div>
@@ -168,7 +168,7 @@ active
     <!-- Display button so that user can view recipe's source website -->
     <div class="row" style="padding-top: 20px;">
       <div class="form-group col-sm">
-        <a href="https://{{ recipe.recipe_url }}" target="_blank" class="btn btn-outline-primary btn-block">Source
+        <a href="https://{{ recipe.recipe_url }}" target="_blank" class="btn btn-primary btn-block">Source
           Website</a>
       </div>
     </div>
@@ -178,7 +178,7 @@ active
     <div class="row" style="padding-top: 20px;">
       <div class="form-group col-sm">
         <a href="{{ url_for('edit_recipe', recipe_id=recipe.recipe_id) }}"
-          class="btn btn-outline-warning btn-block">Edit
+          class="btn btn-warning btn-block">Edit
           Recipe</a>
       </div>
     </div>

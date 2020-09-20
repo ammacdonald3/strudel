@@ -220,6 +220,7 @@ def shopping_list():
                 shopping_list = Shopping_List(
                     item_desc=shopping_list_item,
                     recipe_id=None,
+                    ingredient_id=None,
                     app_user_id=current_user.id,
                     item_sort=0,
                     checked_status=False,
@@ -236,6 +237,7 @@ def shopping_list():
                     shopping_list = Shopping_List(
                         item_desc=item.item_desc,
                         recipe_id=item.recipe_id,
+                        ingredient_id=item.ingredient_id,
                         app_user_id=current_user.id,
                         item_sort=ingredient_counter,
                         checked_status=item.checked_status,
@@ -258,7 +260,19 @@ def shopping_list():
             try:
 
                 # Delete existing shopping list
-                Shopping_List.query.filter_by(app_user_id=current_user.id).delete()
+                # Shopping_List.query.filter_by(app_user_id=current_user.id).delete()
+
+
+                # Retrieve list of current shopping list ingredient IDs
+                current_shop_list = (db.session.query(
+                    Shopping_List
+                ).filter(
+                    Shopping_List.app_user_id==current_user.id
+                ))
+
+                ingredient_ids_list = []
+                for item in current_shop_list:
+                    ingredient_ids_list.append(item.ingredient_id)
 
 
                 # Retrieve a list of ingredients for current meals
@@ -266,20 +280,23 @@ def shopping_list():
 
 
                 # Insert ingredients from selected meals into shopping_list table
+                # Only insert ingredients that do not yet exist in the table for the respective user
                 ingredient_counter = 0
                 for item in shop_list:
-                    shopping_list = Shopping_List(
-                        item_desc=item.Ingredient.ingredient_desc,
-                        recipe_id=item.Current_Meal.recipe_id,
-                        app_user_id=current_user.id,
-                        item_sort=ingredient_counter,
-                        checked_status=False,
-                        insert_datetime=datetime.now()
-                    )
-                    ingredient_counter += 1
-                    db.session.add(shopping_list)
-                    db.session.flush()
-                    db.session.commit()
+                    if item.Ingredient.ingredient_id not in ingredient_ids_list:
+                        shopping_list = Shopping_List(
+                            item_desc=item.Ingredient.ingredient_desc,
+                            recipe_id=item.Current_Meal.recipe_id,
+                            ingredient_id=item.Ingredient.ingredient_id,
+                            app_user_id=current_user.id,
+                            item_sort=ingredient_counter,
+                            checked_status=False,
+                            insert_datetime=datetime.now()
+                        )
+                        ingredient_counter += 1
+                        db.session.add(shopping_list)
+                        db.session.flush()
+                        db.session.commit()
 
 
             except Exception as e:
@@ -288,6 +305,58 @@ def shopping_list():
                 output.append(str(e))
                 print(output)
 
+
+        # Path for deleting custom-added items from shopping list:
+        if "del_custom_submit" in request.form:
+            try:
+
+                # Delete existing shopping list
+                Shopping_List.query.filter_by(app_user_id=current_user.id).filter_by(recipe_id=None).delete()
+
+                db.session.flush()
+                db.session.commit()
+
+
+            except Exception as e:
+                db.session.rollback()
+                output.append("Application encountered an error, and your shopping list was not deleted. Better luck in the future!")
+                output.append(str(e))
+                print(output)
+
+
+        # Path for deleting auto-generated items from shopping list:
+        if "del_auto_submit" in request.form:
+            try:
+
+                # Delete existing shopping list
+                Shopping_List.query.filter(Shopping_List.recipe_id.isnot(None)).filter_by(app_user_id=current_user.id).delete()
+
+                db.session.flush()
+                db.session.commit()
+
+            except Exception as e:
+                db.session.rollback()
+                output.append("Application encountered an error, and your shopping list was not deleted. Better luck in the future!")
+                output.append(str(e))
+                print(output)
+
+
+        # Path for deleting all items from shopping list:
+        if "del_all_submit" in request.form:
+            try:
+
+                # Delete existing shopping list
+                Shopping_List.query.filter_by(app_user_id=current_user.id).delete()
+
+                db.session.flush()
+                db.session.commit()
+
+
+            except Exception as e:
+                db.session.rollback()
+                output.append("Application encountered an error, and your shopping list was not deleted. Better luck in the future!")
+                output.append(str(e))
+                print(output)
         
 
     shop_list = (db.session.query(

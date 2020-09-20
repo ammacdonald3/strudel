@@ -92,6 +92,7 @@ class Ingredient(db.Model):
     recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.recipe_id'), nullable=False)
     ingredient_desc = db.Column(db.String())
     insert_datetime = db.Column(db.DateTime())
+    shopping_list = db.relationship('Shopping_List', backref='shopping_list2', lazy=True)
 
     def __init__(self, recipe_id, ingredient_desc, insert_datetime):
         self.recipe_id = recipe_id
@@ -193,14 +194,16 @@ class Shopping_List(db.Model):
     shopping_list_id = db.Column(db.Integer, primary_key=True)
     item_desc = db.Column(db.String())
     recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.recipe_id'), nullable=True)
+    ingredient_id = db.Column(db.Integer(), db.ForeignKey('ingredient.ingredient_id'), nullable=True)
     app_user_id = db.Column(db.Integer(), db.ForeignKey('app_user.id'), nullable=False)
     item_sort = db.Column(db.Integer)
     checked_status = db.Column(db.Boolean())
     insert_datetime = db.Column(db.DateTime())
 
-    def __init__(self, item_desc, recipe_id, app_user_id, item_sort, checked_status, insert_datetime):
+    def __init__(self, item_desc, recipe_id, ingredient_id, app_user_id, item_sort, checked_status, insert_datetime):
         self.item_desc = item_desc
         self.recipe_id = recipe_id
+        self.ingredient_id = ingredient_id
         self.app_user_id = app_user_id
         self.item_sort = item_sort
         self.checked_status = checked_status

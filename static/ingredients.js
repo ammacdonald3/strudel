@@ -19,7 +19,7 @@ $(AddIngredientButton).click(function (e) //on add input button click
         if (x <= IngredientFieldCount) {
             IngredientFieldCount++; //text box added increment
             //add input box
-            $('<div class="form-group"><div class="row"><div class="form-group col-lg-2">Ingredient ' + IngredientFieldCount + '</div><div class="form-group col-lg-7"><input name="ingredient_desc' + IngredientFieldCount + '" class="form-control col" placeholder="Ingredient ' + IngredientFieldCount + '"></div><div class="form-group col-lg-3"><button class="removeclass btn btn-outline-danger col">Delete</button></div></div></div>').insertBefore(IngredientInputsWrapper);
+            $('<div class="form-group"><div class="row"><div class="form-group col-lg-2">Ingredient ' + IngredientFieldCount + '</div><div class="form-group col-lg-7"><input name="ingredient_desc' + IngredientFieldCount + '" class="form-control col" placeholder="Ingredient ' + IngredientFieldCount + '"></div><div class="form-group col-lg-3"><button class="removeclass btn btn-danger col">Delete</button></div></div></div>').insertBefore(IngredientInputsWrapper);
             x++; //text box increment
         }
         return false;
@@ -31,7 +31,7 @@ $(AddStepButton).click(function (g) //on add input button click
         if (y <= StepFieldCount) {
             StepFieldCount++; //text box added increment
             //add input box
-            $('<div class="form-group"><div class="row"><div class="form-group col-lg-1">Step ' + StepFieldCount + '</div><div class="form-group col-lg-8"><input name="recipe_step' + StepFieldCount + '" class="form-control col" placeholder="Step ' + StepFieldCount + '"></div><div class="form-group col-lg-3"><button class="removeclass btn btn-outline-danger col">Delete</button></div></div></div>').insertBefore(StepInputsWrapper);
+            $('<div class="form-group"><div class="row"><div class="form-group col-lg-1">Step ' + StepFieldCount + '</div><div class="form-group col-lg-8"><input name="recipe_step' + StepFieldCount + '" class="form-control col" placeholder="Step ' + StepFieldCount + '"></div><div class="form-group col-lg-3"><button class="removeclass btn btn-danger col">Delete</button></div></div></div>').insertBefore(StepInputsWrapper);
             y++; //text box increment
         }
         return false;

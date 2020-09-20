@@ -17,13 +17,11 @@ Shopping List
     <div>
         Automatically generate your shopping list based on this week's selected meals!
         <br>
-        <span class="error">NOTE: Selecting the button below will clear out your current shopping list.</span>
-        <br>
         <br>
 
         <form role="form" method='POST' id="generate_form" name="generate_form">
 
-            <button type="submit" class="btn btn-outline-primary btn-block" id="generate_submit"
+            <button type="submit" class="btn btn-primary btn-block" id="generate_submit"
                 name="generate_submit">Generate Shopping List</button>
 
         </form>
@@ -36,10 +34,10 @@ Shopping List
     <form role="form" method='POST' id="add_form" name="add_form">
 
         <div class="input-group mb-3">
-            <input type="text" class="form-control" name="add_item" id="add_item" placeholder="Add new item" aria-label="Add new item"
-                aria-describedby="basic-addon2">
+            <input type="text" class="form-control" name="add_item" id="add_item" placeholder="Add new item"
+                aria-label="Add new item" aria-describedby="basic-addon2">
             <div class="input-group-append">
-                <button class="btn btn-outline-success" type="submit" id="add_submit" name="add_submit">Add</button>
+                <button class="btn btn-success" type="submit" id="add_submit" name="add_submit">Add</button>
             </div>
         </div>
 
@@ -54,12 +52,44 @@ Shopping List
                 {% if ingredient.Shopping_List.checked_status == True %} class="completed" {% endif %}>
                 <span class="trash"><i class="fa fa-trash"
                         id="{{ ingredient.Shopping_List.shopping_list_id }}"></i></span>
-                {{ ingredient.Shopping_List.item_desc }} {% if ingredient.Recipe.recipe_id %} ({{ ingredient.Recipe.recipe_name }}) {% endif %}</span>
+                {{ ingredient.Shopping_List.item_desc }} {% if ingredient.Recipe.recipe_id %}
+                ({{ ingredient.Recipe.recipe_name }}) {% endif %}</span>
         </li>
         {% endfor %}
     </ul>
     <br>
     <br>
+
+    <div class="row">
+
+        <!-- Button for deleting custom shopping list items -->
+        <div class="form-group col-sm">
+            <form role="form" method='POST' id='del_custom_form' name='del_custom_name'>
+                <button type="submit" class="btn btn-danger btn-block" id="del_custom_submit"
+                    name="del_custom_submit">Delete Custom Items</button>
+            </form>
+        </div>
+
+        <!-- Button for deleting auto-generated shopping list items -->
+        <div class="form-group col-sm">
+            <form role="form" method='POST' id='del_auto_form' name='del_auto_name'>
+                <button type="submit" class="btn btn-danger btn-block" id="del_auto_submit"
+                    name="del_auto_submit">Delete Auto-Generated Items</button>
+            </form>
+        </div>
+
+        <!-- Button for deleting all shopping list items -->
+        <div class="form-group col-sm">
+            <form role="form" method='POST' id='del_all_form' name='del_all_form'>
+                <button type="submit" class="btn btn-danger btn-block" id="del_all_submit" name="del_all_submit">Delete
+                    All Items</button>
+            </form>
+        </div>
+
+    </div>
+
+
+
     <br>
 
 </div>
