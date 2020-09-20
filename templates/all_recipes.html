@@ -24,22 +24,28 @@ All Recipes
         </h4>
       </div>
 
-      <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+      <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
         <div class="card-body">
+          {% if fav_exists == True %}
           <dl>
             {% for recipe in favorite_recipe_list %}
-            <dt>
-              <h4><a
+            <dt class="text-center">
+              <h4>
+                <a
                   href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}">{{ recipe.Recipe.recipe_name }}</a>
               </h4>
 
               <h6><a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank">Source Website</a></h6>
             </dt>
-            <dd>
+            <dd class="text-center">
               <p>{{ recipe.Recipe.recipe_desc }}</p>
             </dd>
+            
             {% endfor %}
           </dl>
+          {% else %}
+          <h5 class="text-center">You haven't favorited any recipes yet. Try adding one!</h5>
+          {% endif %}
         </div>
       </div>
     </div>
@@ -55,20 +61,24 @@ All Recipes
       </div>
       <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
         <div class="card-body">
+          {% if your_exists == True %}
           <dl>
             {% for recipe in your_recipe_list %}
-            <dt>
+            <dt class="text-center">
               <h4><a
                   href="{{ url_for('recipe_detail', recipe_id=recipe.recipe_id) }}">{{ recipe.recipe_name }}</a>
               </h4>
 
               <h6><a href="https://{{ recipe.recipe_url }}" target="_blank">Source Website</a></h6>
             </dt>
-            <dd>
+            <dd class="text-center">
               <p>{{ recipe.recipe_desc }}</p>
             </dd>
             {% endfor %}
           </dl>
+          {% else %}
+          <h5 class="text-center">You haven't uploaded any recipes yet. Try adding one!</h5>
+          {% endif %}
         </div>
       </div>
     </div>
@@ -84,20 +94,24 @@ All Recipes
       </div>
       <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
         <div class="card-body">
+          {% if other_exists == True %}
           <dl>
             {% for recipe in other_recipe_list %}
-            <dt>
+            <dt class="text-center">
               <h4><a
                   href="{{ url_for('recipe_detail', recipe_id=recipe.recipe_id) }}">{{ recipe.recipe_name }}</a>
               </h4>
 
               <h6><a href="https://{{ recipe.recipe_url }}" target="_blank">Source Website</a></h6>
             </dt>
-            <dd>
+            <dd class="text-center">
               <p>{{ recipe.recipe_desc }}</p>
             </dd>
             {% endfor %}
           </dl>
+          {% else %}
+          <h5 class="text-center">No one else has uploaded any recipes yet!</h5>
+          {% endif %}
         </div>
       </div>
     </div>

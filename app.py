@@ -180,14 +180,33 @@ def meal_plan():
     # Get list of user's selected breakfast meals
     selected_bfast_meals_list = (db.session.query(Recipe, Current_Meal).join(Current_Meal, Recipe.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.app_user_id==current_user.id).filter(Current_Meal.active_ind==True).filter(Current_Meal.meal=='breakfast').order_by(Current_Meal.day_number)).all()
 
+    if len(selected_bfast_meals_list) != 0:
+        bfast_exists = True
+    else:
+        bfast_exists = False 
+
     # Get list of user's selected lunch meals
     selected_lunch_meals_list = (db.session.query(Recipe, Current_Meal).join(Current_Meal, Recipe.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.app_user_id==current_user.id).filter(Current_Meal.active_ind==True).filter(Current_Meal.meal=='lunch').order_by(Current_Meal.day_number)).all()
+
+    if len(selected_lunch_meals_list) != 0:
+        lunch_exists = True
+    else:
+        lunch_exists = False 
 
     # Get list of user's selected dinner meals
     selected_dinner_meals_list = (db.session.query(Recipe, Current_Meal).join(Current_Meal, Recipe.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.app_user_id==current_user.id).filter(Current_Meal.active_ind==True).filter(Current_Meal.meal=='dinner').order_by(Current_Meal.day_number)).all()
 
+    if len(selected_dinner_meals_list) != 0:
+        dinner_exists = True
+    else:
+        dinner_exists = False 
 
-    return render_template('meal_plan.html', selected_bfast_meals_list=selected_bfast_meals_list, selected_lunch_meals_list=selected_lunch_meals_list, selected_dinner_meals_list=selected_dinner_meals_list)
+
+    return render_template('meal_plan.html', selected_bfast_meals_list=selected_bfast_meals_list, selected_lunch_meals_list=selected_lunch_meals_list, selected_dinner_meals_list=selected_dinner_meals_list,
+    bfast_exists=bfast_exists,
+    lunch_exists=lunch_exists,
+    dinner_exists=dinner_exists
+    )
 
     
 
@@ -968,15 +987,30 @@ def auto_import():
 def all_recipes():
     # Your favorite recipes (created both by you and others)
     favorite_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id)).order_by(Recipe.recipe_name).all()
-    #print(favorite_recipe_list)
+
+    if len(favorite_recipe_list) != 0:
+        fav_exists = True
+    else:
+        fav_exists = False 
+
     # Recipes created by you
     your_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id)).order_by(Recipe.recipe_name).all()
+
+    if len(your_recipe_list) != 0:
+        your_exists = True
+    else:
+        your_exists = False 
 
     # Recipes created by others
     other_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by!=current_user.id)).order_by(Recipe.recipe_name).all()
 
+    if len(other_recipe_list) != 0:
+        other_exists = True
+    else:
+        other_exists = False 
+
     # Render the all_recipes.html template (main page for this route)
-    return render_template("all_recipes.html", favorite_recipe_list=favorite_recipe_list, your_recipe_list=your_recipe_list, other_recipe_list=other_recipe_list)
+    return render_template("all_recipes.html", favorite_recipe_list=favorite_recipe_list, your_recipe_list=your_recipe_list, other_recipe_list=other_recipe_list, fav_exists=fav_exists, your_exists=your_exists, other_exists=other_exists)
 
 
 # Define route for page to view detailed info about one recipe

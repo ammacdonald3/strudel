@@ -12,15 +12,18 @@
 $(document).ready(function(){
     $("input:checkbox").click(function () {
         var $this = $(this);
+        var $this_parent = $this.parent()
         if (this.checked) {
-            $this.nextAll(':lt(2)').addClass('completed');
+            // $this.nextAll(':lt(2)').addClass('completed');
+            $this_parent.siblings().addClass("completed");
             $.ajax({
                 url: '/_shopping_list_items',
                 type: 'POST',
                 data: { s_list_id:$(this).attr("id"), status:"checked" }
             });
         } else {
-            $this.nextAll(':lt(2)').removeClass('completed');
+            // $this.nextAll(':lt(2)').removeClass('completed');
+            $this_parent.siblings().removeClass("completed");
             $.ajax({
                 url: '/_shopping_list_items',
                 type: 'POST',
@@ -30,7 +33,7 @@ $(document).ready(function(){
     });
     $('.fa-trash').click(function () {
         var $this = $(this);
-        $(this).closest("li").fadeOut(100,function(){
+        $(this).closest("tr").fadeOut(100,function(){
             $(this).remove;
         });
         $.ajax({
@@ -39,28 +42,28 @@ $(document).ready(function(){
             data: { s_list_id:$(this).attr("id") }
         });
     })
-    $('#shop-list').sortable({
-        // stop: function(event, ui) {
-        //     alert("New position: " + ui.item.index());
-        //     $.ajax({
-        //         url: '/_shopping_list_sort',
-        //         type: 'POST',
-        //         data: { s_list_id:$(this).attr("id"), item_index:ui.item.index() }
-        //     });
-        // }
-        handle: '.handle',
-        axis: 'y',
-        update: function (event, ui) {
-            var data = $(this).sortable('serialize');
+    // $('#shop-list').sortable({
+    //     // stop: function(event, ui) {
+    //     //     alert("New position: " + ui.item.index());
+    //     //     $.ajax({
+    //     //         url: '/_shopping_list_sort',
+    //     //         type: 'POST',
+    //     //         data: { s_list_id:$(this).attr("id"), item_index:ui.item.index() }
+    //     //     });
+    //     // }
+    //     handle: '.handle',
+    //     axis: 'y',
+    //     update: function (event, ui) {
+    //         var data = $(this).sortable('serialize');
 
-            // POST to server using $.post or $.ajax
-            $.ajax({
-                data: data,
-                type: 'POST',
-                url: '/_shopping_list_sort'
-            });
-        }
-    });
+    //         // POST to server using $.post or $.ajax
+    //         $.ajax({
+    //             data: data,
+    //             type: 'POST',
+    //             url: '/_shopping_list_sort'
+    //         });
+    //     }
+    // });
 });
 
 

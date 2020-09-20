@@ -38,19 +38,27 @@ Meal Plan
     
           <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
             <div class="card-body">
+              {% if bfast_exists == True %}
               <dl>
                 {% for recipe in selected_bfast_meals_list %}
-                <dt>
-                  <h4>Meal #{{ recipe.Current_Meal.day_number }} - <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}">{{ recipe.Recipe.recipe_name }}</a>
+                <dt class="text-center">
+                  <h4>
+                    Meal #{{ recipe.Current_Meal.day_number }}
+                  </h4>
+                  <h4>
+                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}">{{ recipe.Recipe.recipe_name }}</a>
                   </h4>
     
                   <h6><a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank">Source Website</a></h6>
                 </dt>
-                <dd>
+                <dd class="text-center">
                   <p>{{ recipe.Recipe.recipe_desc }}</p>
                 </dd>
                 {% endfor %}
               </dl>
+              {% else %}
+              <h5 class="text-center">You don't have any breakfast meals selected this week.</h5>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -66,19 +74,27 @@ Meal Plan
           </div>
           <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
             <div class="card-body">
+              {% if lunch_exists == True %}
               <dl>
                 {% for recipe in selected_lunch_meals_list %}
-                <dt>
-                  <h4>Meal #{{ recipe.Current_Meal.day_number }} - <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}">{{ recipe.Recipe.recipe_name }}</a>
+                <dt class="text-center">
+                  <h4>
+                    Meal #{{ recipe.Current_Meal.day_number }}
+                  </h4>
+                  <h4>
+                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}">{{ recipe.Recipe.recipe_name }}</a>
                   </h4>
     
                   <h6><a href="https://{{ recipe.recipe_url }}" target="_blank">Source Website</a></h6>
                 </dt>
-                <dd>
+                <dd class="text-center">
                   <p>{{ recipe.Recipe.recipe_desc }}</p>
                 </dd>
                 {% endfor %}
               </dl>
+              {% else %}
+              <h5 class="text-center">You don't have any lunch meals selected this week.</h5>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -92,21 +108,29 @@ Meal Plan
               <!-- </button> -->
             </h4>
           </div>
-          <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+          <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
             <div class="card-body">
+              {% if dinner_exists == True %}
               <dl>
                 {% for recipe in selected_dinner_meals_list %}
-                <dt>
-                  <h4>Meal #{{ recipe.Current_Meal.day_number }} - <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}">{{ recipe.Recipe.recipe_name }}</a>
+                <dt class="text-center">
+                  <h4>
+                    Meal #{{ recipe.Current_Meal.day_number }}
+                  </h4>
+                  <h4>
+                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}">{{ recipe.Recipe.recipe_name }}</a>
                   </h4>
     
                   <h6><a href="https://{{ recipe.recipe_url }}" target="_blank">Source Website</a></h6>
                 </dt>
-                <dd>
+                <dd class="text-center">
                   <p>{{ recipe.Recipe.recipe_desc }}</p>
                 </dd>
                 {% endfor %}
               </dl>
+              {% else %}
+              <h5 class="text-center">You don't have any dinner meals selected this week.</h5>
+              {% endif %}
             </div>
           </div>
         </div>
