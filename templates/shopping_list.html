@@ -21,9 +21,10 @@ Shopping List
         <br>
         <br>
 
-        <form role="form" method='POST'>
+        <form role="form" method='POST' id="generate_form" name="generate_form">
 
-            <button type="submit" class="btn btn-outline-primary btn-block">Generate Shopping List</button>
+            <button type="submit" class="btn btn-outline-primary btn-block" id="generate_submit"
+                name="generate_submit">Generate Shopping List</button>
 
         </form>
     </div>
@@ -32,20 +33,34 @@ Shopping List
     <br>
     <br>
 
-    <dl id="shop-list">
+    <form role="form" method='POST' id="add_form" name="add_form">
+
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" name="add_item" id="add_item" placeholder="Add new item" aria-label="Add new item"
+                aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-outline-success" type="submit" id="add_submit" name="add_submit">Add</button>
+            </div>
+        </div>
+
+    </form>
+
+    <ul class="list-group" id="shop-list">
         {% for ingredient in shop_list %}
-        <dt>
+        <li class="list-group-item">
             <span class="handle"><i class="fas fa-bars"></i></span>
             <input type="checkbox" class="big-checkbox" value="1" id="{{ ingredient.Shopping_List.shopping_list_id }}"
                 name="rr[]" {% if ingredient.Shopping_List.checked_status == True %} checked {% endif %}><span
-                {% if ingredient.Shopping_List.checked_status == True %} class="completed"
-                {% endif %}>
-            <span class="trash"><i class="fa fa-trash"  id="{{ ingredient.Shopping_List.shopping_list_id }}"></i></span>    
-            {{ ingredient.Shopping_List.item_desc }} ({{ ingredient.Recipe.recipe_name }})</span>
-        </dt>
+                {% if ingredient.Shopping_List.checked_status == True %} class="completed" {% endif %}>
+                <span class="trash"><i class="fa fa-trash"
+                        id="{{ ingredient.Shopping_List.shopping_list_id }}"></i></span>
+                {{ ingredient.Shopping_List.item_desc }} {% if ingredient.Recipe.recipe_id %} ({{ ingredient.Recipe.recipe_name }}) {% endif %}</span>
+        </li>
         {% endfor %}
-    </dl>
-
+    </ul>
+    <br>
+    <br>
+    <br>
 
 </div>
 

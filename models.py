@@ -192,7 +192,7 @@ class Shopping_List(db.Model):
 
     shopping_list_id = db.Column(db.Integer, primary_key=True)
     item_desc = db.Column(db.String())
-    recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.recipe_id'), nullable=False)
+    recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.recipe_id'), nullable=True)
     app_user_id = db.Column(db.Integer(), db.ForeignKey('app_user.id'), nullable=False)
     item_sort = db.Column(db.Integer)
     checked_status = db.Column(db.Boolean())

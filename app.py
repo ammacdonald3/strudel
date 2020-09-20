@@ -196,46 +196,104 @@ def meal_plan():
 @login_required
 def shopping_list():
     output = []
+
     if request.method == "POST":
-        
-        try:
-            # Delete existing shopping list
-            Shopping_List.query.filter_by(app_user_id=current_user.id).delete()
+
+        # Path for manually adding new shopping list items
+        if "add_submit" in request.form:
+            try:
+                shopping_list_item = request.form['add_item']
+
+                # Retrieve the current items in the shopping list
+                shop_list = (db.session.query(
+                    Shopping_List
+                ).filter(
+                    Shopping_List.app_user_id==current_user.id
+                ).order_by(Shopping_List.item_sort).all())
 
 
-            # Retrieve a list of ingredients for current meals
-            shop_list = (db.session.query(Ingredient, Current_Meal).join(Current_Meal, Ingredient.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.app_user_id==current_user.id).filter(Current_Meal.active_ind==True)).all()
+                # Delete existing shopping list
+                Shopping_List.query.filter_by(app_user_id=current_user.id).delete()
 
 
-            # Insert ingredients from selected meals into shopping_list table
-            ingredient_counter = 0
-            for item in shop_list:
+                # Insert new item first
                 shopping_list = Shopping_List(
-                    item_desc=item.Ingredient.ingredient_desc,
-                    recipe_id=item.Current_Meal.recipe_id,
+                    item_desc=shopping_list_item,
+                    recipe_id=None,
                     app_user_id=current_user.id,
-                    item_sort=ingredient_counter,
+                    item_sort=0,
                     checked_status=False,
                     insert_datetime=datetime.now()
                 )
-                ingredient_counter += 1
+                
                 db.session.add(shopping_list)
                 db.session.flush()
                 db.session.commit()
 
+                # Reinsert remaining shopping list items second
+                ingredient_counter = 1
+                for item in shop_list:
+                    shopping_list = Shopping_List(
+                        item_desc=item.item_desc,
+                        recipe_id=item.recipe_id,
+                        app_user_id=current_user.id,
+                        item_sort=ingredient_counter,
+                        checked_status=item.checked_status,
+                        insert_datetime=item.insert_datetime
+                    )
+                    ingredient_counter += 1
+                    db.session.add(shopping_list)
+                    db.session.flush()
+                    db.session.commit()
 
-        except Exception as e:
-            db.session.rollback()
-            output.append("Application encountered an error, and your shopping list was not generated. Better luck in the future!")
-            output.append(str(e))
-            print(output)
+            except Exception as e:
+                db.session.rollback()
+                output.append("Application encountered an error, and your shopping list was not generated. Better luck in the future!")
+                output.append(str(e))
+                print(output)
 
 
+        # Path for auto-generating shopping list from meal plan
+        if "generate_submit" in request.form:
+            try:
+
+                # Delete existing shopping list
+                Shopping_List.query.filter_by(app_user_id=current_user.id).delete()
+
+
+                # Retrieve a list of ingredients for current meals
+                shop_list = (db.session.query(Ingredient, Current_Meal).join(Current_Meal, Ingredient.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.app_user_id==current_user.id).filter(Current_Meal.active_ind==True)).all()
+
+
+                # Insert ingredients from selected meals into shopping_list table
+                ingredient_counter = 0
+                for item in shop_list:
+                    shopping_list = Shopping_List(
+                        item_desc=item.Ingredient.ingredient_desc,
+                        recipe_id=item.Current_Meal.recipe_id,
+                        app_user_id=current_user.id,
+                        item_sort=ingredient_counter,
+                        checked_status=False,
+                        insert_datetime=datetime.now()
+                    )
+                    ingredient_counter += 1
+                    db.session.add(shopping_list)
+                    db.session.flush()
+                    db.session.commit()
+
+
+            except Exception as e:
+                db.session.rollback()
+                output.append("Application encountered an error, and your shopping list was not generated. Better luck in the future!")
+                output.append(str(e))
+                print(output)
+
+        
 
     shop_list = (db.session.query(
         Shopping_List, 
         Recipe
-    ).join(
+    ).outerjoin(
         Recipe, Recipe.recipe_id==Shopping_List.recipe_id
     ).filter(
         Shopping_List.app_user_id==current_user.id

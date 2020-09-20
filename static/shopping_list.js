@@ -30,7 +30,7 @@ $(document).ready(function(){
     });
     $('.fa-trash').click(function () {
         var $this = $(this);
-        $(this).closest("dt").fadeOut(500,function(){
+        $(this).closest("li").fadeOut(100,function(){
             $(this).remove;
         });
         $.ajax({
