@@ -31,6 +31,7 @@ Shopping List
     <br>
     <br>
 
+    <!-- Manually add new items to the shopping list -->
     <form role="form" method='POST' id="add_form" name="add_form">
 
         <div class="input-group mb-3">
@@ -42,6 +43,9 @@ Shopping List
         </div>
 
     </form>
+
+    
+
 
     <!-- <ul class="list-group" id="shop-list">
         {% for ingredient in shop_list %}
@@ -64,16 +68,16 @@ Shopping List
     <table class="table table-striped table-bordered">
         <thead>
             <tr>
-                <th scope="col"></th>
+                <th scope="col" class="trash-column"></th>
                 <th scope="col"></th>
                 <th scope="col">Item</th>
-                <th scope="col">Recipe</th>
+                <th scope="col" class="recipe-column">Recipe</th>
             </tr>
         </thead>
         <tbody>
             {% for ingredient in shop_list %}
             <tr>
-                <td class="text-center">
+                <td class="text-center trash-column">
                     <span class="trash"><i class="fa fa-trash"
                             id="{{ ingredient.Shopping_List.shopping_list_id }}"></i></span>
                 </td>
@@ -86,14 +90,15 @@ Shopping List
                 </td>
 
 
-                    <td {% if ingredient.Shopping_List.checked_status == True %} class="completed" {% endif %}>
-                        {{ ingredient.Shopping_List.item_desc }}
-                    </td>
-                    <td {% if ingredient.Shopping_List.checked_status == True %} class="completed" {% endif %}>
-                        {% if ingredient.Recipe.recipe_id %}
-                        {{ ingredient.Recipe.recipe_name }}
-                        {% endif %}
-                    </td>
+                <td {% if ingredient.Shopping_List.checked_status == True %} class="completed" {% endif %}>
+                    {{ ingredient.Shopping_List.item_desc }}
+                </td>
+                <td {% if ingredient.Shopping_List.checked_status == True %} class="completed recipe-column" {% else %}
+                    class="recipe-column" {% endif %}>
+                    {% if ingredient.Recipe.recipe_id %}
+                    {{ ingredient.Recipe.recipe_name }}
+                    {% endif %}
+                </td>
 
             </tr>
             {% endfor %}
@@ -103,6 +108,24 @@ Shopping List
 
 
     <br>
+    <br>
+
+    <!-- Toggle displaying / hiding the Trash Can or Recipe Name columns -->
+    <div class="form-group">
+            <div class="row">
+                <div class="btn-group-toggle form-group col-sm" data-toggle="buttons" style="margin-top: 10px;">
+                    <label class="btn btn-outline-success active btn-block">
+                        <input type="checkbox" name="diet_vegan" id="hide-del" autocomplete="off" />Hide Delete Column
+                    </label>
+                </div>
+                <div class="btn-group-toggle form-group col-sm" data-toggle="buttons" style="margin-top: 10px;">
+                    <label class="btn btn-outline-success active btn-block">
+                        <input type="checkbox" name="diet_vegetarian" id="hide-recipe" autocomplete="off" />Hide Recipe
+                        Column</label>
+                </div>
+            </div>
+        </div>
+
     <br>
 
     <div class="row">

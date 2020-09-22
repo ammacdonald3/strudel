@@ -10,6 +10,7 @@
 
 
 $(document).ready(function(){
+    // Strikethrough and fade shopping list items when checked
     $("input:checkbox").click(function () {
         var $this = $(this);
         var $this_parent = $this.parent()
@@ -31,6 +32,8 @@ $(document).ready(function(){
             });
         }
     });
+
+    // Completely delete shopping list items when clicking trash can icon
     $('.fa-trash').click(function () {
         var $this = $(this);
         $(this).closest("tr").fadeOut(100,function(){
@@ -42,6 +45,27 @@ $(document).ready(function(){
             data: { s_list_id:$(this).attr("id") }
         });
     })
+
+    // Show or hide table column for trash can icon
+    $('#hide-del').click(function () {
+        var $this = $(this);
+        if (this.checked) {
+            $(".trash-column").addClass("d-none")
+        } else {
+            $(".trash-column").removeClass("d-none")
+        }
+    });
+
+    // Show or hide table column for recipe name
+    $('#hide-recipe').click(function () {
+        var $this = $(this);
+        if (this.checked) {
+            $(".recipe-column").addClass("d-none")
+        } else {
+            $(".recipe-column").removeClass("d-none")
+        }
+    });
+
     // $('#shop-list').sortable({
     //     // stop: function(event, ui) {
     //     //     alert("New position: " + ui.item.index());
