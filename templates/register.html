@@ -32,7 +32,7 @@ Register
         <div class="row">
             <div class="form-group col-lg-6">
                 {{ form.app_username.label }}<br>
-                {{ form.app_username(size=32, class="form-control", placeholder="Enter username") }}<br>
+                {{ form.app_username(size=32, class="form-control", placeholder="Enter username", autocapitalize="none") }}<br>
                 {% for error in form.app_username.errors %}
                 <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
