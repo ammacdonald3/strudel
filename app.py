@@ -877,9 +877,13 @@ def auto_import():
                 auto_import_clean_url = clean(url_input)
                 scraper = scrape_me(url_input)
                 yields = scraper.yields()
-                clean_yields = re.sub('[^0-9]','', yields)
             except:
                 output.append("Recipe didn't scrape")
+
+            try:
+                clean_yields = re.sub('[^0-9]','', yields)
+            except:
+                clean_yields = 0
 
             # Insert data to RECIPE table
             try:
@@ -932,13 +936,16 @@ def auto_import():
 
             # Insert data to RECIPE_STEP table
             instructions = scraper.instructions().split('\n')
+            counter = 1
             for step in instructions:
                 try:
                     recipe_step = Recipe_Step(
                         recipe_id=recipe.recipe_id,
+                        step_order=counter,
                         step_desc=step,
                         insert_datetime=datetime.now()
                     )
+                    counter += 1
                     db.session.add(recipe_step)
                     db.session.flush()
                     db.session.commit()
