@@ -11,17 +11,7 @@ Meal Plan
 {% endblock %}
 
 {% block body %}
-<!--
-<div class="container">
 
-    {% for recipe in meal_plan_list %}
-    <h4>Day {{ recipe.Current_Meal.day_number }}: <a
-            href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.id) }}">{{ recipe.Recipe.recipe_name }}</a></h4>
-    {% endfor %}
-
-
-</div>
--->
 <br>
 <div class="container">
     <div id="accordion">
@@ -30,9 +20,7 @@ Meal Plan
         <div class="card" data-toggle="collapse" data-target="#collapseOne">
           <div class="card-header text-center" id="headingOne">
             <h4 class="mb-0">
-              <!-- <button class="btn btn-link collapsed" aria-expanded="false" aria-controls="collapseOne"> -->
               Breakfast
-              <!-- </button> -->
             </h4>
           </div>
     
@@ -67,9 +55,7 @@ Meal Plan
         <div class="card" data-toggle="collapse" data-target="#collapseTwo">
           <div class="card-header text-center" id="headingTwo">
             <h4 class="mb-0">
-              <!-- <button class="btn btn-link collapsed" aria-expanded="false" aria-controls="collapseTwo"> -->
               Lunch
-              <!-- </button> -->
             </h4>
           </div>
           <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
@@ -103,9 +89,7 @@ Meal Plan
         <div class="card" data-toggle="collapse" data-target="#collapseThree">
           <div class="card-header text-center" id="headingThree">
             <h4 class="mb-0">
-              <!-- <button class="btn btn-link collapsed" aria-expanded="false" aria-controls="collapseThree"> -->
               Dinner
-              <!-- </button> -->
             </h4>
           </div>
           <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
@@ -136,48 +120,11 @@ Meal Plan
         </div>
       </div>
 
-
-    <!-- BREAKFAST
-    <ul>
-      {% for recipe in selected_bfast_meals_list %}
-        <li>
-          <h4>Meal #{{ recipe.Current_Meal.day_number }} - <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}">{{ recipe.Recipe.recipe_name }}</a></h4>
-          
-          <h5><a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank">Source Website</a></h5>
-          <p>{{ recipe.Recipe.recipe_desc }}</p>
-        </li>
-      {% endfor %}
-    </ul>
-    <br>
-    LUNCH
-    <ul>
-      {% for recipe in selected_lunch_meals_list %}
-        <li>
-          <h4>Meal #{{ recipe.Current_Meal.day_number }} - <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}">{{ recipe.Recipe.recipe_name }}</a></h4>
-          
-          <h5><a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank">Source Website</a></h5>
-          <p>{{ recipe.Recipe.recipe_desc }}</p>
-        </li>
-      {% endfor %}
-    </ul>
-    <br>
-    DINNER
-    <ul>
-      {% for recipe in selected_dinner_meals_list %}
-        <li>
-          <h4>Meal #{{ recipe.Current_Meal.day_number }} - <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}">{{ recipe.Recipe.recipe_name }}</a></h4>
-          
-          <h5><a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank">Source Website</a></h5>
-          <p>{{ recipe.Recipe.recipe_desc }}</p>
-        </li>
-      {% endfor %}
-    </ul>
-    <br> -->
 </div>
 
-{% for item in output %}
+<!-- {% for item in output %}
   <h4>{{ item }}</h4>
-  {% endfor %}
+  {% endfor %} -->
 
 {% endblock %}
 

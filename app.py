@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
-#from Flask_SQLAlchemy import SQLAlchemy
 import flask_sqlalchemy
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from recipe_scrapers import scrape_me
@@ -8,6 +7,7 @@ import re
 import random
 import sys
 import os
+
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
@@ -63,10 +63,6 @@ def meal_selector():
 
             db.session.flush()
             db.session.commit()
-
-            # Retrieve a list of all recipes uploaded by user
-            # TO BE CHANGED in future to be a list of user's favorite meals
-            # your_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id)).order_by(Recipe.recipe_name).all()
 
             # Retrieve a list of user's favorite breakfast recipes
             favorite_bfast_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.meal_breakfast==True)).order_by(Recipe.recipe_name).all()
@@ -162,6 +158,17 @@ def meal_selector():
             output.append("Application encountered an error, and your meals were not selected. Better luck in the future!")
             output.append(str(e))
             print(output)
+
+            # Write errors to APP_ERROR table
+            app_error = App_Error(
+                    app_user_id=current_user.id,
+                    insert_datetime=datetime.now(),
+                    error_val=str(e)
+                )
+            db.session.add(app_error)
+            db.session.flush()
+            db.session.commit()
+
 
         # Redirect to meal_plan.html page so that data pulls from database
         return redirect('meal_plan')
@@ -273,14 +280,20 @@ def shopping_list():
                 output.append(str(e))
                 print(output)
 
+                # Write errors to APP_ERROR table
+                app_error = App_Error(
+                    app_user_id=current_user.id,
+                    insert_datetime=datetime.now(),
+                    error_val=str(e)
+                )
+                db.session.add(app_error)
+                db.session.flush()
+                db.session.commit()
+
 
         # Path for auto-generating shopping list from meal plan
         if "generate_submit" in request.form:
             try:
-
-                # Delete existing shopping list
-                # Shopping_List.query.filter_by(app_user_id=current_user.id).delete()
-
 
                 # Retrieve list of current shopping list ingredient IDs
                 current_shop_list = (db.session.query(
@@ -324,6 +337,16 @@ def shopping_list():
                 output.append(str(e))
                 print(output)
 
+                # Write errors to APP_ERROR table
+                app_error = App_Error(
+                    app_user_id=current_user.id,
+                    insert_datetime=datetime.now(),
+                    error_val=str(e)
+                )
+                db.session.add(app_error)
+                db.session.flush()
+                db.session.commit()
+
 
         # Path for deleting custom-added items from shopping list:
         if "del_custom_submit" in request.form:
@@ -342,6 +365,16 @@ def shopping_list():
                 output.append(str(e))
                 print(output)
 
+                # Write errors to APP_ERROR table
+                app_error = App_Error(
+                    app_user_id=current_user.id,
+                    insert_datetime=datetime.now(),
+                    error_val=str(e)
+                )
+                db.session.add(app_error)
+                db.session.flush()
+                db.session.commit()
+
 
         # Path for deleting auto-generated items from shopping list:
         if "del_auto_submit" in request.form:
@@ -358,6 +391,16 @@ def shopping_list():
                 output.append("Application encountered an error, and your shopping list was not deleted. Better luck in the future!")
                 output.append(str(e))
                 print(output)
+
+                # Write errors to APP_ERROR table
+                app_error = App_Error(
+                    app_user_id=current_user.id,
+                    insert_datetime=datetime.now(),
+                    error_val=str(e)
+                )
+                db.session.add(app_error)
+                db.session.flush()
+                db.session.commit()
 
 
         # Path for deleting all items from shopping list:
@@ -376,8 +419,19 @@ def shopping_list():
                 output.append("Application encountered an error, and your shopping list was not deleted. Better luck in the future!")
                 output.append(str(e))
                 print(output)
+
+                # Write errors to APP_ERROR table
+                app_error = App_Error(
+                    app_user_id=current_user.id,
+                    insert_datetime=datetime.now(),
+                    error_val=str(e)
+                )
+                db.session.add(app_error)
+                db.session.flush()
+                db.session.commit()
         
 
+    # Query for shopping list items
     shop_list = (db.session.query(
         Shopping_List, 
         Recipe
@@ -390,21 +444,25 @@ def shopping_list():
     return render_template('shopping_list.html', shop_list=shop_list)
 
 
-# Define route for checking off shopping list items
+# Define route for checking off shopping list items with ajax
 @app.route('/_shopping_list_items', methods=['GET', 'POST'])
 @login_required
 def _shopping_list_items():
     status = request.form.get('status')
     s_list_id = request.form.get('s_list_id')
 
+    # If user checked an item, update DB to flag it as checked
     if status == 'checked':
         db.session.query(Shopping_List).filter(Shopping_List.shopping_list_id==s_list_id).update(dict(checked_status=True))
+    
+    # If user unchecked an item, update DB to flag it as unchecked
     elif status == 'unchecked':
         db.session.query(Shopping_List).filter(Shopping_List.shopping_list_id==s_list_id).update(dict(checked_status=False))
     
     db.session.flush()
     db.session.commit()
 
+    # Query for shopping list items
     shop_list = (db.session.query(
         Shopping_List, 
         Recipe
@@ -423,11 +481,13 @@ def _shopping_list_items():
 def _del_shopping_list_items():
     s_list_id = request.form.get('s_list_id')
 
+    # Delete value from database
     Shopping_List.query.filter_by(shopping_list_id=s_list_id).delete()
 
     db.session.flush()
     db.session.commit()
 
+    # Query for shopping list items
     shop_list = (db.session.query(
         Shopping_List, 
         Recipe
@@ -440,42 +500,6 @@ def _del_shopping_list_items():
     return render_template('shopping_list.html', shop_list=shop_list)
 
 
-# Define route for resorting shopping list items
-@app.route('/_shopping_list_sort', methods=['GET', 'POST'])
-@login_required
-def _shopping_list_sort():
-    # status = request.form.get('status')
-    # s_list_id = request.form.get('s_list_id')
-
-    # if status == 'checked':
-    #     db.session.query(Shopping_List).filter(Shopping_List.shopping_list_id==s_list_id).update(dict(checked_status=True))
-    # elif status == 'unchecked':
-    #     db.session.query(Shopping_List).filter(Shopping_List.shopping_list_id==s_list_id).update(dict(checked_status=False))
-    
-    # db.session.flush()
-    # db.session.commit()
-    print('ITEM INDEX')
-    print(request.get_data())
-
-    shop_list = (db.session.query(
-        Shopping_List, 
-        Ingredient, 
-        Recipe, 
-        Current_Meal
-    ).join(
-        Ingredient, Ingredient.ingredient_id==Shopping_List.ingredient_id
-    ).join(
-        Recipe, Recipe.recipe_id==Ingredient.recipe_id
-    ).join(
-        Current_Meal, Recipe.recipe_id==Current_Meal.recipe_id
-    ).filter(
-        Current_Meal.app_user_id==current_user.id
-    ).filter(
-        Current_Meal.active_ind==True
-    ).order_by(Shopping_List.item_sort).all())
-
-    return render_template('shopping_list.html', shop_list=shop_list)
-
 
 # Define route for page to manually add recipes
 @app.route('/add', methods=['GET', 'POST'])
@@ -484,31 +508,6 @@ def add_recipe():
     output = []
     # If user submits data on input form, write to DB
     if request.method == "POST":
-        # if 'recipe_name' not in request.form:
-        #     print('RECIPE NAME MISSING')
-        # if 'recipe_desc' not in request.form:
-        #     print('RECIPE DESC MISSING')
-        # if 'recipe_prep_time' not in request.form:
-        #     print('RECIPE PREP TIME MISSING')
-        # if 'recipe_cook_time' not in request.form:
-        #     print('RECIPE COOK TIME MISSING')
-        # if 'recipe_url' not in request.form:
-        #     print('RECIPE URL MISSING')
-        # if 'serving_size' not in request.form:
-        #     print('RECIPE SERVING SIZE MISSING')
-        # if 'diet_vegan' not in request.form:
-        #     print('DIET VEGAN MISSING')
-        # if 'diet_vegetarian' not in request.form:
-        #     print('DIET VEGETARIAN MISSING')
-        # if 'diet_gluten' not in request.form:
-        #     print('DIET GLUTEN MISSING')
-        # if 'meal_breakfast' not in request.form:
-        #     print('BREAKFAST MISSING')
-        # if 'meal_lunch' not in request.form:
-        #     print('LUNCH MISSING')
-        # if 'meal_dinner' not in request.form:
-        #     print('DINNER MISSING')
-
 
         # Write recipe info
         try:
@@ -585,6 +584,16 @@ def add_recipe():
             output.append("Application encountered an error, and the recipe didn't write to the database. Better luck in the future!")
             output.append(str(e))
             print(output)
+
+            # Write errors to APP_ERROR table
+            app_error = App_Error(
+                app_user_id=current_user.id,
+                insert_datetime=datetime.now(),
+                error_val=str(e)
+            )
+            db.session.add(app_error)
+            db.session.flush()
+            db.session.commit()
             
 
         # Insert data to INGREDIENT table
@@ -597,6 +606,7 @@ def add_recipe():
                 )
                 db.session.add(ingredient)
                 db.session.commit()
+
             # Return error if database write was unsuccessful
             except Exception as e:
                 db.session.rollback()
@@ -617,6 +627,7 @@ def add_recipe():
                 counter += 1
                 db.session.add(recipe_step)
                 db.session.commit()
+
             # Return error if database write was unsuccessful
             except Exception as e:
                 db.session.rollback()
@@ -644,6 +655,16 @@ def add_recipe():
             output.append("Application encountered an error, and the user/recipe info didn't write to the database. Better luck in the future!")
             output.append(str(e))
             print(output)
+
+            # Write errors to APP_ERROR table
+            app_error = App_Error(
+                app_user_id=current_user.id,
+                insert_datetime=datetime.now(),
+                error_val=str(e)
+            )
+            db.session.add(app_error)
+            db.session.flush()
+            db.session.commit()
 
         # Render recipe_confirm.html template after recipe is written to DB    
         return(render_template('recipe_confirm.html', recipe_id=recipe.recipe_id, recipe_name=request.form['recipe_name']))
@@ -680,42 +701,6 @@ def edit_recipe(recipe_id):
             prep_time = int(request.form['recipe_prep_time'])
             cook_time = int(request.form['recipe_cook_time'])
             total_time = prep_time + cook_time
-            
-            # Insert data to RECIPE table
-            # recipe = Recipe(
-            #     recipe_name=request.form['recipe_name'],
-            #     recipe_desc=request.form['recipe_desc'],
-            #     recipe_prep_time=prep_time,
-            #     recipe_cook_time=cook_time,
-            #     recipe_total_time=total_time,
-            #     serving_size=request.form['serving_size'],
-            #     recipe_url=manual_input_clean_url,
-            #     diet_vegan=convert_bool(request.form.get('diet_vegan')),
-            #     diet_vegetarian=convert_bool(request.form.get('diet_vegetarian')),
-            #     diet_gluten=convert_bool(request.form.get('diet_gluten')),
-            #     meal_breakfast=convert_bool(request.form.get('meal_breakfast')),
-            #     meal_lunch=convert_bool(request.form.get('meal_lunch')),
-            #     meal_dinner=convert_bool(request.form.get('meal_dinner')),
-            #     created_by=current_user.id,
-            #     insert_datetime=datetime.now()
-            # )
-            # print("PRINT PRINT PRINT")
-            # print(request.form['recipe_name']),
-            # print(request.form['recipe_desc']),
-            # print(prep_time),
-            # print(cook_time),
-            # print(total_time),
-            # print(request.form['serving_size']),
-            # print(manual_input_clean_url),
-            # print(bool(request.form['diet_vegan']),),
-            # print(bool(request.form['diet_vegetarian'])),
-            # print(bool(request.form['diet_gluten'])),
-            # print(bool(request.form['meal_breakfast'])),
-            # print(bool(request.form['meal_lunch'])),
-            # print(bool(request.form['meal_dinner'])),
-            # print(current_user.id),
-            # print(datetime.now())
-
 
             # HTML form only passes checked inputs
             # Below code calculates boolean value if the input exists
@@ -778,6 +763,16 @@ def edit_recipe(recipe_id):
             output.append(str(e))
             print(str(e))
 
+            # Write errors to APP_ERROR table
+            app_error = App_Error(
+                app_user_id=current_user.id,
+                insert_datetime=datetime.now(),
+                error_val=str(e)
+            )
+            db.session.add(app_error)
+            db.session.flush()
+            db.session.commit()
+
         # Delete existing ingredients
         Ingredient.query.filter_by(recipe_id=recipe_id).delete()
         db.session.flush()
@@ -831,6 +826,16 @@ def edit_recipe(recipe_id):
                 output.append(str(e))
                 print(output)
 
+                # Write errors to APP_ERROR table
+                app_error = App_Error(
+                    app_user_id=current_user.id,
+                    insert_datetime=datetime.now(),
+                    error_val=str(e)
+                )
+                db.session.add(app_error)
+                db.session.flush()
+                db.session.commit()
+
 
         # Insert data to USER_RECIPE table
         try:
@@ -845,12 +850,23 @@ def edit_recipe(recipe_id):
             db.session.flush()
             db.session.commit()
             #output.append("User_Recipe successfully added!")
+
         # Return error if database write was unsuccessful
         except Exception as e:
                 db.session.rollback()
                 output.append("Application encountered an error, and the user/recipe info didn't write to the database. Better luck in the future!")
                 output.append(str(e))
                 print(output)
+
+                # Write errors to APP_ERROR table
+                app_error = App_Error(
+                    app_user_id=current_user.id,
+                    insert_datetime=datetime.now(),
+                    error_val=str(e)
+                )
+                db.session.add(app_error)
+                db.session.flush()
+                db.session.commit()
 
 
         # Render recipe_confirm.html template after recipe is written to DB    
@@ -877,8 +893,17 @@ def auto_import():
                 auto_import_clean_url = clean(url_input)
                 scraper = scrape_me(url_input)
                 yields = scraper.yields()
-            except:
+            except Exception as e:
                 output.append("Recipe didn't scrape")
+                # Write errors to APP_ERROR table
+                app_error = App_Error(
+                    app_user_id=current_user.id,
+                    insert_datetime=datetime.now(),
+                    error_val=str(e)
+                )
+                db.session.add(app_error)
+                db.session.flush()
+                db.session.commit()
 
             try:
                 clean_yields = re.sub('[^0-9]','', yields)
@@ -888,6 +913,7 @@ def auto_import():
                     clean_yields = 0
             except:
                 clean_yields = 0
+                
 
             # Insert data to RECIPE table
             try:
@@ -919,6 +945,16 @@ def auto_import():
                 output.append("Application encountered an error, and the recipe didn't write to the database. Better luck in the future!")
                 output.append(str(e))
 
+                # Write errors to APP_ERROR table
+                app_error = App_Error(
+                    app_user_id=current_user.id,
+                    insert_datetime=datetime.now(),
+                    error_val=str(e)
+                )
+                db.session.add(app_error)
+                db.session.flush()
+                db.session.commit()
+
 
             # Insert data to INGREDENT table
             for item in scraper.ingredients():
@@ -937,6 +973,16 @@ def auto_import():
                     db.session.rollback()
                     output.append("Application encountered an error, and the ingredients didn't write to the database. Better luck in the future!")
                     output.append(str(e))
+
+                    # Write errors to APP_ERROR table
+                    app_error = App_Error(
+                        app_user_id=current_user.id,
+                        insert_datetime=datetime.now(),
+                        error_val=str(e)
+                    )
+                    db.session.add(app_error)
+                    db.session.flush()
+                    db.session.commit()
 
             # Insert data to RECIPE_STEP table
             instructions = scraper.instructions().split('\n')
@@ -958,6 +1004,16 @@ def auto_import():
                     db.session.rollback()
                     output.append("Application encountered an error, and the instructions didn't write to the database. Better luck in the future!")
                     output.append(str(e))
+
+                    # Write errors to APP_ERROR table
+                    app_error = App_Error(
+                        app_user_id=current_user.id,
+                        insert_datetime=datetime.now(),
+                        error_val=str(e)
+                    )
+                    db.session.add(app_error)
+                    db.session.flush()
+                    db.session.commit()
 
 
             # Insert data to USER_RECIPE table
@@ -983,9 +1039,22 @@ def auto_import():
                 output.append("Application encountered an error, and the user recipe didn't write to the database. Better luck in the future!")
                 output.append(str(e)) """
             
-        except:
+        except Exception as e:
             error = 'This website is not supported at this time. Please manually add this recipe, and use the Auto Import function for one of the supported websites below.'
+            
+            # Write errors to APP_ERROR table
+            app_error = App_Error(
+                app_user_id=current_user.id,
+                insert_datetime=datetime.now(),
+                error_val=str(e)
+            )
+            db.session.add(app_error)
+            db.session.flush()
+            db.session.commit()
+
             return render_template("auto_import.html", error=error)
+
+            
 
     # When not posting form, render the auto_import.html template (main page for this route)
     return render_template("auto_import.html", output=output)
@@ -1028,16 +1097,17 @@ def all_recipes():
 @app.route('/recipe/<recipe_id>', methods=['GET', 'POST'])
 @login_required
 def recipe_detail(recipe_id):
-    #recipe = Recipe.query.filter_by(recipe_id=recipe_id)
-    #recipe = (db.session.query(Recipe).filter(Recipe.recipe_id==recipe_id)).order_by(Recipe.recipe_name).all()
-    #Recipe.query.filter_by(recipe_id=recipe_id).first_or_404()
-    # BELOW COMMENT is an attempt to display "uploaded by username" on Recipe Detail page - DOES NOT WORK
-    #recipe = (db.session.query(Recipe, App_User).join(App_User, Recipe.created_by==App_User.id).filter_by(id=recipe_id)).all()
+
+    # Get recipe details
     recipe = db.session.query(Recipe).filter_by(recipe_id=recipe_id).join(App_User).first()
-    #recipe = db.session.query(Recipe).filter_by(recipe_id=recipe_id)
-    #recipe = Recipe.query.filter_by(recipe_id=recipe_id)
+
+    # Determine if recipe is one of the user's favorite recipes
     favorite = db.session.query(Favorite_Recipe).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).first()
+
+    # Get ingredient list for recipe
     ingredient_list = Ingredient.query.filter_by(recipe_id=recipe_id)
+
+    # Get step list for recipe
     step_list = Recipe_Step.query.filter_by(recipe_id=recipe_id)
 
     output = []
@@ -1065,8 +1135,17 @@ def recipe_detail(recipe_id):
             db.session.rollback()
             output.append("Application encountered an error, and the recipe didn't write to the database. Better luck in the future!")
             output.append(str(e))
-            print('ERROR ERROR ERROR')
             print(output)
+
+            # Write errors to APP_ERROR table
+            app_error = App_Error(
+                app_user_id=current_user.id,
+                insert_datetime=datetime.now(),
+                error_val=str(e)
+            )
+            db.session.add(app_error)
+            db.session.flush()
+            db.session.commit()
         
 
     # If user select 'remove from favorites' button, delete the user/recipe combo from the favorites table:
@@ -1085,8 +1164,17 @@ def recipe_detail(recipe_id):
             db.session.rollback()
             output.append("Application encountered an error, and the favorite wasn't deleted from the database. Better luck in the future!")
             output.append(str(e))
-            print('ERROR ERROR ERROR')
             print(output)
+
+            # Write errors to APP_ERROR table
+            app_error = App_Error(
+                app_user_id=current_user.id,
+                insert_datetime=datetime.now(),
+                error_val=str(e)
+            )
+            db.session.add(app_error)
+            db.session.flush()
+            db.session.commit()
 
     # If user is the owner of the recipe, pass a flag to render the 'Edit' button
     if recipe.created_by == current_user.id:
@@ -1159,7 +1247,10 @@ def register():
         db.session.add(app_user)
         db.session.commit()
         flash('Congratulations, you are now a registered user!')
-        return redirect(url_for('login'))
+        login_user(app_user)
+        next_page = url_for('index')
+        return redirect(next_page)
+        #return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
 

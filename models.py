@@ -241,6 +241,25 @@ class RegistrationForm(FlaskForm):
         if app_user is not None:
             raise ValidationError('Please use a different email address.')
 
+
+
+class App_Error(db.Model):
+    __tablename__ = 'app_error'
+
+    error_id = db.Column(db.Integer, primary_key=True)
+    app_user_id = db.Column(db.Integer())
+    insert_datetime = db.Column(db.DateTime())
+    error_val = db.Column(db.String())
+
+    def __init__(self, app_user_id, insert_datetime, error_val):
+        self.app_user_id = app_user_id
+        self.insert_datetime = insert_datetime
+        self.error_val = error_val
+        
+    def __repr__(self):
+        return '<id {}>'.format(self.error_id)
+
+
 @login.user_loader
 def load_user(id):
     return App_User.query.get(id)
