@@ -882,9 +882,9 @@ def auto_import():
 
             try:
                 clean_yields = re.sub('[^0-9]','', yields)
-                if clean_yields = None:
+                if clean_yields == None:
                     clean_yields = 0
-                elif clean_yields = '':
+                elif clean_yields == '':
                     clean_yields = 0
             except:
                 clean_yields = 0
