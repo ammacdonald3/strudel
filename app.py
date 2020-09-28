@@ -17,7 +17,7 @@ login = LoginManager(app)
 login.login_view = 'login'
 db = flask_sqlalchemy.SQLAlchemy(app)
 
-from models import Recipe, Ingredient, Recipe_Step, App_User, LoginForm, RegistrationForm, Current_Meal, User_Recipe, Favorite_Recipe, Shopping_List
+from models import Recipe, Ingredient, Recipe_Step, App_User, LoginForm, RegistrationForm, Current_Meal, User_Recipe, Favorite_Recipe, Shopping_List, App_Error
 
 # Function to clean URL input
 def clean(url_input):
