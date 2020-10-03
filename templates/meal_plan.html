@@ -21,6 +21,9 @@ Meal Plan
           <div class="card-header text-center" id="headingOne">
             <h4 class="mb-0">
               Breakfast
+              <!-- Badge displaying total number of recipes in this section -->
+              <span class="badge badge-light">{{ bfast_length }}</span>
+              <span class="sr-only">breakfast recipes</span>
             </h4>
           </div>
     
@@ -56,6 +59,9 @@ Meal Plan
           <div class="card-header text-center" id="headingTwo">
             <h4 class="mb-0">
               Lunch
+              <!-- Badge displaying total number of recipes in this section -->
+              <span class="badge badge-light">{{ lunch_length }}</span>
+              <span class="sr-only">lunch recipes</span>
             </h4>
           </div>
           <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
@@ -90,6 +96,9 @@ Meal Plan
           <div class="card-header text-center" id="headingThree">
             <h4 class="mb-0">
               Dinner
+              <!-- Badge displaying total number of recipes in this section -->
+              <span class="badge badge-light">{{ dinner_length }}</span>
+              <span class="sr-only">dinner recipes</span>
             </h4>
           </div>
           <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">

@@ -184,3 +184,7 @@ dt {
 .navbar-brand {
 	margin-right: 30px;
 }
+
+.badge {
+	margin-left: 15px;
+}
