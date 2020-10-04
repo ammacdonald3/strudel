@@ -15,10 +15,68 @@ Add New Recipe from Website
   <div class="error">{{ error }}</div>
   <br>
   <form role="form" method='POST'>
+
+
+    <div class="row">
+      <!-- Pre-assign dietary restrictions before importing recipe -->
+      <div class="form-group col-md">
+        <h3>Dietary Restrictions</h3>
+        <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
+          <label class="btn btn-outline-success active btn-block">
+            <input type="checkbox" name="diet_vegan" id="diet_vegan" autocomplete="off" />Vegan
+          </label>
+        </div>
+        <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
+          <label class="btn btn-outline-success active btn-block">
+            <input type="checkbox" name="diet_vegetarian" id="diet_vegetarian" autocomplete="off" />Vegetarian</label>
+        </div>
+        <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
+          <label class="btn btn-outline-success active btn-block">
+            <input type="checkbox" name="diet_gluten" id="diet_gluten" autocomplete="off">Gluten-free</label>
+        </div>
+      </div>
+
+
+      <br>
+
+      <!-- Pre-assign meal time before importing recipe -->
+      <div class="form-group col-md">
+        <h3>Meal Time</h3>
+        <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
+          <label class="btn btn-outline-success active btn-block">
+            <input type="checkbox" name="meal_breakfast" id="meal_breakfast" autocomplete="off">Breakfast
+          </label>
+        </div>
+        <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
+          <label class="btn btn-outline-success active btn-block">
+            <input type="checkbox" name="meal_lunch" id="meal_lunch" autocomplete="off">Lunch</label>
+        </div>
+        <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
+          <label class="btn btn-outline-success active btn-block">
+            <input type="checkbox" name="meal_dinner" id="meal_dinner" autocomplete="off">Dinner</label>
+        </div>
+      </div>
+
+    </div>
+
+    <br>
+
+    <div class="btn-group btn-group-toggle btn-block" data-toggle="buttons">
+      <label class="btn btn-outline-success active">
+        <input type="checkbox" name="mark_fav" value="fav" id="fav" autocomplete="off"> Automatically Mark as Favorite
+      </label>
+    </div>
+
+    <br>
+    <br>
+    <br>
+
     <div class="row">
       <!-- Recipe URL input -->
       <div class="form-group col-lg">
-        <label for="recipe_url_box">URL</label>
+        <label for="recipe_url_box">
+          <h3>URL</h3>
+        </label>
         <input type="text" name="recipe_url" class="form-control" id="recipe_url_box" placeholder="Enter recipe URL"
           style="max-width: 1000px;" autofocus required>
       </div>

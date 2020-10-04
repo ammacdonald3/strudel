@@ -17,21 +17,21 @@ Recipe Added
         <div class="form-group">
             <div class="row" style="padding-top: 20px;">
                 <div class="form-group col-sm">
-                    <a href="{{ url_for('recipe_detail', recipe_id=recipe_id) }}" class="btn btn-primary btn-block">View Recipe</a>
+                    <a href="{{ url_for('recipe_detail', recipe_id=recipe_id) }}" class="btn btn-success btn-block">View Recipe</a>
                 </div>
                 <div class="form-group col-sm">
-                    <a href="{{ url_for('edit_recipe', recipe_id=recipe_id) }}" class="btn btn-danger btn-block">Edit Recipe</a>
+                    <a href="{{ url_for('edit_recipe', recipe_id=recipe_id) }}" class="btn btn-warning btn-block">Edit Recipe</a>
                 </div>
 
             </div>
             <div class="row" style="padding-top: 10px;">
                 <div class="form-group col-sm">
-                    <a href="{{ url_for('auto_import') }}" class="btn btn-success btn-block">Add
+                    <a href="{{ url_for('auto_import') }}" class="btn btn-primary btn-block">Add
                             Another (Auto Import)</a>
                 </div>
 
                 <div class="form-group col-sm">
-                    <a href="{{ url_for('add_recipe') }}" class="btn btn-success btn-block">Add
+                    <a href="{{ url_for('add_recipe') }}" class="btn btn-primary btn-block">Add
                             Another (Manual Entry)</a>
                 </div>
             </div>

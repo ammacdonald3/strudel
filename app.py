@@ -979,6 +979,39 @@ def auto_import():
     # If user inputs URL, scrape website for recipe data and write to DB:
     if request.method == "POST":
         try:
+            # HTML form only passes checked inputs
+            # Below code calculates boolean value if the input exists
+            if 'diet_vegan' in request.form:
+                diet_vegan_input = bool(request.form['diet_vegan'])
+            else:
+                diet_vegan_input = False
+
+            if 'diet_vegetarian' in request.form:
+                diet_vegetarian_input = bool(request.form['diet_vegetarian'])
+            else:
+                diet_vegetarian_input = False
+
+            if 'diet_gluten' in request.form:
+                diet_gluten_input = bool(request.form['diet_gluten'])
+            else:
+                diet_gluten_input = False
+
+            if 'meal_breakfast' in request.form:
+                meal_breakfast_input = bool(request.form['meal_breakfast'])
+            else:
+                meal_breakfast_input = False
+
+            if 'meal_lunch' in request.form:
+                meal_lunch_input = bool(request.form['meal_lunch'])
+            else:
+                meal_lunch_input = False
+
+            if 'meal_dinner' in request.form:
+                meal_dinner_input = bool(request.form['meal_dinner'])
+            else:
+                meal_dinner_input = False
+
+
             # Scrape external website and clean data for write to the DB
             try:
                 url_input = request.form['recipe_url']
@@ -1017,12 +1050,12 @@ def auto_import():
                     recipe_total_time=scraper.total_time(),
                     serving_size=clean_yields,
                     recipe_url=auto_import_clean_url,
-                    diet_vegetarian=False,
-                    diet_vegan=False,
-                    diet_gluten=False,
-                    meal_breakfast=False,
-                    meal_lunch=False,
-                    meal_dinner=False,
+                    diet_vegan=diet_vegan_input,
+                    diet_vegetarian=diet_vegetarian_input,
+                    diet_gluten=diet_gluten_input,
+                    meal_breakfast=meal_breakfast_input,
+                    meal_lunch=meal_lunch_input,
+                    meal_dinner=meal_dinner_input,
                     created_by=current_user.id,
                     insert_datetime=datetime.now()
                 )
@@ -1121,6 +1154,36 @@ def auto_import():
                 db.session.flush()
                 db.session.commit() """
                 #output.append("User_Recipe successfully added!")
+
+            
+            # Insert data to FAVORITE_RECIPE table
+            try:
+                if request.form['mark_fav'] == 'fav':
+                    favorite_recipe = Favorite_Recipe(
+                        recipe_id=recipe.recipe_id,
+                        app_user_id=current_user.id,
+                        owner_ind=True,
+                        insert_datetime=datetime.now()
+                    )
+
+                    db.session.add(favorite_recipe)
+                    db.session.flush()
+                    db.session.commit()
+
+            except Exception as e:
+                db.session.rollback()
+                output.append("Application encountered an error, and the recipe was not marked as a favorite. Better luck in the future!")
+                output.append(str(e))
+
+                # Write errors to APP_ERROR table
+                app_error = App_Error(
+                    app_user_id=current_user.id,
+                    insert_datetime=datetime.now(),
+                    error_val=str(e)
+                )
+                db.session.add(app_error)
+                db.session.flush()
+                db.session.commit()
 
             # Render recipe_confirm.html template after recipe is written to DB
             return(render_template('recipe_confirm.html', recipe_id=recipe.recipe_id, recipe_name=scraper.title(), output=output))
