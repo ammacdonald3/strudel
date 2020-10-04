@@ -14,13 +14,27 @@ Meal Selector
 <br>
 <div class="container">
     <div>
-        Automatically select meals for the week based on your favorite recipes! 
-        <br>
-        <span class="error">NOTE: Selecting the button below will clear out your current meal plan.</span>
-        <br>
-        <br>
+        <!-- <br>
+        <span class="error">NOTE: Selecting the button below will clear out your current meal plan.</span> -->
         <br>
         <form role="form" method='POST'>
+
+            <div class="btn-group btn-group-toggle btn-block" data-toggle="buttons">
+                <label class="btn btn-outline-primary active">
+                    <input type="radio" name="recipe_source" value="fav" id="fav" autocomplete="off" checked> Favorites
+                </label>
+                <label class="btn btn-outline-primary">
+                    <input type="radio" name="recipe_source" value="you" id="you" autocomplete="off"> Uploaded by You
+                </label>
+                <label class="btn btn-outline-primary">
+                    <input type="radio" name="recipe_source" value="all" id="all" autocomplete="off"> All Recipes
+                </label>
+            </div>
+
+            <br>
+            <br>
+            <br>
+
             <div class="row">
 
                 <!-- Input for number of breakfast meals needed -->
@@ -45,8 +59,15 @@ Meal Selector
                 </div>
 
             </div>
+
+
             <br>
-            <button type="submit" class="btn btn-primary btn-block">Generate Recipes</button>
+            <br>
+
+
+            <button type="submit" class="btn btn-primary btn-block"
+                onclick="return confirm('Generating a new meal plan will delete your existing plan. Are you sure that you want to continue?');">Generate
+                Recipes</button>
         </form>
     </div>
 </div>

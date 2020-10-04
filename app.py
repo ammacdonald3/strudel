@@ -64,92 +64,174 @@ def meal_selector():
             db.session.flush()
             db.session.commit()
 
-            # Retrieve a list of user's favorite breakfast recipes
-            favorite_bfast_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.meal_breakfast==True)).order_by(Recipe.recipe_name).all()
-
-            # Retrieve a list of user's favorite lunch recipes
-            favorite_lunch_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.meal_lunch==True)).order_by(Recipe.recipe_name).all()
-
-            # Retrieve a list of user's favorite dinner recipes
-            favorite_dinner_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.meal_dinner==True)).order_by(Recipe.recipe_name).all()
-
-
             # Retrieve number of days of meals to generate per user input form
             num_bfast_meals = int(request.form['num_bfast_meals'])
             num_lunch_meals = int(request.form['num_lunch_meals'])
             num_dinner_meals = int(request.form['num_dinner_meals'])
+
+            # If user wants to generate plan from Favorite recipes
+            if request.form['recipe_source'] == 'fav':
+
+                # Retrieve a list of user's favorite breakfast recipes
+                bfast_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.meal_breakfast==True)).order_by(Recipe.recipe_name).all()
+
+                # Retrieve a list of user's favorite lunch recipes
+                lunch_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.meal_lunch==True)).order_by(Recipe.recipe_name).all()
+
+                # Retrieve a list of user's favorite dinner recipes
+                dinner_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.meal_dinner==True)).order_by(Recipe.recipe_name).all()
+
+            
+            # If user wants to generate plan from all recipes they uploaded
+            elif request.form['recipe_source'] == 'you':
+
+                # Retrieve a list of user's breakfast recipes
+                bfast_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id).filter(Recipe.meal_breakfast==True)).order_by(Recipe.recipe_name).all()
+
+                # Retrieve a list of user's lunch recipes
+                lunch_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id).filter(Recipe.meal_lunch==True)).order_by(Recipe.recipe_name).all()
+
+                # Retrieve a list of user's dinner recipes
+                dinner_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id).filter(Recipe.meal_dinner==True)).order_by(Recipe.recipe_name).all()
+
+
+            # If user wants to generate plan from all recipes in the app
+            elif request.form['recipe_source'] == 'all':
+
+                # Retrieve a list of user's breakfast recipes
+                bfast_recipe_list = (db.session.query(Recipe).filter(Recipe.meal_breakfast==True)).order_by(Recipe.recipe_name).all()
+
+                # Retrieve a list of user's lunch recipes
+                lunch_recipe_list = (db.session.query(Recipe).filter(Recipe.meal_lunch==True)).order_by(Recipe.recipe_name).all()
+
+                # Retrieve a list of user's dinner recipes
+                dinner_recipe_list = (db.session.query(Recipe).filter(Recipe.meal_dinner==True)).order_by(Recipe.recipe_name).all()
+            
 
             
             # If the total number of user's recipes is <= number of days' meals needed, just return entire list of user's recipes
             # Otherwise, randomly pick unique recipes based on number of days' meals needed
 
             # Breakfast
-            if len(favorite_bfast_recipe_list) > num_bfast_meals:
-                selected_bfast_meals_list = random.sample(favorite_bfast_recipe_list, num_bfast_meals)
+            if len(bfast_recipe_list) > num_bfast_meals:
+                selected_bfast_meals_list = random.sample(bfast_recipe_list, num_bfast_meals)
             else:
-                selected_bfast_meals_list = favorite_bfast_recipe_list
+                selected_bfast_meals_list = bfast_recipe_list
 
             # Lunch
-            if len(favorite_lunch_recipe_list) > num_lunch_meals:
-                selected_lunch_meals_list = random.sample(favorite_lunch_recipe_list, num_lunch_meals)
+            if len(lunch_recipe_list) > num_lunch_meals:
+                selected_lunch_meals_list = random.sample(lunch_recipe_list, num_lunch_meals)
             else:
-                selected_lunch_meals_list = favorite_lunch_recipe_list
+                selected_lunch_meals_list = lunch_recipe_list
 
             # Dinner
-            if len(favorite_dinner_recipe_list) > num_dinner_meals:
-                selected_dinner_meals_list = random.sample(favorite_dinner_recipe_list, num_dinner_meals)
+            if len(dinner_recipe_list) > num_dinner_meals:
+                selected_dinner_meals_list = random.sample(dinner_recipe_list, num_dinner_meals)
             else:
-                selected_dinner_meals_list = favorite_dinner_recipe_list
+                selected_dinner_meals_list = dinner_recipe_list
 
+            
+            # Below IF/ELSE is required because Favorite Recipes sqlalchemy object is referenced as val.Recipe.recipe_id, but User-Uploaded / All Recipes sqlalchemy objects are referenced as val.recipe_id
+            if request.form['recipe_source'] == 'fav':
 
-            # Insert selected breakfast meals to current_meal table
-            day_counter = 0
-            for val in selected_bfast_meals_list:
-                day_counter += 1
-                current_meal = Current_Meal(
-                    recipe_id=val.Recipe.recipe_id,
-                    app_user_id=current_user.id,
-                    day_number=day_counter,
-                    meal='breakfast',
-                    active_ind=True,
-                    insert_datetime=datetime.now()
-                )
-                db.session.add(current_meal)
-                db.session.flush()
-                db.session.commit()
+                # Insert selected breakfast meals to current_meal table
+                day_counter = 0
+                for val in selected_bfast_meals_list:
+                    day_counter += 1
+                    current_meal = Current_Meal(
+                        recipe_id=val.Recipe.recipe_id,
+                        app_user_id=current_user.id,
+                        day_number=day_counter,
+                        meal='breakfast',
+                        active_ind=True,
+                        insert_datetime=datetime.now()
+                    )
+                    db.session.add(current_meal)
+                    db.session.flush()
+                    db.session.commit()
 
-            # Insert selected lunch meals to current_meal table
-            day_counter = 0
-            for val in selected_lunch_meals_list:
-                day_counter += 1
-                current_meal = Current_Meal(
-                    recipe_id=val.Recipe.recipe_id,
-                    app_user_id=current_user.id,
-                    day_number=day_counter,
-                    meal='lunch',
-                    active_ind=True,
-                    insert_datetime=datetime.now()
-                )
-                db.session.add(current_meal)
-                db.session.flush()
-                db.session.commit()
+                # Insert selected lunch meals to current_meal table
+                day_counter = 0
+                for val in selected_lunch_meals_list:
+                    day_counter += 1
+                    current_meal = Current_Meal(
+                        recipe_id=val.Recipe.recipe_id,
+                        app_user_id=current_user.id,
+                        day_number=day_counter,
+                        meal='lunch',
+                        active_ind=True,
+                        insert_datetime=datetime.now()
+                    )
+                    db.session.add(current_meal)
+                    db.session.flush()
+                    db.session.commit()
 
-            # Insert selected dinner meals to current_meal table
-            day_counter = 0
-            for val in selected_dinner_meals_list:
-                day_counter += 1
-                current_meal = Current_Meal(
-                    recipe_id=val.Recipe.recipe_id,
-                    app_user_id=current_user.id,
-                    day_number=day_counter,
-                    meal='dinner',
-                    active_ind=True,
-                    insert_datetime=datetime.now()
-                )
-                db.session.add(current_meal)
-                db.session.flush()
-                db.session.commit()
+                # Insert selected dinner meals to current_meal table
+                day_counter = 0
+                for val in selected_dinner_meals_list:
+                    day_counter += 1
+                    current_meal = Current_Meal(
+                        recipe_id=val.Recipe.recipe_id,
+                        app_user_id=current_user.id,
+                        day_number=day_counter,
+                        meal='dinner',
+                        active_ind=True,
+                        insert_datetime=datetime.now()
+                    )
+                    db.session.add(current_meal)
+                    db.session.flush()
+                    db.session.commit()
 
+            else:
+
+                # Insert selected breakfast meals to current_meal table
+                day_counter = 0
+                for val in selected_bfast_meals_list:
+                    day_counter += 1
+                    current_meal = Current_Meal(
+                        recipe_id=val.recipe_id,
+                        app_user_id=current_user.id,
+                        day_number=day_counter,
+                        meal='breakfast',
+                        active_ind=True,
+                        insert_datetime=datetime.now()
+                    )
+                    db.session.add(current_meal)
+                    db.session.flush()
+                    db.session.commit()
+
+                # Insert selected lunch meals to current_meal table
+                day_counter = 0
+                for val in selected_lunch_meals_list:
+                    day_counter += 1
+                    current_meal = Current_Meal(
+                        recipe_id=val.recipe_id,
+                        app_user_id=current_user.id,
+                        day_number=day_counter,
+                        meal='lunch',
+                        active_ind=True,
+                        insert_datetime=datetime.now()
+                    )
+                    db.session.add(current_meal)
+                    db.session.flush()
+                    db.session.commit()
+
+                # Insert selected dinner meals to current_meal table
+                day_counter = 0
+                for val in selected_dinner_meals_list:
+                    day_counter += 1
+                    current_meal = Current_Meal(
+                        recipe_id=val.recipe_id,
+                        app_user_id=current_user.id,
+                        day_number=day_counter,
+                        meal='dinner',
+                        active_ind=True,
+                        insert_datetime=datetime.now()
+                    )
+                    db.session.add(current_meal)
+                    db.session.flush()
+                    db.session.commit()
+                
 
             #print("selected_meals " + str(selected_meals_list), file=sys.stderr)
 
