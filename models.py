@@ -53,6 +53,7 @@ class Recipe(db.Model):
     meal_lunch = db.Column(db.Boolean())
     meal_dinner = db.Column(db.Boolean())
     recipe_url = db.Column(db.String())
+    recipe_image_url = db.Column(db.String())
     created_by = db.Column(db.Integer(), db.ForeignKey('app_user.id'), nullable=False)
     insert_datetime = db.Column(db.DateTime())
     ingredient = db.relationship('Ingredient', backref='ingredient', lazy=True)
@@ -63,7 +64,7 @@ class Recipe(db.Model):
     shopping_list = db.relationship('Shopping_List', backref="shopping_list1", lazy=True)
 
 
-    def __init__(self, recipe_name, recipe_desc, recipe_prep_time, recipe_cook_time, recipe_total_time, serving_size, diet_vegetarian, diet_vegan, diet_gluten, meal_breakfast, meal_lunch, meal_dinner, recipe_url, created_by, insert_datetime):
+    def __init__(self, recipe_name, recipe_desc, recipe_prep_time, recipe_cook_time, recipe_total_time, serving_size, diet_vegetarian, diet_vegan, diet_gluten, meal_breakfast, meal_lunch, meal_dinner, recipe_url, recipe_image_url, created_by, insert_datetime):
         self.recipe_name = recipe_name
         self.recipe_desc = recipe_desc
         self.recipe_prep_time = recipe_prep_time
@@ -77,6 +78,7 @@ class Recipe(db.Model):
         self.meal_lunch = meal_lunch
         self.meal_dinner = meal_dinner
         self.recipe_url = recipe_url
+        self.recipe_image_url = recipe_image_url
         self.created_by = created_by
         self.insert_datetime = insert_datetime
 

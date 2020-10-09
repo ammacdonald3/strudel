@@ -188,3 +188,33 @@ dt {
 .badge {
 	margin-left: 15px;
 }
+
+
+.center {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 80%;
+  }
+
+
+.image-container {
+  width: 90%;
+  /* max-height: 100px; */
+}
+
+.image-container img {
+  max-height:100%;
+  max-width: 100%;
+}
+
+.center-cropped {
+	width: 900px;
+	height: 400px;
+	background-position: center center;
+	background-repeat: no-repeat;
+  }
+
+.center-text {
+	text-align: center;
+}

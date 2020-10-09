@@ -44,6 +44,35 @@ active
     </div>
   </div>
 
+  <br>
+
+  <!-- <div class="center-cropped img-fluid center" style="background-image: url('{% if recipe.recipe_image_url != None %}{{ recipe.recipe_image_url}}{% else %}/static/placeholder-recipe-image.jpg{% endif %}');"> -->
+  <!-- https://images.unsplash.com/photo-1546548970-71785318a17b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2468&q=80');"> -->
+    
+
+  <div class="image-container center">
+    {% if recipe.recipe_image_url != None %}
+    <img id="preview" src="{{ recipe.recipe_image_url}}" class="center img-fluid" alt="Responsive image" />
+    {% else %}
+    <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid" alt="Responsive image" />
+    {% endif %}
+
+
+    <!-- <div class="center-cropped" 
+    {% if recipe.recipe_image_url != None %}
+    style="background-image: url('{{ recipe.recipe_image_url}}');">
+    <img src="{{ recipe.recipe_image_url}}" />-->
+      <!-- <img id="preview" src="" class="center"/> -->
+    <!-- {% else %}
+    style="background-image: url('/static/placeholder-recipe-image.jpg');">
+    <img src="/static/placeholder-recipe-image.jpg" />     -->
+      <!-- <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center"/> -->
+    <!--{% endif %}
+    </div> -->
+  </div>
+  <br>
+  <br>
+
   <p>{{ recipe.recipe_desc }}</p>
 
 
@@ -84,15 +113,18 @@ active
         <tbody>
           <tr>
             <th scope="row">Vegan</th>
-            <td>{% if recipe.diet_vegan == True %} <i class="fas fa-check"></i> {% else %} <i class="fas fa-times error"></i>{% endif %}</td>
+            <td>{% if recipe.diet_vegan == True %} <i class="fas fa-check"></i> {% else %} <i
+                class="fas fa-times error"></i>{% endif %}</td>
           </tr>
           <tr>
             <th scope="row">Vegetarian</th>
-            <td>{% if recipe.diet_vegetarian == True %} <i class="fas fa-check"></i> {% else %} <i class="fas fa-times error"></i>{% endif %}</td>
+            <td>{% if recipe.diet_vegetarian == True %} <i class="fas fa-check"></i> {% else %} <i
+                class="fas fa-times error"></i>{% endif %}</td>
           </tr>
           <tr>
             <th scope="row">Gluten-free</th>
-            <td>{% if recipe.diet_gluten == True %} <i class="fas fa-check"></i> {% else %} <i class="fas fa-times error"></i>{% endif %}</td>
+            <td>{% if recipe.diet_gluten == True %} <i class="fas fa-check"></i> {% else %} <i
+                class="fas fa-times error"></i>{% endif %}</td>
           </tr>
         </tbody>
       </table>
@@ -105,15 +137,18 @@ active
         <tbody>
           <tr>
             <th scope="row">Breakfast</th>
-            <td>{% if recipe.meal_breakfast == True %} <i class="fas fa-check"></i> {% else %} <i class="fas fa-times error"></i>{% endif %}</td>
+            <td>{% if recipe.meal_breakfast == True %} <i class="fas fa-check"></i> {% else %} <i
+                class="fas fa-times error"></i>{% endif %}</td>
           </tr>
           <tr>
             <th scope="row">Lunch</th>
-            <td>{% if recipe.meal_lunch == True %} <i class="fas fa-check"></i> {% else %} <i class="fas fa-times error"></i>{% endif %}</td>
+            <td>{% if recipe.meal_lunch == True %} <i class="fas fa-check"></i> {% else %} <i
+                class="fas fa-times error"></i>{% endif %}</td>
           </tr>
           <tr>
             <th scope="row">Dinner</th>
-            <td>{% if recipe.meal_dinner == True %} <i class="fas fa-check"></i> {% else %} <i class="fas fa-times error"></i>{% endif %}</td>
+            <td>{% if recipe.meal_dinner == True %} <i class="fas fa-check"></i> {% else %} <i
+                class="fas fa-times error"></i>{% endif %}</td>
           </tr>
         </tbody>
       </table>
@@ -177,8 +212,7 @@ active
     {% if owner_ind == True %}
     <div class="row" style="padding-top: 20px;">
       <div class="form-group col-sm">
-        <a href="{{ url_for('edit_recipe', recipe_id=recipe.recipe_id) }}"
-          class="btn btn-warning btn-block">Edit
+        <a href="{{ url_for('edit_recipe', recipe_id=recipe.recipe_id) }}" class="btn btn-warning btn-block">Edit
           Recipe</a>
       </div>
     </div>

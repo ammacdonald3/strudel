@@ -12,7 +12,29 @@ Edit Recipe
 
 {% block body %}
 <div class="container">
-  <form role="form" method='POST'>
+
+  <form role="form" method='POST' action="" enctype="multipart/form-data">
+
+    <!-- Display recipe image -->
+    <div class="image-container center">
+      {% if recipe.recipe_image_url != None %}
+      <img id="preview" src="{{ recipe.recipe_image_url}}" class="center img-fluid" alt="Responsive image" />
+      {% else %}
+      <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid" alt="Responsive image" />
+      {% endif %}
+    </div>
+    <br>
+    <br>
+
+    <!-- User selects an image to upload -->
+    <p>Select a new image for this recipe</p>
+    <div class="custom-file">
+      <input type="file" class="custom-file-input" id="file_input" name="file">
+      <label class="custom-file-label" for="file_input">Image location</label>
+    </div> 
+
+    <br>
+    <br>
 
     <div class="row">
       <!-- Recipe Name input -->
@@ -27,7 +49,8 @@ Edit Recipe
       <!-- Recipe Description input -->
       <div class="form-group col-lg">
         <label for="recipe_desc_box">Description</label>
-        <textarea name="recipe_desc" class="form-control" id="recipe_desc_box" placeholder="Enter recipe description" rows="3" autofocus required>{{ recipe.recipe_desc }}</textarea>
+        <textarea name="recipe_desc" class="form-control" id="recipe_desc_box" placeholder="Enter recipe description"
+          rows="3" autofocus required>{{ recipe.recipe_desc }}</textarea>
         <!-- <input type="text" name="recipe_desc" class="form-control" id="recipe_desc_box"
           placeholder="Enter recipe description" style="max-width: 500px;" autofocus required> -->
       </div>
@@ -83,21 +106,21 @@ Edit Recipe
         <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
           <label class="btn btn-outline-success active btn-block {% if recipe.diet_vegan == True %} active
           {% endif %}">
-            <input type="checkbox" name="diet_vegan" id="diet_vegan" autocomplete="off" {% if recipe.diet_vegan == True %} checked
-              {% endif %}>Vegan
+            <input type="checkbox" name="diet_vegan" id="diet_vegan" autocomplete="off"
+              {% if recipe.diet_vegan == True %} checked {% endif %}>Vegan
           </label>
         </div>
         <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
           <label class="btn btn-outline-success active btn-block {% if recipe.diet_vegetarian == True %} active
           {% endif %}">
-            <input type="checkbox" name="diet_vegetarian" id="diet_vegetarian" autocomplete="off" {% if recipe.diet_vegetarian == True %}
-              checked {% endif %}>Vegetarian</label>
+            <input type="checkbox" name="diet_vegetarian" id="diet_vegetarian" autocomplete="off"
+              {% if recipe.diet_vegetarian == True %} checked {% endif %}>Vegetarian</label>
         </div>
         <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
           <label class="btn btn-outline-success active btn-block {% if recipe.diet_gluten == True %} active
           {% endif %}">
-            <input type="checkbox" name="diet_gluten" id="diet_gluten" autocomplete="off" {% if recipe.diet_gluten == True %} checked
-              {% endif %}>Gluten-free</label>
+            <input type="checkbox" name="diet_gluten" id="diet_gluten" autocomplete="off"
+              {% if recipe.diet_gluten == True %} checked {% endif %}>Gluten-free</label>
         </div>
       </div>
 
@@ -109,21 +132,21 @@ Edit Recipe
         <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
           <label class="btn btn-outline-success active btn-block {% if recipe.meal_breakfast == True %} active
           {% endif %}">
-            <input type="checkbox" name="meal_breakfast" id="meal_breakfast" autocomplete="off" {% if recipe.meal_breakfast == True %}
-              checked {% endif %}>Breakfast
+            <input type="checkbox" name="meal_breakfast" id="meal_breakfast" autocomplete="off"
+              {% if recipe.meal_breakfast == True %} checked {% endif %}>Breakfast
           </label>
         </div>
         <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
           <label class="btn btn-outline-success active btn-block {% if recipe.meal_lunch == True %} active
           {% endif %}">
-            <input type="checkbox" name="meal_lunch" id="meal_lunch" autocomplete="off" {% if recipe.meal_lunch == True %} checked
-              {% endif %}>Lunch</label>
+            <input type="checkbox" name="meal_lunch" id="meal_lunch" autocomplete="off"
+              {% if recipe.meal_lunch == True %} checked {% endif %}>Lunch</label>
         </div>
         <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
           <label class="btn btn-outline-success active btn-block {% if recipe.meal_dinner == True %} active
           {% endif %}">
-            <input type="checkbox" name="meal_dinner" id="meal_dinner" autocomplete="off" {% if recipe.meal_dinner == True %} checked
-              {% endif %}>Dinner</label>
+            <input type="checkbox" name="meal_dinner" id="meal_dinner" autocomplete="off"
+              {% if recipe.meal_dinner == True %} checked {% endif %}>Dinner</label>
         </div>
       </div>
 
@@ -139,18 +162,19 @@ Edit Recipe
 
       {% for ingredient in ingredient_list %}
       <div class="form-group">
-          <div class="row">
-            <div class="form-group col-lg-2">Ingredient {{ loop.index }}</div>
-            <div class="form-group col-lg-7">
-              <input name="ingredient_desc{{ loop.index }}" class="form-control col" placeholder="Ingredient {{ loop.index }}" value="{{ ingredient.ingredient_desc }}">
-            </div>
-            <div class="form-group col-lg-3">
-              <button class="removeclass btn btn-danger col">Delete</button>
-            </div>
+        <div class="row">
+          <div class="form-group col-lg-2">Ingredient {{ loop.index }}</div>
+          <div class="form-group col-lg-7">
+            <input name="ingredient_desc{{ loop.index }}" class="form-control col"
+              placeholder="Ingredient {{ loop.index }}" value="{{ ingredient.ingredient_desc }}">
+          </div>
+          <div class="form-group col-lg-3">
+            <button class="removeclass btn btn-danger col">Delete</button>
           </div>
         </div>
+      </div>
       {% endfor %}
-      
+
       <div id="IngredientInputsWrapper"></div>
       <br>
 
@@ -171,7 +195,8 @@ Edit Recipe
         <div class="row">
           <div class="form-group col-lg-1">Step {{ loop.index }}</div>
           <div class="form-group col-lg-8">
-            <input name="recipe_step{{ loop.index }}" class="form-control col" placeholder="Step {{ loop.index }}" value="{{ step.step_desc }}">
+            <input name="recipe_step{{ loop.index }}" class="form-control col" placeholder="Step {{ loop.index }}"
+              value="{{ step.step_desc }}">
           </div>
           <div class="form-group col-lg-3">
             <button class="removeclass btn btn-danger col">Delete</button>
@@ -208,4 +233,13 @@ Edit Recipe
 
 {% block footer %}
 <script type="text/javascript" src="{{ url_for('static', filename='ingredients.js') }}"></script>
+<!-- <script type="text/javascript" src="{{ url_for('static', filename='upload.js') }}"></script> -->
+
+<script type="application/javascript">
+  $('input[type="file"]').change(function(e){
+      var fileName = e.target.files[0].name;
+      $('.custom-file-label').html(fileName);
+  });
+</script>
+
 {% endblock %}
