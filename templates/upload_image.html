@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+{% block nav_add_menu %}
+active
+{% endblock %}
+{% block nav_add %}
+active
+{% endblock %}
+
+{% block heading %}
+Upload Image
+{% endblock %}
+
+{% block body %}
+<div class="container">
+
+  <h2>{{ recipe.recipe_name }}</h2>
+  <br>
+  <br>
+  <form role="form" method='POST' action="" enctype="multipart/form-data">
+
+    <!-- Display recipe image -->
+    <div class="image-container center">
+      {% if recipe.recipe_image_url != None %}
+      <img id="preview" src="{{ recipe.recipe_image_url}}" class="center img-fluid" alt="Responsive image" />
+      {% else %}
+      <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid" alt="Responsive image" />
+      {% endif %}
+    </div>
+    <br>
+    <br>
+
+    <!-- User selects an image to upload -->
+    <p>Select a new image for this recipe</p>
+    <div class="custom-file">
+      <input type="file" class="custom-file-input" id="file_input" name="file">
+      <label class="custom-file-label" for="file_input">select file location</label>
+    </div>
+
+    <br>
+    <br>
+
+
+    <button type="submit" class="btn btn-primary btn-block">Submit</button>
+  </form> <br>
+  <br>
+</div>
+
+<!--
+{% for item in output %}
+<h4>{{ item }}</h4>
+{% endfor %}
+-->
+
+</div>
+{% endblock %}
+
+
+{% block footer %}
+<script type="text/javascript" src="{{ url_for('static', filename='ingredients.js') }}"></script>
+<!-- <script type="text/javascript" src="{{ url_for('static', filename='upload.js') }}"></script> -->
+
+<script type="application/javascript">
+  $('input[type="file"]').change(function (e) {
+    var fileName = e.target.files[0].name;
+    $('.custom-file-label').html(fileName);
+  });
+</script>
+
+{% endblock %}

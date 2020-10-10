@@ -218,6 +218,15 @@ active
     </div>
     {% endif %}
 
+    <!-- Display button so that user can upload an image if they're the owner -->
+    {% if owner_ind == True %}
+    <div class="row" style="padding-top: 20px;">
+      <div class="form-group col-sm">
+        <a href="{{ url_for('upload_image', recipe_id=recipe.recipe_id) }}" class="btn btn-warning btn-block">Upload Recipe Image</a>
+      </div>
+    </div>
+    {% endif %}
+
   </div>
 </div>
 </div>
