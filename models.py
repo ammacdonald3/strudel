@@ -20,6 +20,7 @@ class App_User(UserMixin, db.Model):
     last_name = db.Column(db.String)
     insert_datetime = db.Column(db.DateTime())
     user_recipe = db.relationship('User_Recipe', backref='user_recipe2', lazy=True)
+    admin = db.Column(db.Boolean())
     current_meal = db.relationship('Current_Meal', backref='current_meal2', lazy=True)
     favorite_recipe = db.relationship('Favorite_Recipe', backref='favorite_recipe2', lazy=True)
     recipe = db.relationship('Recipe', backref='recipe', lazy=True)

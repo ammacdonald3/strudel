@@ -4,6 +4,7 @@ from flask_login import LoginManager, current_user, login_user, logout_user, log
 from werkzeug.utils import secure_filename
 from recipe_scrapers import scrape_me
 from datetime import datetime
+from uuid import uuid4
 import re
 import random
 import sys
@@ -663,15 +664,16 @@ def add_recipe():
             try:
                 uploaded_file = request.files['file']
                 filename_sec = secure_filename(uploaded_file.filename)
-                filename = str(current_user.id) + '_' + filename_sec
-                if filename != '':
-                    file_ext = os.path.splitext(filename)[1]
+                if filename_sec != '':
+                    file_ext = os.path.splitext(filename_sec)[1]
                     if file_ext in app.config['UPLOAD_EXTENSIONS'] and \
                             file_ext == validate_image(uploaded_file.stream):
+                            # Generate unique file name
+                            filename = str(uuid4()) + file_ext
                             uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
-                            url = upload_file(f"uploads/{filename}", BUCKET)
+                            image_url = upload_file(f"uploads/{filename}", BUCKET)
                 else:
-                    url=None
+                    image_url = None
                     error="Invalid image upload. Images must be a maximum size of 1024x1024 and one of the following types: .JPG or .PNG"
 
             except Exception as e:
@@ -732,7 +734,7 @@ def add_recipe():
                 recipe_total_time=total_time,
                 serving_size=request.form['serving_size'],
                 recipe_url=manual_input_clean_url,
-                recipe_image_url=url,
+                recipe_image_url=image_url,
                 diet_vegan=diet_vegan_input,
                 diet_vegetarian=diet_vegetarian_input,
                 diet_gluten=diet_gluten_input,
@@ -869,16 +871,17 @@ def edit_recipe(recipe_id):
                 try:
                     uploaded_file = request.files['file']
                     filename_sec = secure_filename(uploaded_file.filename)
-                    filename = str(current_user.id) + '_' + filename_sec
-                    if filename != '':
-                        file_ext = os.path.splitext(filename)[1]
+                    if filename_sec != '':
+                        file_ext = os.path.splitext(filename_sec)[1]
                         if file_ext in app.config['UPLOAD_EXTENSIONS'] and \
                                 file_ext == validate_image(uploaded_file.stream):
+                                # Generate unique file name
+                                filename = str(uuid4()) + file_ext
                                 uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
-                                url = upload_file(f"uploads/{filename}", BUCKET)
+                                image_url = upload_file(f"uploads/{filename}", BUCKET)
                     else:
-                        url=None
-                        error="Invalid image upload. Images must be a maximum size of 1024x1024 and one of the following types: .JPG or .PNG"
+                        image_url = None
+                        error = "Invalid image upload. Images must be a maximum size of 1024x1024 and one of the following types: .JPG or .PNG"
 
                 except Exception as e:
                     output.append("Application encountered an error, and the image was not uploaded. Better luck in the future!")
@@ -935,7 +938,7 @@ def edit_recipe(recipe_id):
                 recipe.recipe_total_time=total_time
                 recipe.serving_size=request.form['serving_size']
                 recipe.recipe_url=manual_input_clean_url
-                recipe.recipe_image_url=url
+                recipe.recipe_image_url=image_url
                 recipe.diet_vegan=diet_vegan_input
                 recipe.diet_vegetarian=diet_vegetarian_input
                 recipe.diet_gluten=diet_gluten_input
