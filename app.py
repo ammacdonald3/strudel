@@ -851,7 +851,7 @@ def add_recipe():
 @app.route('/edit/<recipe_id>', methods=['GET', 'POST'])
 @login_required
 def edit_recipe(recipe_id):
-
+    output = []
     recipe = db.session.query(Recipe).filter_by(recipe_id=recipe_id).join(App_User).first()
 
     ingredient_list = Ingredient.query.filter_by(recipe_id=recipe_id)
@@ -866,32 +866,29 @@ def edit_recipe(recipe_id):
     (current_user.id in admins_list)):
         error=""
         try:
+            # Clean image input and upload to AWS S3
+            try:
+                uploaded_file = request.files['file']
+                filename_sec = secure_filename(uploaded_file.filename)
+                if filename_sec != '':
+                    file_ext = os.path.splitext(filename_sec)[1]
+                    if file_ext in app.config['UPLOAD_EXTENSIONS'] and \
+                            file_ext == validate_image(uploaded_file.stream):
+                            # Generate unique file name
+                            filename = str(uuid4()) + file_ext
+                            uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
+                            image_url = upload_file(f"uploads/{filename}", BUCKET)
+                else:
+                    image_url = None
+                    error = "Invalid image upload. Images must be a maximum size of 1024x1024 and one of the following types: .JPG or .PNG"
+
+            except Exception as e:
+                output.append("Application encountered an error, and the image was not uploaded. Better luck in the future!")
+                output.append(str(e))
+                print(str(e))
+
             # Write recipe info
             try:
-                output = []
-
-                # Clean image input and upload to AWS S3
-                try:
-                    uploaded_file = request.files['file']
-                    filename_sec = secure_filename(uploaded_file.filename)
-                    if filename_sec != '':
-                        file_ext = os.path.splitext(filename_sec)[1]
-                        if file_ext in app.config['UPLOAD_EXTENSIONS'] and \
-                                file_ext == validate_image(uploaded_file.stream):
-                                # Generate unique file name
-                                filename = str(uuid4()) + file_ext
-                                uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
-                                image_url = upload_file(f"uploads/{filename}", BUCKET)
-                    else:
-                        image_url = None
-                        error = "Invalid image upload. Images must be a maximum size of 1024x1024 and one of the following types: .JPG or .PNG"
-
-                except Exception as e:
-                    output.append("Application encountered an error, and the image was not uploaded. Better luck in the future!")
-                    output.append(str(e))
-                    print(str(e))
-
-
                 # Parse recipe URLs
                 url_input = request.form['recipe_url']
                 manual_input_clean_url = clean(url_input)
