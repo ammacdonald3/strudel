@@ -860,7 +860,10 @@ def edit_recipe(recipe_id):
     #len_i = len(ingredient_list)
 
     # If user submits data on input form, write to DB
-    if request.method == "POST" and recipe.created_by == current_user.id:
+    admins = (db.session.query(App_User).filter_by(admin=True).all())
+    admins_list = [r.id for r in admins]
+    if request.method == "POST" and ((recipe.created_by == current_user.id) or 
+    (current_user.id in admins_list)):
         error=""
         try:
             # Write recipe info
@@ -1450,7 +1453,9 @@ def recipe_detail(recipe_id):
             db.session.commit()
 
     # If user is the owner of the recipe, pass a flag to render the 'Edit' button
-    if recipe.created_by == current_user.id:
+    admins = (db.session.query(App_User).filter_by(admin=True).all())
+    admins_list = [r.id for r in admins]
+    if ((recipe.created_by == current_user.id) or (current_user.id in admins_list)):
         owner_ind = True
     else:
         owner_ind = False
