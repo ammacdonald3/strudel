@@ -1209,6 +1209,7 @@ def auto_import():
                     recipe_total_time=scraper.total_time(),
                     serving_size=clean_yields,
                     recipe_url=auto_import_clean_url,
+                    recipe_image_url=None,
                     diet_vegan=diet_vegan_input,
                     diet_vegetarian=diet_vegetarian_input,
                     diet_gluten=diet_gluten_input,
