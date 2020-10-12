@@ -29,27 +29,54 @@ Meal Plan
     
           <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
             <div class="card-body">
-              {% if bfast_exists == True %}
-              <dl>
-                {% for recipe in selected_bfast_meals_list %}
-                <dt class="text-center">
-                  <h4>
-                    Meal #{{ recipe.Current_Meal.day_number }}
-                  </h4>
-                  <h4>
-                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}">{{ recipe.Recipe.recipe_name }}</a>
-                  </h4>
-    
-                  <h6><a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank">Source Website</a></h6>
-                </dt>
-                <dd class="text-center">
-                  <p>{{ recipe.Recipe.recipe_desc }}</p>
-                </dd>
-                {% endfor %}
-              </dl>
-              {% else %}
-              <h5 class="text-center">You don't have any breakfast meals selected this week.</h5>
-              {% endif %}
+                {% if bfast_exists == True %}
+
+                <ul class="list-unstyled">
+                  {% for recipe in selected_bfast_meals_list %}
+      
+                  <!-- Recipe Name -->
+                  <li>
+                    <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
+                      <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                      >
+                    <!-- Recipe Image -->
+                    {% if recipe.Recipe.recipe_image_url != None %}
+                    <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center img-fluid small-image" alt="Responsive image"
+                     />
+                    {% else %}
+                    <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid small-image" alt="Responsive image"
+                     />
+                    {% endif %}
+                    </a>
+      
+      
+                    <div class="form-group">
+                      <!-- Display button so that user can view recipe's page -->
+                      <div class="row" style="padding-top: 20px;">
+                        <div class="form-group col-sm">
+                          <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                            class="btn btn-primary btn-block">View Recipe</a>
+                        </div>
+                    
+                      <!-- Display button so that user can view recipe's source website -->
+                        <div class="form-group col-sm">
+                          <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
+                            class="btn btn-primary btn-block">Source
+                            Website</a>
+                        </div>
+                      </div>
+                    </div>
+      
+                  </li>
+                  <hr class="recipe-list-hr"/>
+                  {% endfor %}
+      
+                </ul>
+      
+                <!-- If user doesn't have any breakfast meals selected, display placeholder message -->
+                {% else %}
+                <h5 class="text-center">You don't have any breakfast meals selected this week.</h5>
+                {% endif %}
             </div>
           </div>
         </div>
@@ -66,27 +93,54 @@ Meal Plan
           </div>
           <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
             <div class="card-body">
-              {% if lunch_exists == True %}
-              <dl>
-                {% for recipe in selected_lunch_meals_list %}
-                <dt class="text-center">
-                  <h4>
-                    Meal #{{ recipe.Current_Meal.day_number }}
-                  </h4>
-                  <h4>
-                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}">{{ recipe.Recipe.recipe_name }}</a>
-                  </h4>
-    
-                  <h6><a href="https://{{ recipe.recipe_url }}" target="_blank">Source Website</a></h6>
-                </dt>
-                <dd class="text-center">
-                  <p>{{ recipe.Recipe.recipe_desc }}</p>
-                </dd>
-                {% endfor %}
-              </dl>
-              {% else %}
-              <h5 class="text-center">You don't have any lunch meals selected this week.</h5>
-              {% endif %}
+                {% if lunch_exists == True %}
+
+                <ul class="list-unstyled">
+                  {% for recipe in selected_lunch_meals_list %}
+      
+                  <!-- Recipe Name -->
+                  <li>
+                    <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
+                      <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                      >
+                    <!-- Recipe Image -->
+                    {% if recipe.Recipe.recipe_image_url != None %}
+                    <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center img-fluid small-image" alt="Responsive image"
+                     />
+                    {% else %}
+                    <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid small-image" alt="Responsive image"
+                     />
+                    {% endif %}
+                    </a>
+      
+      
+                    <div class="form-group">
+                      <!-- Display button so that user can view recipe's page -->
+                      <div class="row" style="padding-top: 20px;">
+                        <div class="form-group col-sm">
+                          <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                            class="btn btn-primary btn-block">View Recipe</a>
+                        </div>
+                    
+                      <!-- Display button so that user can view recipe's source website -->
+                        <div class="form-group col-sm">
+                          <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
+                            class="btn btn-primary btn-block">Source
+                            Website</a>
+                        </div>
+                      </div>
+                    </div>
+      
+                  </li>
+                  <hr class="recipe-list-hr"/>
+                  {% endfor %}
+      
+                </ul>
+      
+                <!-- If user doesn't have any lunch meals selected, display placeholder message -->
+                {% else %}
+                <h5 class="text-center">You don't have any lunch meals selected this week.</h5>
+                {% endif %}
             </div>
           </div>
         </div>
@@ -103,27 +157,54 @@ Meal Plan
           </div>
           <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
             <div class="card-body">
-              {% if dinner_exists == True %}
-              <dl>
-                {% for recipe in selected_dinner_meals_list %}
-                <dt class="text-center">
-                  <h4>
-                    Meal #{{ recipe.Current_Meal.day_number }}
-                  </h4>
-                  <h4>
-                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}">{{ recipe.Recipe.recipe_name }}</a>
-                  </h4>
-    
-                  <h6><a href="https://{{ recipe.recipe_url }}" target="_blank">Source Website</a></h6>
-                </dt>
-                <dd class="text-center">
-                  <p>{{ recipe.Recipe.recipe_desc }}</p>
-                </dd>
-                {% endfor %}
-              </dl>
-              {% else %}
-              <h5 class="text-center">You don't have any dinner meals selected this week.</h5>
-              {% endif %}
+                {% if dinner_exists == True %}
+
+                <ul class="list-unstyled">
+                  {% for recipe in selected_dinner_meals_list %}
+      
+                  <!-- Recipe Name -->
+                  <li>
+                    <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
+                      <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                      >
+                    <!-- Recipe Image -->
+                    {% if recipe.Recipe.recipe_image_url != None %}
+                    <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center img-fluid small-image" alt="Responsive image"
+                     />
+                    {% else %}
+                    <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid small-image" alt="Responsive image"
+                     />
+                    {% endif %}
+                    </a>
+      
+      
+                    <div class="form-group">
+                      <!-- Display button so that user can view recipe's page -->
+                      <div class="row" style="padding-top: 20px;">
+                        <div class="form-group col-sm">
+                          <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                            class="btn btn-primary btn-block">View Recipe</a>
+                        </div>
+                    
+                      <!-- Display button so that user can view recipe's source website -->
+                        <div class="form-group col-sm">
+                          <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
+                            class="btn btn-primary btn-block">Source
+                            Website</a>
+                        </div>
+                      </div>
+                    </div>
+      
+                  </li>
+                  <hr class="recipe-list-hr"/>
+                  {% endfor %}
+      
+                </ul>
+      
+                <!-- If user doesn't have any dinner meals selected, display placeholder message -->
+                {% else %}
+                <h5 class="text-center">You don't have any dinner meals selected this week.</h5>
+                {% endif %}
             </div>
           </div>
         </div>

@@ -129,39 +129,39 @@ def meal_selector():
             if request.form['recipe_source'] == 'fav':
 
                 # Retrieve a list of user's favorite breakfast recipes
-                bfast_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.meal_breakfast==True)).order_by(Recipe.recipe_name).all()
+                bfast_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.meal_breakfast==True).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
 
                 # Retrieve a list of user's favorite lunch recipes
-                lunch_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.meal_lunch==True)).order_by(Recipe.recipe_name).all()
+                lunch_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.meal_lunch==True).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
 
                 # Retrieve a list of user's favorite dinner recipes
-                dinner_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.meal_dinner==True)).order_by(Recipe.recipe_name).all()
+                dinner_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.meal_dinner==True).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
 
             
             # If user wants to generate plan from all recipes they uploaded
             elif request.form['recipe_source'] == 'you':
 
                 # Retrieve a list of user's breakfast recipes
-                bfast_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id).filter(Recipe.meal_breakfast==True)).order_by(Recipe.recipe_name).all()
+                bfast_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id).filter(Recipe.meal_breakfast==True).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
 
                 # Retrieve a list of user's lunch recipes
-                lunch_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id).filter(Recipe.meal_lunch==True)).order_by(Recipe.recipe_name).all()
+                lunch_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id).filter(Recipe.meal_lunch==True).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
 
                 # Retrieve a list of user's dinner recipes
-                dinner_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id).filter(Recipe.meal_dinner==True)).order_by(Recipe.recipe_name).all()
+                dinner_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id).filter(Recipe.meal_dinner==True).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
 
 
             # If user wants to generate plan from all recipes in the app
             elif request.form['recipe_source'] == 'all':
 
                 # Retrieve a list of user's breakfast recipes
-                bfast_recipe_list = (db.session.query(Recipe).filter(Recipe.meal_breakfast==True)).order_by(Recipe.recipe_name).all()
+                bfast_recipe_list = (db.session.query(Recipe).filter(Recipe.meal_breakfast==True).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
 
                 # Retrieve a list of user's lunch recipes
-                lunch_recipe_list = (db.session.query(Recipe).filter(Recipe.meal_lunch==True)).order_by(Recipe.recipe_name).all()
+                lunch_recipe_list = (db.session.query(Recipe).filter(Recipe.meal_lunch==True).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
 
                 # Retrieve a list of user's dinner recipes
-                dinner_recipe_list = (db.session.query(Recipe).filter(Recipe.meal_dinner==True)).order_by(Recipe.recipe_name).all()
+                dinner_recipe_list = (db.session.query(Recipe).filter(Recipe.meal_dinner==True).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
             
 
             
@@ -660,28 +660,6 @@ def add_recipe():
         # Write recipe info
         try:
 
-            # # Clean image input and upload to AWS S3
-            # try:
-            #     uploaded_file = request.files['file']
-            #     filename_sec = secure_filename(uploaded_file.filename)
-            #     if filename_sec != '':
-            #         file_ext = os.path.splitext(filename_sec)[1]
-            #         if file_ext in app.config['UPLOAD_EXTENSIONS'] and \
-            #                 file_ext == validate_image(uploaded_file.stream):
-            #                 # Generate unique file name
-            #                 filename = str(uuid4()) + file_ext
-            #                 uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
-            #                 image_url = upload_file(f"uploads/{filename}", BUCKET)
-            #     else:
-            #         image_url = None
-            #         error="Invalid image upload. Images must be a maximum size of 1024x1024 and one of the following types: .JPG or .PNG"
-
-            # except Exception as e:
-            #     output.append("Application encountered an error, and the image was not uploaded. Better luck in the future!")
-            #     output.append(str(e))
-            #     print(str(e))
-
-
             # Parse recipe URLs
             url_input = request.form['recipe_url']
             manual_input_clean_url = clean(url_input)
@@ -807,36 +785,6 @@ def add_recipe():
                 output.append(str(e))
                 print(output)
 
-        # Insert data to USER_RECIPE table
-        try:
-            user_recipe = User_Recipe(
-                recipe_id=recipe.recipe_id,
-                app_user_id=current_user.id,
-                user_rating=0,
-                owner_ind=True,
-                insert_datetime=datetime.now()
-            )
-            db.session.add(user_recipe)
-            db.session.flush()
-            db.session.commit()
-            #output.append("User_Recipe successfully added!")
-
-        # Return error if database write was unsuccessful
-        except Exception as e:
-            db.session.rollback()
-            output.append("Application encountered an error, and the user/recipe info didn't write to the database. Better luck in the future!")
-            output.append(str(e))
-            print(output)
-
-            # Write errors to APP_ERROR table
-            app_error = App_Error(
-                app_user_id=current_user.id,
-                insert_datetime=datetime.now(),
-                error_val=str(e)
-            )
-            db.session.add(app_error)
-            db.session.flush()
-            db.session.commit()
 
         # Render recipe_confirm.html template after recipe is written to DB    
         return(render_template('recipe_confirm.html', recipe_id=recipe.recipe_id, recipe_name=request.form['recipe_name']))
@@ -917,26 +865,6 @@ def edit_recipe(recipe_id):
     (current_user.id in admins_list)):
         error=""
         try:
-            # # Clean image input and upload to AWS S3
-            # try:
-            #     uploaded_file = request.files['file']
-            #     filename_sec = secure_filename(uploaded_file.filename)
-            #     if filename_sec != '':
-            #         file_ext = os.path.splitext(filename_sec)[1]
-            #         if file_ext in app.config['UPLOAD_EXTENSIONS'] and \
-            #                 file_ext == validate_image(uploaded_file.stream):
-            #                 # Generate unique file name
-            #                 filename = str(uuid4()) + file_ext
-            #                 uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
-            #                 image_url = upload_file(f"uploads/{filename}", BUCKET)
-            #     else:
-            #         image_url = None
-            #         error = "Invalid image upload. Images must be a maximum size of 1024x1024 and one of the following types: .JPG or .PNG"
-
-            # except Exception as e:
-            #     output.append("Application encountered an error, and the image was not uploaded. Better luck in the future!")
-            #     output.append(str(e))
-            #     print(str(e))
 
             # Write recipe info
             try:
@@ -996,7 +924,8 @@ def edit_recipe(recipe_id):
                 recipe.meal_breakfast=meal_breakfast_input
                 recipe.meal_lunch=meal_lunch_input
                 recipe.meal_dinner=meal_dinner_input
-                recipe.created_by=current_user.id
+                # Below line ensures that ownership of the recipe does not transfer to Admin
+                recipe.created_by=recipe.created_by
                 recipe.insert_datetime=datetime.now()
 
                 #db.session.add(recipe)
@@ -1072,38 +1001,6 @@ def edit_recipe(recipe_id):
                     db.session.rollback()
                     output.append("Application encountered an error, and the Recipe Step info didn't write to the database. Better luck in the future!")
                     output.append("Recipe Step " + str(x) + " did not add to database!!")
-                    output.append(str(e))
-                    print(output)
-
-                    # Write errors to APP_ERROR table
-                    app_error = App_Error(
-                        app_user_id=current_user.id,
-                        insert_datetime=datetime.now(),
-                        error_val=str(e)
-                    )
-                    db.session.add(app_error)
-                    db.session.flush()
-                    db.session.commit()
-
-
-            # Insert data to USER_RECIPE table
-            try:
-                user_recipe = User_Recipe(
-                    recipe_id=recipe.recipe_id,
-                    app_user_id=current_user.id,
-                    user_rating=0,
-                    owner_ind=True,
-                    insert_datetime=datetime.now()
-                )
-                db.session.add(user_recipe)
-                db.session.flush()
-                db.session.commit()
-                #output.append("User_Recipe successfully added!")
-
-            # Return error if database write was unsuccessful
-            except Exception as e:
-                    db.session.rollback()
-                    output.append("Application encountered an error, and the user/recipe info didn't write to the database. Better luck in the future!")
                     output.append(str(e))
                     print(output)
 
@@ -1300,22 +1197,6 @@ def auto_import():
                     db.session.flush()
                     db.session.commit()
 
-
-            # Insert data to USER_RECIPE table
-            """ try:
-                user_recipe = User_Recipe(
-                    recipe_id=recipe.recipe_id,
-                    app_user_id=current_user.id,
-                    user_rating=5,
-                    owner_ind=True,
-                    insert_datetime=datetime.now()
-                )
-                db.session.add(user_recipe)
-                db.session.flush()
-                db.session.commit() """
-                #output.append("User_Recipe successfully added!")
-
-            
             # Insert data to FAVORITE_RECIPE table
             try:
                 if request.form['mark_fav'] == 'fav':
@@ -1347,12 +1228,6 @@ def auto_import():
 
             # Render recipe_confirm.html template after recipe is written to DB
             return(render_template('recipe_confirm.html', recipe_id=recipe.recipe_id, recipe_name=scraper.title(), output=output))
-
-            # Return error if database write was unsuccessful
-            """ except Exception as e:
-                db.session.rollback()
-                output.append("Application encountered an error, and the user recipe didn't write to the database. Better luck in the future!")
-                output.append(str(e)) """
             
         except Exception as e:
             error = 'This website is not supported at this time. Please manually add this recipe, and use the Auto Import function for one of the supported websites below.'

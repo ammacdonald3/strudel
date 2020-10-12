@@ -18,9 +18,7 @@ All Recipes
     <div class="card" data-toggle="collapse" data-target="#collapseOne">
       <div class="card-header text-center" id="headingOne">
         <h4 class="mb-0">
-          <!-- <button class="btn btn-link collapsed" aria-expanded="false" aria-controls="collapseOne"> -->
           Favorites
-          <!-- </button> -->
           <!-- Badge displaying total number of recipes in this section -->
           <span class="badge badge-light">{{ fav_length }}</span>
           <span class="sr-only">favorite recipes</span>
@@ -30,25 +28,54 @@ All Recipes
       <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
         <div class="card-body">
           {% if fav_exists == True %}
-          <dl>
-            {% for recipe in favorite_recipe_list %}
-            <dt class="text-center">
-              <h4>
-                <a
-                  href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}">{{ recipe.Recipe.recipe_name }}</a>
-              </h4>
 
-              <h6><a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank">Source Website</a></h6>
-            </dt>
-            <dd class="text-center">
-              <p>{{ recipe.Recipe.recipe_desc }}</p>
-            </dd>
-            
+          <ul class="list-unstyled">
+            {% for recipe in favorite_recipe_list %}
+
+            <!-- Recipe Name -->
+            <li>
+              <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
+                <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                >
+              <!-- Recipe Image -->
+              {% if recipe.Recipe.recipe_image_url != None %}
+              <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center img-fluid small-image" alt="Responsive image"
+               />
+              {% else %}
+              <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid small-image" alt="Responsive image"
+               />
+              {% endif %}
+              </a>
+
+
+              <div class="form-group">
+                <!-- Display button so that user can view recipe's page -->
+                <div class="row" style="padding-top: 20px;">
+                  <div class="form-group col-sm">
+                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                      class="btn btn-primary btn-block">View Recipe</a>
+                  </div>
+              
+                <!-- Display button so that user can view recipe's source website -->
+                  <div class="form-group col-sm">
+                    <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
+                      class="btn btn-primary btn-block">Source
+                      Website</a>
+                  </div>
+                </div>
+              </div>
+
+            </li>
+            <hr class="recipe-list-hr"/>
             {% endfor %}
-          </dl>
+
+          </ul>
+
+          <!-- If user doesn't have any Favorites, display placeholder message -->
           {% else %}
           <h5 class="text-center">You haven't favorited any recipes yet. Try adding one!</h5>
           {% endif %}
+
         </div>
       </div>
     </div>
@@ -67,24 +94,54 @@ All Recipes
       </div>
       <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
         <div class="card-body">
-          {% if your_exists == True %}
-          <dl>
-            {% for recipe in your_recipe_list %}
-            <dt class="text-center">
-              <h4><a
-                  href="{{ url_for('recipe_detail', recipe_id=recipe.recipe_id) }}">{{ recipe.recipe_name }}</a>
-              </h4>
+            {% if your_exists == True %}
 
-              <h6><a href="https://{{ recipe.recipe_url }}" target="_blank">Source Website</a></h6>
-            </dt>
-            <dd class="text-center">
-              <p>{{ recipe.recipe_desc }}</p>
-            </dd>
-            {% endfor %}
-          </dl>
-          {% else %}
-          <h5 class="text-center">You haven't uploaded any recipes yet. Try adding one!</h5>
-          {% endif %}
+            <ul class="list-unstyled">
+              {% for recipe in your_recipe_list %}
+  
+              <!-- Recipe Name -->
+              <li>
+                <h3 class="text-center">{{ recipe.recipe_name }}</h3>
+                  <a href="{{ url_for('recipe_detail', recipe_id=recipe.recipe_id) }}"
+                  >
+                <!-- Recipe Image -->
+                {% if recipe.recipe_image_url != None %}
+                <img id="preview" src="{{ recipe.recipe_image_url}}" class="center img-fluid small-image" alt="Responsive image"
+                 />
+                {% else %}
+                <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid small-image" alt="Responsive image"
+                 />
+                {% endif %}
+                </a>
+  
+  
+                <div class="form-group">
+                  <!-- Display button so that user can view recipe's page -->
+                  <div class="row" style="padding-top: 20px;">
+                    <div class="form-group col-sm">
+                      <a href="{{ url_for('recipe_detail', recipe_id=recipe.recipe_id) }}"
+                        class="btn btn-primary btn-block">View Recipe</a>
+                    </div>
+                
+                  <!-- Display button so that user can view recipe's source website -->
+                    <div class="form-group col-sm">
+                      <a href="https://{{ recipe.recipe_url }}" target="_blank"
+                        class="btn btn-primary btn-block">Source
+                        Website</a>
+                    </div>
+                  </div>
+                </div>
+  
+              </li>
+              <hr class="recipe-list-hr"/>
+              {% endfor %}
+  
+            </ul>
+  
+            <!-- If user hasn't uploaded any recipes, display placeholder message -->
+            {% else %}
+            <h5 class="text-center">You haven't uploaded any recipes yet. Try adding one!</h5>
+            {% endif %}
         </div>
       </div>
     </div>
@@ -103,22 +160,52 @@ All Recipes
       </div>
       <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
         <div class="card-body">
-          {% if other_exists == True %}
-          <dl>
-            {% for recipe in other_recipe_list %}
-            <dt class="text-center">
-              <h4><a
-                  href="{{ url_for('recipe_detail', recipe_id=recipe.recipe_id) }}">{{ recipe.recipe_name }}</a>
-              </h4>
+            {% if other_exists == True %}
 
-              <h6><a href="https://{{ recipe.recipe_url }}" target="_blank">Source Website</a></h6>
-            </dt>
-            <dd class="text-center">
-              <p>{{ recipe.recipe_desc }}</p>
-            </dd>
-            {% endfor %}
-          </dl>
-          {% else %}
+            <ul class="list-unstyled">
+              {% for recipe in other_recipe_list %}
+  
+              <!-- Recipe Name -->
+              <li>
+                <h3 class="text-center">{{ recipe.recipe_name }}</h3>
+                  <a href="{{ url_for('recipe_detail', recipe_id=recipe.recipe_id) }}"
+                  >
+                <!-- Recipe Image -->
+                {% if recipe.recipe_image_url != None %}
+                <img id="preview" src="{{ recipe.recipe_image_url}}" class="center img-fluid small-image" alt="Responsive image"
+                 />
+                {% else %}
+                <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid small-image" alt="Responsive image"
+                 />
+                {% endif %}
+                </a>
+  
+  
+                <div class="form-group">
+                  <!-- Display button so that user can view recipe's page -->
+                  <div class="row" style="padding-top: 20px;">
+                    <div class="form-group col-sm">
+                      <a href="{{ url_for('recipe_detail', recipe_id=recipe.recipe_id) }}"
+                        class="btn btn-primary btn-block">View Recipe</a>
+                    </div>
+                
+                  <!-- Display button so that user can view recipe's source website -->
+                    <div class="form-group col-sm">
+                      <a href="https://{{ recipe.recipe_url }}" target="_blank"
+                        class="btn btn-primary btn-block">Source
+                        Website</a>
+                    </div>
+                  </div>
+                </div>
+  
+              </li>
+              <hr class="recipe-list-hr"/>
+              {% endfor %}
+  
+            </ul>
+  
+            <!-- If no one else has uploaded any recipes, display placeholder message -->
+            {% else %}
           <h5 class="text-center">No one else has uploaded any recipes yet!</h5>
           {% endif %}
         </div>

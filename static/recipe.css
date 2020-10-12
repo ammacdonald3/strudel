@@ -218,3 +218,12 @@ dt {
 .center-text {
 	text-align: center;
 }
+
+.small-image {
+	max-width: 300px;
+}
+
+.recipe-list-hr {
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
