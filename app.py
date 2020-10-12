@@ -1381,7 +1381,7 @@ def auto_import():
 @login_required
 def all_recipes():
     # Your favorite recipes (created both by you and others)
-    favorite_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id)).order_by(Recipe.recipe_name).all()
+    favorite_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
 
     fav_length = len(favorite_recipe_list)
 
@@ -1392,7 +1392,7 @@ def all_recipes():
 
 
     # Recipes created by you
-    your_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id)).order_by(Recipe.recipe_name).all()
+    your_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
 
     your_length = len(your_recipe_list)
 
@@ -1403,7 +1403,7 @@ def all_recipes():
 
 
     # Recipes created by others
-    other_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by!=current_user.id)).order_by(Recipe.recipe_name).all()
+    other_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by!=current_user.id).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
 
     other_length = len(other_recipe_list)
 
@@ -1436,72 +1436,123 @@ def recipe_detail(recipe_id):
     step_list = Recipe_Step.query.filter_by(recipe_id=recipe_id)
 
     output = []
-    # If user selects 'add to favorites' button, add the user/recipe combo to favorites table:
-    if request.method == "POST" and favorite == None:
-        # Scrape external website and clean data for write to the DB
-        try:
-            favorite_recipe = Favorite_Recipe(
-                recipe_id=recipe_id,
-                app_user_id=current_user.id,
-                owner_ind=True,
-                insert_datetime=datetime.now()
-            )
-
-            db.session.add(favorite_recipe)
-            db.session.flush()
-            db.session.commit()
-
-            favorite = favorite_recipe
-
-            return render_template('recipe_detail.html', recipe=recipe, ingredient_list=ingredient_list, step_list=step_list, favorite=favorite)
-
-            
-        except Exception as e:
-            db.session.rollback()
-            output.append("Application encountered an error, and the recipe didn't write to the database. Better luck in the future!")
-            output.append(str(e))
-            print(output)
-
-            # Write errors to APP_ERROR table
-            app_error = App_Error(
-                app_user_id=current_user.id,
-                insert_datetime=datetime.now(),
-                error_val=str(e)
-            )
-            db.session.add(app_error)
-            db.session.flush()
-            db.session.commit()
+    if request.method == "POST":
         
+        if "favorite_submit" in request.form:
+            # If user selects 'add to favorites' button and the recipe is not a favorite, add the user/recipe combo to favorites table:
+            if favorite == None:
+                try:
+                    favorite_recipe = Favorite_Recipe(
+                        recipe_id=recipe_id,
+                        app_user_id=current_user.id,
+                        owner_ind=True,
+                        insert_datetime=datetime.now()
+                    )
 
-    # If user select 'remove from favorites' button, delete the user/recipe combo from the favorites table:
-    elif request.method == "POST":
-        try:
-            #db.session.query(Favorite_Recipe).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).delete()
-            db.session.delete(favorite)
-            db.session.flush()
-            db.session.commit()
+                    db.session.add(favorite_recipe)
+                    db.session.flush()
+                    db.session.commit()
 
-            favorite = None
+                    favorite = favorite_recipe
 
-            return render_template('recipe_detail.html', recipe=recipe, ingredient_list=ingredient_list, step_list=step_list, favorite=favorite)
+                    return render_template('recipe_detail.html', recipe=recipe, ingredient_list=ingredient_list, step_list=step_list, favorite=favorite)
+
+                    
+                except Exception as e:
+                    db.session.rollback()
+                    output.append("Application encountered an error, and the recipe didn't write to the database. Better luck in the future!")
+                    output.append(str(e))
+                    print(output)
+
+                    # Write errors to APP_ERROR table
+                    app_error = App_Error(
+                        app_user_id=current_user.id,
+                        insert_datetime=datetime.now(),
+                        error_val=str(e)
+                    )
+                    db.session.add(app_error)
+                    db.session.flush()
+                    db.session.commit()
         
-        except Exception as e:
-            db.session.rollback()
-            output.append("Application encountered an error, and the favorite wasn't deleted from the database. Better luck in the future!")
-            output.append(str(e))
-            print(output)
+            # If user selects 'add to favorites' button and the recipe is already a favorite, delete the user/recipe combo to favorites table:
+            else:
+                try:
+                    #db.session.query(Favorite_Recipe).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).delete()
+                    db.session.delete(favorite)
+                    db.session.flush()
+                    db.session.commit()
 
-            # Write errors to APP_ERROR table
-            app_error = App_Error(
-                app_user_id=current_user.id,
-                insert_datetime=datetime.now(),
-                error_val=str(e)
-            )
-            db.session.add(app_error)
+                    favorite = None
+
+                    return render_template('recipe_detail.html', recipe=recipe, ingredient_list=ingredient_list, step_list=step_list, favorite=favorite)
+                
+                except Exception as e:
+                    db.session.rollback()
+                    output.append("Application encountered an error, and the favorite wasn't deleted from the database. Better luck in the future!")
+                    output.append(str(e))
+                    print(output)
+
+                    # Write errors to APP_ERROR table
+                    app_error = App_Error(
+                        app_user_id=current_user.id,
+                        insert_datetime=datetime.now(),
+                        error_val=str(e)
+                    )
+                    db.session.add(app_error)
+                    db.session.flush()
+                    db.session.commit()
+
+
+        # Route for deleting recipe
+        admins = (db.session.query(App_User).filter_by(admin=True).all())
+        admins_list = [r.id for r in admins]
+        if "delete_submit" in request.form and ((recipe.created_by == current_user.id) or 
+        (current_user.id in admins_list)):
+            db.session.query(Recipe).filter_by(recipe_id=recipe_id).update(dict(recipe_deleted=True))
+
             db.session.flush()
             db.session.commit()
 
-    # If user is the owner of the recipe, pass a flag to render the 'Edit' button
+            # After deleting, render the all_recipes.html template
+
+            # Your favorite recipes (created both by you and others)
+            favorite_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
+
+            fav_length = len(favorite_recipe_list)
+
+            if fav_length != 0:
+                fav_exists = True
+            else:
+                fav_exists = False 
+
+
+            # Recipes created by you
+            your_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
+
+            your_length = len(your_recipe_list)
+
+            if your_length != 0:
+                your_exists = True
+            else:
+                your_exists = False 
+
+
+            # Recipes created by others
+            other_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by!=current_user.id).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
+
+            other_length = len(other_recipe_list)
+
+            if other_length != 0:
+                other_exists = True
+            else:
+                other_exists = False 
+
+
+
+            return render_template("all_recipes.html", favorite_recipe_list=favorite_recipe_list, your_recipe_list=your_recipe_list, other_recipe_list=other_recipe_list, fav_exists=fav_exists, your_exists=your_exists, other_exists=other_exists, fav_length=fav_length, your_length=your_length, other_length=other_length)
+
+
+    # If user is the owner of the recipe, pass a flag to render the 'Edit' and 'Delete' buttons
     admins = (db.session.query(App_User).filter_by(admin=True).all())
     admins_list = [r.id for r in admins]
     if ((recipe.created_by == current_user.id) or (current_user.id in admins_list)):

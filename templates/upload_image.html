@@ -7,15 +7,12 @@ active
 {% endblock %}
 
 {% block heading %}
-Upload Image
+{{ recipe.recipe_name }}
 {% endblock %}
 
 {% block body %}
 <div class="container">
 
-  <h2>{{ recipe.recipe_name }}</h2>
-  <br>
-  <br>
   <form role="form" method='POST' action="" enctype="multipart/form-data">
 
     <!-- Display recipe image -->

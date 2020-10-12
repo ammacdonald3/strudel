@@ -57,6 +57,7 @@ class Recipe(db.Model):
     recipe_image_url = db.Column(db.String())
     created_by = db.Column(db.Integer(), db.ForeignKey('app_user.id'), nullable=False)
     insert_datetime = db.Column(db.DateTime())
+    recipe_deleted = db.Column(db.Boolean())
     ingredient = db.relationship('Ingredient', backref='ingredient', lazy=True)
     recipe_step = db.relationship('Recipe_Step', backref='recipe_step', lazy=True)
     user_recipe = db.relationship('User_Recipe', backref='user_recipe1', lazy=True)
