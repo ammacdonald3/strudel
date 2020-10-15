@@ -1,7 +1,4 @@
 {% extends "layout.html" %}
-{% block nav_current %}
-active
-{% endblock %}
 {% block nav_meal_plan %}
 active
 {% endblock %}
@@ -14,201 +11,246 @@ Meal Plan
 
 <br>
 <div class="container">
-    <div id="accordion">
 
-        <!-- Card #1: Breakfast recipes -->
-        <div class="card" data-toggle="collapse" data-target="#collapseOne">
-          <div class="card-header text-center" id="headingOne">
-            <h4 class="mb-0">
-              Breakfast
-              <!-- Badge displaying total number of recipes in this section -->
-              <span class="badge badge-light">{{ bfast_length }}</span>
-              <span class="sr-only">breakfast recipes</span>
-            </h4>
-          </div>
-    
-          <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-            <div class="card-body">
-                {% if bfast_exists == True %}
+  <!-- Display button so that user can delete all recipes from their current meal plan -->
+  <div class="form-group col-sm">
+      <form role="form" method='POST' id="all_meal_plan_form" name="all_meal_plan_form">
+        <button type="submit" class="btn btn-danger btn-block" id="all_meal_plan_submit"
+          name="all_meal_plan_submit" onclick="return confirm('Are you sure that you want to delete all items from your current meal plan?');">Clear Current Meal Plan</button>
+      </form>
+    </div>
 
-                <ul class="list-unstyled">
-                  {% for recipe in selected_bfast_meals_list %}
-      
-                  <!-- Recipe Name -->
-                  <li>
-                    <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
-                      <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
-                      >
-                    <!-- Recipe Image -->
-                    {% if recipe.Recipe.recipe_image_url != None %}
-                    <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center img-fluid small-image" alt="Responsive image"
-                     />
-                    {% else %}
-                    <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid small-image" alt="Responsive image"
-                     />
-                    {% endif %}
-                    </a>
-      
-      
-                    <div class="form-group">
-                      <!-- Display button so that user can view recipe's page -->
-                      <div class="row" style="padding-top: 20px;">
-                        <div class="form-group col-sm">
-                          <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
-                            class="btn btn-primary btn-block">View Recipe</a>
-                        </div>
-                    
-                      <!-- Display button so that user can view recipe's source website -->
-                        <div class="form-group col-sm">
-                          <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
-                            class="btn btn-primary btn-block">Source
-                            Website</a>
-                        </div>
-                      </div>
-                    </div>
-      
-                  </li>
-                  <hr class="recipe-list-hr"/>
-                  {% endfor %}
-      
-                </ul>
-      
-                <!-- If user doesn't have any breakfast meals selected, display placeholder message -->
+    <br>
+
+  
+  <div id="accordion">
+
+    <!-- Card #1: Breakfast recipes -->
+    <div class="card">
+      <div class="card-header text-center text-white bg-secondary" id="headingOne" data-toggle="collapse"
+        data-target="#collapseOne">
+        <h4 class="mb-0">
+          Breakfast
+          <!-- Badge displaying total number of recipes in this section -->
+          <span class="badge badge-light">{{ bfast_length }}</span>
+          <span class="sr-only">breakfast recipes</span>
+        </h4>
+      </div>
+
+      <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+        <div class="card-body">
+          {% if bfast_exists == True %}
+
+          <ul class="list-unstyled">
+            {% for recipe in selected_bfast_meals_list %}
+
+            <!-- Recipe Name -->
+            <li>
+              <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}" class="text-decoration-none">
+                <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
+                <!-- Recipe Image -->
+                {% if recipe.Recipe.recipe_image_url != None %}
+                <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center img-fluid small-image"
+                  alt="Responsive image" />
                 {% else %}
-                <h5 class="text-center">You don't have any breakfast meals selected this week.</h5>
+                <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid small-image"
+                  alt="Responsive image" />
                 {% endif %}
-            </div>
-          </div>
-        </div>
-    
-        <!-- Card #2: Lunch recipes -->
-        <div class="card" data-toggle="collapse" data-target="#collapseTwo">
-          <div class="card-header text-center" id="headingTwo">
-            <h4 class="mb-0">
-              Lunch
-              <!-- Badge displaying total number of recipes in this section -->
-              <span class="badge badge-light">{{ lunch_length }}</span>
-              <span class="sr-only">lunch recipes</span>
-            </h4>
-          </div>
-          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-            <div class="card-body">
-                {% if lunch_exists == True %}
+              </a>
 
-                <ul class="list-unstyled">
-                  {% for recipe in selected_lunch_meals_list %}
-      
-                  <!-- Recipe Name -->
-                  <li>
-                    <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
-                      <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
-                      >
-                    <!-- Recipe Image -->
-                    {% if recipe.Recipe.recipe_image_url != None %}
-                    <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center img-fluid small-image" alt="Responsive image"
-                     />
-                    {% else %}
-                    <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid small-image" alt="Responsive image"
-                     />
-                    {% endif %}
-                    </a>
-      
-      
-                    <div class="form-group">
-                      <!-- Display button so that user can view recipe's page -->
-                      <div class="row" style="padding-top: 20px;">
-                        <div class="form-group col-sm">
-                          <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
-                            class="btn btn-primary btn-block">View Recipe</a>
-                        </div>
-                    
-                      <!-- Display button so that user can view recipe's source website -->
-                        <div class="form-group col-sm">
-                          <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
-                            class="btn btn-primary btn-block">Source
-                            Website</a>
-                        </div>
-                      </div>
-                    </div>
-      
-                  </li>
-                  <hr class="recipe-list-hr"/>
-                  {% endfor %}
-      
-                </ul>
-      
-                <!-- If user doesn't have any lunch meals selected, display placeholder message -->
-                {% else %}
-                <h5 class="text-center">You don't have any lunch meals selected this week.</h5>
-                {% endif %}
-            </div>
-          </div>
-        </div>
-    
-        <!-- Card #3: Dinner recipes -->
-        <div class="card" data-toggle="collapse" data-target="#collapseThree">
-          <div class="card-header text-center" id="headingThree">
-            <h4 class="mb-0">
-              Dinner
-              <!-- Badge displaying total number of recipes in this section -->
-              <span class="badge badge-light">{{ dinner_length }}</span>
-              <span class="sr-only">dinner recipes</span>
-            </h4>
-          </div>
-          <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
-            <div class="card-body">
-                {% if dinner_exists == True %}
 
-                <ul class="list-unstyled">
-                  {% for recipe in selected_dinner_meals_list %}
-      
-                  <!-- Recipe Name -->
-                  <li>
-                    <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
-                      <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
-                      >
-                    <!-- Recipe Image -->
-                    {% if recipe.Recipe.recipe_image_url != None %}
-                    <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center img-fluid small-image" alt="Responsive image"
-                     />
-                    {% else %}
-                    <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid small-image" alt="Responsive image"
-                     />
-                    {% endif %}
-                    </a>
-      
-      
-                    <div class="form-group">
-                      <!-- Display button so that user can view recipe's page -->
-                      <div class="row" style="padding-top: 20px;">
-                        <div class="form-group col-sm">
-                          <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
-                            class="btn btn-primary btn-block">View Recipe</a>
-                        </div>
-                    
-                      <!-- Display button so that user can view recipe's source website -->
-                        <div class="form-group col-sm">
-                          <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
-                            class="btn btn-primary btn-block">Source
-                            Website</a>
-                        </div>
-                      </div>
-                    </div>
-      
-                  </li>
-                  <hr class="recipe-list-hr"/>
-                  {% endfor %}
-      
-                </ul>
-      
-                <!-- If user doesn't have any dinner meals selected, display placeholder message -->
-                {% else %}
-                <h5 class="text-center">You don't have any dinner meals selected this week.</h5>
-                {% endif %}
-            </div>
-          </div>
+              <div class="form-group">
+                <!-- Display button so that user can view recipe's page -->
+                <div class="row" style="padding-top: 20px;">
+                  <div class="form-group col-sm">
+                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                      class="btn btn-primary btn-block">View Recipe</a>
+                  </div>
+
+                  <!-- Display button so that user can view recipe's source website -->
+                  <div class="form-group col-sm">
+                    <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
+                      class="btn btn-primary btn-block">Source
+                      Website</a>
+                  </div>
+
+                  <!-- Display button so that user can delete recipe from their current meal plan -->
+                  <div class="form-group col-sm">
+                    <form role="form" method='POST' id="bfast_meal_plan_form" name="bfast_meal_plan_form">
+                      <input type="hidden" name="recipe_id" value="{{ recipe.Recipe.recipe_id }}" />
+                      <input type="hidden" name="meal_time" value="breakfast" />
+                      <button type="submit" class="btn btn-danger btn-block" id="bfast_meal_plan_submit"
+                        name="bfast_meal_plan_submit">Remove from Meal Plan</button>
+                    </form>
+                  </div>
+
+                </div>
+              </div>
+
+            </li>
+            <hr class="recipe-list-hr" />
+            {% endfor %}
+
+          </ul>
+
+          <!-- If user doesn't have any breakfast meals selected, display placeholder message -->
+          {% else %}
+          <h5 class="text-center">You don't have any breakfast meals selected this week.</h5>
+          {% endif %}
         </div>
       </div>
+    </div>
+
+    <!-- Card #2: Lunch recipes -->
+    <div class="card">
+      <div class="card-header text-center text-white bg-secondary" id="headingTwo" data-toggle="collapse"
+      data-target="#collapseTwo">
+        <h4 class="mb-0">
+          Lunch
+          <!-- Badge displaying total number of recipes in this section -->
+          <span class="badge badge-light">{{ lunch_length }}</span>
+          <span class="sr-only">lunch recipes</span>
+        </h4>
+      </div>
+      <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+        <div class="card-body">
+          {% if lunch_exists == True %}
+
+          <ul class="list-unstyled">
+            {% for recipe in selected_lunch_meals_list %}
+
+            <!-- Recipe Name -->
+            <li>
+              <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}" class="text-decoration-none">
+                <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
+                <!-- Recipe Image -->
+                {% if recipe.Recipe.recipe_image_url != None %}
+                <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center img-fluid small-image"
+                  alt="Responsive image" />
+                {% else %}
+                <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid small-image"
+                  alt="Responsive image" />
+                {% endif %}
+              </a>
+
+
+              <div class="form-group">
+                <!-- Display button so that user can view recipe's page -->
+                <div class="row" style="padding-top: 20px;">
+                  <div class="form-group col-sm">
+                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                      class="btn btn-primary btn-block">View Recipe</a>
+                  </div>
+
+                  <!-- Display button so that user can view recipe's source website -->
+                  <div class="form-group col-sm">
+                    <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
+                      class="btn btn-primary btn-block">Source
+                      Website</a>
+                  </div>
+
+                  <!-- Display button so that user can delete recipe from their current meal plan -->
+                  <div class="form-group col-sm">
+                    <form role="form" method='POST' id="lunch_meal_plan_form" name="lunch_meal_plan_form">
+                      <input type="hidden" name="recipe_id" value="{{ recipe.Recipe.recipe_id }}" />
+                      <input type="hidden" name="meal_time" value="lunch" />
+                      <button type="submit" class="btn btn-danger btn-block" id="lunch_meal_plan_submit"
+                        name="lunch_meal_plan_submit">Remove from Meal Plan</button>
+                    </form>
+                  </div>
+
+                </div>
+              </div>
+
+            </li>
+            <hr class="recipe-list-hr" />
+            {% endfor %}
+
+          </ul>
+
+          <!-- If user doesn't have any lunch meals selected, display placeholder message -->
+          {% else %}
+          <h5 class="text-center">You don't have any lunch meals selected this week.</h5>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Card #3: Dinner recipes -->
+    <div class="card">
+      <div class="card-header text-center text-white bg-secondary" id="headingThree" data-toggle="collapse"
+      data-target="#collapseThree">
+        <h4 class="mb-0">
+          Dinner
+          <!-- Badge displaying total number of recipes in this section -->
+          <span class="badge badge-light">{{ dinner_length }}</span>
+          <span class="sr-only">dinner recipes</span>
+        </h4>
+      </div>
+      <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+        <div class="card-body">
+          {% if dinner_exists == True %}
+
+          <ul class="list-unstyled">
+            {% for recipe in selected_dinner_meals_list %}
+
+            <!-- Recipe Name -->
+            <li>
+              <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}" class="text-decoration-none">
+                <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
+                <!-- Recipe Image -->
+                {% if recipe.Recipe.recipe_image_url != None %}
+                <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center img-fluid small-image"
+                  alt="Responsive image" />
+                {% else %}
+                <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid small-image"
+                  alt="Responsive image" />
+                {% endif %}
+              </a>
+
+
+              <div class="form-group">
+                <!-- Display button so that user can view recipe's page -->
+                <div class="row" style="padding-top: 20px;">
+                  <div class="form-group col-sm">
+                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                      class="btn btn-primary btn-block">View Recipe</a>
+                  </div>
+
+                  <!-- Display button so that user can view recipe's source website -->
+                  <div class="form-group col-sm">
+                    <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
+                      class="btn btn-primary btn-block">Source
+                      Website</a>
+                  </div>
+
+                  <!-- Display button so that user can delete recipe from their current meal plan -->
+                  <div class="form-group col-sm">
+                    <form role="form" method='POST' id="dinner_meal_plan_form" name="dinner_meal_plan_form">
+                      <input type="hidden" name="recipe_id" value="{{ recipe.Recipe.recipe_id }}" />
+                      <input type="hidden" name="meal_time" value="dinner" />
+                      <button type="submit" class="btn btn-danger btn-block" id="dinner_meal_plan_submit"
+                        name="dinner_meal_plan_submit">Remove from Meal Plan</button>
+                    </form>
+                  </div>
+
+                </div>
+              </div>
+
+            </li>
+            <hr class="recipe-list-hr" />
+            {% endfor %}
+
+          </ul>
+
+          <!-- If user doesn't have any dinner meals selected, display placeholder message -->
+          {% else %}
+          <h5 class="text-center">You don't have any dinner meals selected this week.</h5>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
 

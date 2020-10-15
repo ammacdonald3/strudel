@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='recipe.css') }}">
   <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
   <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
-  <link  href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 
   <!-- CSS for uploading images -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.css">
@@ -51,37 +51,37 @@
 
         <!-- Add New Recipes menu-->
         <li class="nav-item {% block nav_add_menu %}{% endblock %} dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">
-              Add New Recipes
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item {% block nav_auto_import %}{% endblock %}"
-                href="{{ url_for('auto_import') }}">Auto Import</a>
-              <a class="dropdown-item {% block nav_add %}{% endblock %}" href="{{ url_for('add_recipe') }}">Manual Entry</a>
-            </div>
-          </li>
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Add New Recipes
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item {% block nav_auto_import %}{% endblock %}" href="{{ url_for('auto_import') }}">Auto
+              Import</a>
+            <a class="dropdown-item {% block nav_add %}{% endblock %}" href="{{ url_for('add_recipe') }}">Manual
+              Entry</a>
+          </div>
+        </li>
 
 
         <li class="nav-item {% block nav_recipes %}{% endblock %}">
           <a class="nav-link" href="{{ url_for('all_recipes') }}">View All Recipes</a>
         </li>
 
-        <!-- Current Week menu -->
-        <li class="nav-item {% block nav_current %}{% endblock %} dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-            Current Week
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item {% block nav_meal_selector %}{% endblock %}"
-              href="{{ url_for('meal_selector') }}">Meal Selector</a>
-            <a class="dropdown-item {% block nav_meal_plan %}{% endblock %}" href="{{ url_for('meal_plan') }}">Meal
-              Plan</a>
-            <a class="dropdown-item {% block nav_shopping_list %}{% endblock %}"
-              href="{{ url_for('shopping_list') }}">Shopping List</a>
-          </div>
+        <li class="nav-item {% block nav_meal_selector %}{% endblock %}">
+          <a class="nav-link" href="{{ url_for('meal_selector') }}">Meal Selector</a>
         </li>
+
+        <li class="nav-item {% block nav_meal_plan %}{% endblock %}">
+          <a class="nav-link" href="{{ url_for('meal_plan') }}">Meal
+            Plan</a>
+        </li>
+
+        <li class="nav-item {% block nav_shopping_list %}{% endblock %}">
+          <a class="nav-link" href="{{ url_for('shopping_list') }}">Shopping List</a>
+        </li>
+
+        
         {% endif %}
 
       </ul>
@@ -109,9 +109,15 @@
 
   {% block body %}
   {% endblock %}
-  <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+    integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous">
+  </script>
 
   {% block footer %}
   {% endblock %}

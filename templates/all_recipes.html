@@ -15,8 +15,8 @@ All Recipes
   <div id="accordion">
 
     <!-- Card #1: User's "Favorites" recipes -->
-    <div class="card" data-toggle="collapse" data-target="#collapseOne">
-      <div class="card-header text-center" id="headingOne">
+    <div class="card">
+      <div class="card-header text-center text-white bg-secondary" id="headingOne" data-toggle="collapse" data-target="#collapseOne">
         <h4 class="mb-0">
           Favorites
           <!-- Badge displaying total number of recipes in this section -->
@@ -25,7 +25,7 @@ All Recipes
         </h4>
       </div>
 
-      <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+      <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
         <div class="card-body">
           {% if fav_exists == True %}
 
@@ -34,17 +34,16 @@ All Recipes
 
             <!-- Recipe Name -->
             <li>
-              <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
-                <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
-                >
-              <!-- Recipe Image -->
-              {% if recipe.Recipe.recipe_image_url != None %}
-              <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center img-fluid small-image" alt="Responsive image"
-               />
-              {% else %}
-              <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid small-image" alt="Responsive image"
-               />
-              {% endif %}
+              <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}" class="text-decoration-none">
+                <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
+                <!-- Recipe Image -->
+                {% if recipe.Recipe.recipe_image_url != None %}
+                <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center img-fluid small-image"
+                  alt="Responsive image" />
+                {% else %}
+                <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid small-image"
+                  alt="Responsive image" />
+                {% endif %}
               </a>
 
 
@@ -55,18 +54,28 @@ All Recipes
                     <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
                       class="btn btn-primary btn-block">View Recipe</a>
                   </div>
-              
-                <!-- Display button so that user can view recipe's source website -->
+
+                  <!-- Display button so that user can view recipe's source website -->
                   <div class="form-group col-sm">
                     <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
                       class="btn btn-primary btn-block">Source
                       Website</a>
                   </div>
+
+                  <!-- Display button so that user can add recipe to their current meal plan -->
+                  <div class="form-group col-sm">
+                    <form role="form" method='POST' id="fav_meal_plan_form" name="fav_meal_plan_form">
+                      <!-- <input id = "{{ recipe.Recipe.recipe_id }}" type="text" name="comment.{{ recipe.Recipe.recipe_id }}"> -->
+                      <input type="hidden" name="recipe_id" value="{{ recipe.Recipe.recipe_id }}" />
+                      <button type="submit" class="btn btn-success btn-block" id="fav_meal_plan_submit"
+                        name="fav_meal_plan_submit">Add to Meal Plan</button>
+                    </form>
+                  </div>
                 </div>
               </div>
 
             </li>
-            <hr class="recipe-list-hr"/>
+            <hr class="recipe-list-hr" />
             {% endfor %}
 
           </ul>
@@ -81,8 +90,8 @@ All Recipes
     </div>
 
     <!-- Card #2: All of user's uploaded recipes -->
-    <div class="card" data-toggle="collapse" data-target="#collapseTwo">
-      <div class="card-header text-center" id="headingTwo">
+    <div class="card">
+      <div class="card-header text-center text-white bg-secondary" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo">
         <h4 class="mb-0">
           <!-- <button class="btn btn-link collapsed" aria-expanded="false" aria-controls="collapseTwo"> -->
           My Recipes
@@ -94,61 +103,69 @@ All Recipes
       </div>
       <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
         <div class="card-body">
-            {% if your_exists == True %}
+          {% if your_exists == True %}
 
-            <ul class="list-unstyled">
-              {% for recipe in your_recipe_list %}
-  
-              <!-- Recipe Name -->
-              <li>
+          <ul class="list-unstyled">
+            {% for recipe in your_recipe_list %}
+
+            <!-- Recipe Name -->
+            <li>
+              <a href="{{ url_for('recipe_detail', recipe_id=recipe.recipe_id) }}" class="text-decoration-none">
                 <h3 class="text-center">{{ recipe.recipe_name }}</h3>
-                  <a href="{{ url_for('recipe_detail', recipe_id=recipe.recipe_id) }}"
-                  >
                 <!-- Recipe Image -->
                 {% if recipe.recipe_image_url != None %}
-                <img id="preview" src="{{ recipe.recipe_image_url}}" class="center img-fluid small-image" alt="Responsive image"
-                 />
+                <img id="preview" src="{{ recipe.recipe_image_url}}" class="center img-fluid small-image"
+                  alt="Responsive image" />
                 {% else %}
-                <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid small-image" alt="Responsive image"
-                 />
+                <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid small-image"
+                  alt="Responsive image" />
                 {% endif %}
-                </a>
-  
-  
-                <div class="form-group">
-                  <!-- Display button so that user can view recipe's page -->
-                  <div class="row" style="padding-top: 20px;">
-                    <div class="form-group col-sm">
-                      <a href="{{ url_for('recipe_detail', recipe_id=recipe.recipe_id) }}"
-                        class="btn btn-primary btn-block">View Recipe</a>
-                    </div>
-                
-                  <!-- Display button so that user can view recipe's source website -->
-                    <div class="form-group col-sm">
-                      <a href="https://{{ recipe.recipe_url }}" target="_blank"
-                        class="btn btn-primary btn-block">Source
-                        Website</a>
-                    </div>
+              </a>
+
+
+              <div class="form-group">
+                <!-- Display button so that user can view recipe's page -->
+                <div class="row" style="padding-top: 20px;">
+                  <div class="form-group col-sm">
+                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.recipe_id) }}"
+                      class="btn btn-primary btn-block">View Recipe</a>
                   </div>
+
+                  <!-- Display button so that user can view recipe's source website -->
+                  <div class="form-group col-sm">
+                    <a href="https://{{ recipe.recipe_url }}" target="_blank" class="btn btn-primary btn-block">Source
+                      Website</a>
+                  </div>
+
+                  <!-- Display button so that user can add recipe to their current meal plan -->
+                  <div class="form-group col-sm">
+                    <form role="form" method='POST' id="your_meal_plan_form" name="your_meal_plan_form">
+                      <input type="hidden" name="recipe_id" value="{{ recipe.recipe_id }}" />
+                      <button type="submit" class="btn btn-success btn-block" id="your_meal_plan_submit"
+                        name="your_meal_plan_submit">Add to Meal Plan</button>
+                    </form>
+                  </div>
+
                 </div>
-  
-              </li>
-              <hr class="recipe-list-hr"/>
-              {% endfor %}
-  
-            </ul>
-  
-            <!-- If user hasn't uploaded any recipes, display placeholder message -->
-            {% else %}
-            <h5 class="text-center">You haven't uploaded any recipes yet. Try adding one!</h5>
-            {% endif %}
+              </div>
+
+            </li>
+            <hr class="recipe-list-hr" />
+            {% endfor %}
+
+          </ul>
+
+          <!-- If user hasn't uploaded any recipes, display placeholder message -->
+          {% else %}
+          <h5 class="text-center">You haven't uploaded any recipes yet. Try adding one!</h5>
+          {% endif %}
         </div>
       </div>
     </div>
 
     <!-- Card #3: All other users' uploaded recipes -->
-    <div class="card" data-toggle="collapse" data-target="#collapseThree">
-      <div class="card-header text-center" id="headingThree">
+    <div class="card">
+      <div class="card-header text-center text-white bg-secondary" id="headingThree" data-toggle="collapse" data-target="#collapseThree">
         <h4 class="mb-0">
           <!-- <button class="btn btn-link collapsed" aria-expanded="false" aria-controls="collapseThree"> -->
           Uploaded by Others
@@ -160,52 +177,60 @@ All Recipes
       </div>
       <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
         <div class="card-body">
-            {% if other_exists == True %}
+          {% if other_exists == True %}
 
-            <ul class="list-unstyled">
-              {% for recipe in other_recipe_list %}
-  
-              <!-- Recipe Name -->
-              <li>
+          <ul class="list-unstyled">
+            {% for recipe in other_recipe_list %}
+
+            <!-- Recipe Name -->
+            <li>
+              <a href="{{ url_for('recipe_detail', recipe_id=recipe.recipe_id) }}" class="text-decoration-none">
                 <h3 class="text-center">{{ recipe.recipe_name }}</h3>
-                  <a href="{{ url_for('recipe_detail', recipe_id=recipe.recipe_id) }}"
-                  >
                 <!-- Recipe Image -->
                 {% if recipe.recipe_image_url != None %}
-                <img id="preview" src="{{ recipe.recipe_image_url}}" class="center img-fluid small-image" alt="Responsive image"
-                 />
+                <img id="preview" src="{{ recipe.recipe_image_url}}" class="center img-fluid small-image"
+                  alt="Responsive image" />
                 {% else %}
-                <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid small-image" alt="Responsive image"
-                 />
+                <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid small-image"
+                  alt="Responsive image" />
                 {% endif %}
-                </a>
-  
-  
-                <div class="form-group">
-                  <!-- Display button so that user can view recipe's page -->
-                  <div class="row" style="padding-top: 20px;">
-                    <div class="form-group col-sm">
-                      <a href="{{ url_for('recipe_detail', recipe_id=recipe.recipe_id) }}"
-                        class="btn btn-primary btn-block">View Recipe</a>
-                    </div>
-                
-                  <!-- Display button so that user can view recipe's source website -->
-                    <div class="form-group col-sm">
-                      <a href="https://{{ recipe.recipe_url }}" target="_blank"
-                        class="btn btn-primary btn-block">Source
-                        Website</a>
-                    </div>
+              </a>
+
+
+              <div class="form-group">
+                <!-- Display button so that user can view recipe's page -->
+                <div class="row" style="padding-top: 20px;">
+                  <div class="form-group col-sm">
+                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.recipe_id) }}"
+                      class="btn btn-primary btn-block">View Recipe</a>
                   </div>
+
+                  <!-- Display button so that user can view recipe's source website -->
+                  <div class="form-group col-sm">
+                    <a href="https://{{ recipe.recipe_url }}" target="_blank" class="btn btn-primary btn-block">Source
+                      Website</a>
+                  </div>
+
+                  <!-- Display button so that user can add recipe to their current meal plan -->
+                  <div class="form-group col-sm">
+                    <form role="form" method='POST' id="other_meal_plan_form" name="other_meal_plan_form">
+                      <input type="hidden" name="recipe_id" value="{{ recipe.recipe_id }}" />
+                      <button type="submit" class="btn btn-success btn-block" id="other_meal_plan_submit"
+                        name="other_meal_plan_submit">Add to Meal Plan</button>
+                    </form>
+                  </div>
+
                 </div>
-  
-              </li>
-              <hr class="recipe-list-hr"/>
-              {% endfor %}
-  
-            </ul>
-  
-            <!-- If no one else has uploaded any recipes, display placeholder message -->
-            {% else %}
+              </div>
+
+            </li>
+            <hr class="recipe-list-hr" />
+            {% endfor %}
+
+          </ul>
+
+          <!-- If no one else has uploaded any recipes, display placeholder message -->
+          {% else %}
           <h5 class="text-center">No one else has uploaded any recipes yet!</h5>
           {% endif %}
         </div>
@@ -217,4 +242,7 @@ All Recipes
 </div>
 
 
+{% endblock %}
+
+{% block footer %}
 {% endblock %}
