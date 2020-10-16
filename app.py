@@ -1340,50 +1340,63 @@ def all_recipes():
 
                 recipe_id = request.form['recipe_id']
 
+
                 # If recipe is categorized as a breakfast recipe, add to Meal Plan as a breakfast meal
                 if (db.session.query(Recipe.meal_breakfast).filter(Recipe.recipe_id==recipe_id)).scalar() == True:
 
-                    current_meal = Current_Meal(
-                        recipe_id=recipe_id,
-                        app_user_id=current_user.id,
-                        day_number=0,
-                        meal='breakfast',
-                        active_ind=True,
-                        insert_datetime=datetime.now()
-                    )
-                    db.session.add(current_meal)
-                    db.session.flush()
-                    db.session.commit()
+                    breakfast_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).filter_by(meal='breakfast').first()
+
+                    if breakfast_exists is None:
+
+                        current_meal = Current_Meal(
+                            recipe_id=recipe_id,
+                            app_user_id=current_user.id,
+                            day_number=0,
+                            meal='breakfast',
+                            active_ind=True,
+                            insert_datetime=datetime.now()
+                        )
+                        db.session.add(current_meal)
+                        db.session.flush()
+                        db.session.commit()
 
                 # If recipe is categorized as a lunch recipe, add to Meal Plan as a lunch meal
                 if (db.session.query(Recipe.meal_lunch).filter(Recipe.recipe_id==recipe_id)).scalar() == True:
 
-                    current_meal = Current_Meal(
-                        recipe_id=recipe_id,
-                        app_user_id=current_user.id,
-                        day_number=0,
-                        meal='lunch',
-                        active_ind=True,
-                        insert_datetime=datetime.now()
-                    )
-                    db.session.add(current_meal)
-                    db.session.flush()
-                    db.session.commit()
+                    lunch_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).filter_by(meal='lunch').first()
+
+                    if lunch_exists is None:
+
+                        current_meal = Current_Meal(
+                            recipe_id=recipe_id,
+                            app_user_id=current_user.id,
+                            day_number=0,
+                            meal='lunch',
+                            active_ind=True,
+                            insert_datetime=datetime.now()
+                        )
+                        db.session.add(current_meal)
+                        db.session.flush()
+                        db.session.commit()
 
                 # If recipe is categorized as a dinner recipe, add to Meal Plan as a dinner meal
                 if (db.session.query(Recipe.meal_dinner).filter(Recipe.recipe_id==recipe_id)).scalar() == True:
 
-                    current_meal = Current_Meal(
-                        recipe_id=recipe_id,
-                        app_user_id=current_user.id,
-                        day_number=0,
-                        meal='dinner',
-                        active_ind=True,
-                        insert_datetime=datetime.now()
-                    )
-                    db.session.add(current_meal)
-                    db.session.flush()
-                    db.session.commit()
+                    dinner_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).filter_by(meal='dinner').first()
+
+                    if dinner_exists is None:
+
+                        current_meal = Current_Meal(
+                            recipe_id=recipe_id,
+                            app_user_id=current_user.id,
+                            day_number=0,
+                            meal='dinner',
+                            active_ind=True,
+                            insert_datetime=datetime.now()
+                        )
+                        db.session.add(current_meal)
+                        db.session.flush()
+                        db.session.commit()
 
 
     

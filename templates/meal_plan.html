@@ -12,17 +12,36 @@ Meal Plan
 <br>
 <div class="container">
 
-  <!-- Display button so that user can delete all recipes from their current meal plan -->
-  <div class="form-group col-sm">
-      <form role="form" method='POST' id="all_meal_plan_form" name="all_meal_plan_form">
-        <button type="submit" class="btn btn-danger btn-block" id="all_meal_plan_submit"
-          name="all_meal_plan_submit" onclick="return confirm('Are you sure that you want to delete all items from your current meal plan?');">Clear Current Meal Plan</button>
-      </form>
+  <div class="form-group">
+    <div class="row" style="padding-top: 20px;">
+
+      <!-- Display button so that user can navigate to All Recipes page -->
+      <div class="form-group col-sm">
+        <a href="{{ url_for('all_recipes') }}" class="btn btn-primary btn-block">Choose Recipes</a>
+      </div>
+
+      <!-- Display button so that user can navigate to Meal Selector page -->
+      <div class="form-group col-sm">
+        <a href="{{ url_for('meal_selector') }}" class="btn btn-primary btn-block">Automatically Generate Recipes</a>
+      </div>
+
+      <!-- Display button so that user can delete all recipes from their current meal plan -->
+      <div class="form-group col-sm">
+        <form role="form" method='POST' id="all_meal_plan_form" name="all_meal_plan_form">
+          <button type="submit" class="btn btn-danger btn-block" id="all_meal_plan_submit" name="all_meal_plan_submit"
+            onclick="return confirm('Are you sure that you want to delete all items from your current meal plan?');">Clear
+            Current Meal Plan</button>
+        </form>
+      </div>
+
+
+
     </div>
+  </div>
 
-    <br>
+  <br>
 
-  
+
   <div id="accordion">
 
     <!-- Card #1: Breakfast recipes -->
@@ -104,7 +123,7 @@ Meal Plan
     <!-- Card #2: Lunch recipes -->
     <div class="card">
       <div class="card-header text-center text-white bg-secondary" id="headingTwo" data-toggle="collapse"
-      data-target="#collapseTwo">
+        data-target="#collapseTwo">
         <h4 class="mb-0">
           Lunch
           <!-- Badge displaying total number of recipes in this section -->
@@ -179,7 +198,7 @@ Meal Plan
     <!-- Card #3: Dinner recipes -->
     <div class="card">
       <div class="card-header text-center text-white bg-secondary" id="headingThree" data-toggle="collapse"
-      data-target="#collapseThree">
+        data-target="#collapseThree">
         <h4 class="mb-0">
           Dinner
           <!-- Badge displaying total number of recipes in this section -->
