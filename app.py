@@ -21,8 +21,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_DATABASE_URL'] = ['DATABASE_URL']
 
 # Below config for image uploads
-app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
-app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png']
+app.config['MAX_CONTENT_LENGTH'] = 2048 * 2048
+app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.webp']
 app.config['UPLOAD_PATH'] = 'uploads'
 BUCKET = os.environ.get('S3_BUCKET')
 
