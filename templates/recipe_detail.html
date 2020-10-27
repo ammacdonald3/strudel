@@ -5,22 +5,10 @@ active
 
 {% block heading %}
 {{ recipe.recipe_name }}
-<!-- <div class="click">
-  <span class="fa fa-star-o"></span>
-  <div class="ring"></div>
-  <div class="ring2"></div>
-  <p class="info">Added to favourites!</p>
-</div> -->
 {% endblock %}
 
 {% block body %}
-<!-- <div class="click" id="title">
 
-  <h2><span class="fa fa-star-o">{{ recipe.recipe_name }}</span></h2>
-  <div class="ring"></div>
-  <div class="ring2"></div>
-  <p class="info">Added to favourites!</p>
-</div> -->
 
 
 <div class="container">
@@ -52,24 +40,12 @@ active
 
   <div class="image-container center">
     {% if recipe.recipe_image_url != None %}
-    <img id="preview" src="{{ recipe.recipe_image_url}}" class="center img-fluid" alt="Responsive image" />
+    <img id="preview" src="{{ recipe.recipe_image_url}}" class="center rounded img-fluid" alt="Responsive image" />
     {% else %}
-    <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid" alt="Responsive image" />
+    <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center rounded img-fluid" alt="Responsive image" />
     {% endif %}
   </div>
 
-
-    <!-- <div class="center-cropped" 
-    {% if recipe.recipe_image_url != None %}
-    style="background-image: url('{{ recipe.recipe_image_url}}');">
-    <img src="{{ recipe.recipe_image_url}}" />-->
-    <!-- <img id="preview" src="" class="center"/> -->
-    <!-- {% else %}
-    style="background-image: url('/static/placeholder-recipe-image.jpg');">
-    <img src="/static/placeholder-recipe-image.jpg" />     -->
-    <!-- <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center"/> -->
-    <!--{% endif %}
-    </div> -->
   
   <br>
   <br>

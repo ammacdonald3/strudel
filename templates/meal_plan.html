@@ -67,12 +67,18 @@ Meal Plan
             <li>
               <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}" class="text-decoration-none">
                 <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
+                <!-- Recipe Prep/Cook Time -->
+                <h6 class="text-center">
+                  {% if recipe.Recipe.recipe_total_time != None %}
+                  ({{ recipe.Recipe.recipe_total_time }} minutes total prep/cook time)
+                  {% endif %}
+                </h6>
                 <!-- Recipe Image -->
                 {% if recipe.Recipe.recipe_image_url != None %}
-                <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center img-fluid small-image"
+                <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center rounded img-fluid small-image"
                   alt="Responsive image" />
                 {% else %}
-                <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid small-image"
+                <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center rounded img-fluid small-image"
                   alt="Responsive image" />
                 {% endif %}
               </a>
@@ -142,12 +148,18 @@ Meal Plan
             <li>
               <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}" class="text-decoration-none">
                 <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
+                <!-- Recipe Prep/Cook Time -->
+                <h6 class="text-center">
+                  {% if recipe.Recipe.recipe_total_time != None %}
+                  ({{ recipe.Recipe.recipe_total_time }} minutes total prep/cook time)
+                  {% endif %}
+                </h6>
                 <!-- Recipe Image -->
                 {% if recipe.Recipe.recipe_image_url != None %}
-                <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center img-fluid small-image"
+                <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center rounded img-fluid small-image"
                   alt="Responsive image" />
                 {% else %}
-                <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid small-image"
+                <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center rounded img-fluid small-image"
                   alt="Responsive image" />
                 {% endif %}
               </a>
@@ -217,12 +229,18 @@ Meal Plan
             <li>
               <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}" class="text-decoration-none">
                 <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
+                <!-- Recipe Prep/Cook Time -->
+                <h6 class="text-center">
+                  {% if recipe.Recipe.recipe_total_time != None %}
+                  ({{ recipe.Recipe.recipe_total_time }} minutes total prep/cook time)
+                  {% endif %}
+                </h6>
                 <!-- Recipe Image -->
                 {% if recipe.Recipe.recipe_image_url != None %}
-                <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center img-fluid small-image"
+                <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center rounded img-fluid small-image"
                   alt="Responsive image" />
                 {% else %}
-                <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid small-image"
+                <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center rounded img-fluid small-image"
                   alt="Responsive image" />
                 {% endif %}
               </a>

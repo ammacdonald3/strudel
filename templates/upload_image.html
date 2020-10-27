@@ -18,9 +18,9 @@ active
     <!-- Display recipe image -->
     <div class="image-container center">
       {% if recipe.recipe_image_url != None %}
-      <img id="preview" src="{{ recipe.recipe_image_url}}" class="center img-fluid" alt="Responsive image" />
+      <img id="preview" src="{{ recipe.recipe_image_url}}" class="center rounded img-fluid" alt="Responsive image" />
       {% else %}
-      <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid" alt="Responsive image" />
+      <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center rounded img-fluid" alt="Responsive image" />
       {% endif %}
     </div>
     <br>

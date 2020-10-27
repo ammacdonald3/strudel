@@ -115,6 +115,10 @@ html {
 	max-width: 1000px;
 }
 
+.navbar {
+	border-bottom:2px solid #f0f0f0;
+}
+
 button {
     border-color: #575757;
 }
