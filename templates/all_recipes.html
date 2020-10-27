@@ -3,6 +3,7 @@
 active
 {% endblock %}
 
+
 {% block heading %}
 All Recipes
 {% endblock %}
@@ -10,13 +11,15 @@ All Recipes
 {% block body %}
 <br>
 
+
 <!-- Accordion functionality for user's recipes -->
 <div class="container">
   <div id="accordion">
 
     <!-- Card #1: User's "Favorites" recipes -->
-    <div class="card">
-      <div class="card-header text-center text-white bg-secondary" id="headingOne" data-toggle="collapse" data-target="#collapseOne">
+    <div class="card" id="favorites-card">
+      <div class="card-header text-center text-white bg-secondary" id="headingOne" data-toggle="collapse"
+        data-target="#collapseOne">
         <h4 class="mb-0">
           Favorites
           <!-- Badge displaying total number of recipes in this section -->
@@ -46,7 +49,6 @@ All Recipes
                 {% endif %}
               </a>
 
-
               <div class="form-group">
                 <!-- Display button so that user can view recipe's page -->
                 <div class="row" style="padding-top: 20px;">
@@ -62,18 +64,19 @@ All Recipes
                       Website</a>
                   </div>
 
-                  <!-- Display button so that user can add recipe to their current meal plan -->
+                  <!-- Display button so that user can add the recipe to their current meal plan -->
                   <div class="form-group col-sm">
-                    <form role="form" method='POST' id="fav_meal_plan_form" name="fav_meal_plan_form">
-                      <!-- <input id = "{{ recipe.Recipe.recipe_id }}" type="text" name="comment.{{ recipe.Recipe.recipe_id }}"> -->
-                      <input type="hidden" name="recipe_id" value="{{ recipe.Recipe.recipe_id }}" />
-                      <button type="submit" class="btn btn-success btn-block" id="fav_meal_plan_submit"
-                        name="fav_meal_plan_submit">Add to Meal Plan</button>
-                    </form>
+                    <button name="{{ recipe.Recipe.recipe_id }}" id="meal-{{ recipe.Recipe.recipe_id }}" class="meal-button meal-{{ recipe.Recipe.recipe_id }} btn btn-block 
+                            {% if recipe.app_user_id == current_user.id and recipe.active_ind == True %}
+                            btn-danger">Remove from Meal Plan
+                      {% else %}
+                      btn-success">Add to Meal Plan
+                      {% endif %}
+                    </button>
                   </div>
+
                 </div>
               </div>
-
             </li>
             <hr class="recipe-list-hr" />
             {% endfor %}
@@ -91,11 +94,10 @@ All Recipes
 
     <!-- Card #2: All of user's uploaded recipes -->
     <div class="card">
-      <div class="card-header text-center text-white bg-secondary" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo">
+      <div class="card-header text-center text-white bg-secondary" id="headingTwo" data-toggle="collapse"
+        data-target="#collapseTwo">
         <h4 class="mb-0">
-          <!-- <button class="btn btn-link collapsed" aria-expanded="false" aria-controls="collapseTwo"> -->
           My Recipes
-          <!-- </button> -->
           <!-- Badge displaying total number of recipes in this section -->
           <span class="badge badge-light">{{ your_length }}</span>
           <span class="sr-only">recipes uploaded by you</span>
@@ -110,11 +112,11 @@ All Recipes
 
             <!-- Recipe Name -->
             <li>
-              <a href="{{ url_for('recipe_detail', recipe_id=recipe.recipe_id) }}" class="text-decoration-none">
-                <h3 class="text-center">{{ recipe.recipe_name }}</h3>
+              <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}" class="text-decoration-none">
+                <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
                 <!-- Recipe Image -->
-                {% if recipe.recipe_image_url != None %}
-                <img id="preview" src="{{ recipe.recipe_image_url}}" class="center img-fluid small-image"
+                {% if recipe.Recipe.recipe_image_url != None %}
+                <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center img-fluid small-image"
                   alt="Responsive image" />
                 {% else %}
                 <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid small-image"
@@ -122,29 +124,45 @@ All Recipes
                 {% endif %}
               </a>
 
-
               <div class="form-group">
                 <!-- Display button so that user can view recipe's page -->
                 <div class="row" style="padding-top: 20px;">
                   <div class="form-group col-sm">
-                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.recipe_id) }}"
+                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
                       class="btn btn-primary btn-block">View Recipe</a>
                   </div>
 
                   <!-- Display button so that user can view recipe's source website -->
                   <div class="form-group col-sm">
-                    <a href="https://{{ recipe.recipe_url }}" target="_blank" class="btn btn-primary btn-block">Source
+                    <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
+                      class="btn btn-primary btn-block">Source
                       Website</a>
                   </div>
+                </div>
 
-                  <!-- Display button so that user can add recipe to their current meal plan -->
+                <!-- Display button so that user can add the recipe to their current meal plan -->
+                <div class="row">
                   <div class="form-group col-sm">
-                    <form role="form" method='POST' id="your_meal_plan_form" name="your_meal_plan_form">
-                      <input type="hidden" name="recipe_id" value="{{ recipe.recipe_id }}" />
-                      <button type="submit" class="btn btn-success btn-block" id="your_meal_plan_submit"
-                        name="your_meal_plan_submit">Add to Meal Plan</button>
-                    </form>
+                    <button name="{{ recipe.Recipe.recipe_id }}" id="meal-{{ recipe.Recipe.recipe_id }}" class="meal-button meal-{{ recipe.Recipe.recipe_id }} btn btn-block 
+                        {% if recipe.app_user_id == current_user.id and recipe.active_ind == True %}
+                        btn-danger">Remove from Meal Plan
+                      {% else %}
+                      btn-success">Add to Meal Plan
+                      {% endif %}
+                    </button>
                   </div>
+
+                  <!-- Display button so that user can add the recipe to their favorites -->
+                  <div class="form-group col-sm">
+                    <button name="{{ recipe.Recipe.recipe_id }}" id="fav-{{ recipe.Recipe.recipe_id }}" class="favorite-button fav-{{ recipe.Recipe.recipe_id }} btn btn-block 
+                        {% if recipe.Favorite_Recipe.app_user_id == current_user.id and recipe.Favorite_Recipe.favorite_recipe_id != None %}
+                        btn-danger">Remove from Favorites
+                      {% else %}
+                      btn-success">Add to Favorites
+                      {% endif %}
+                    </button>
+                  </div>
+
 
                 </div>
               </div>
@@ -165,11 +183,10 @@ All Recipes
 
     <!-- Card #3: All other users' uploaded recipes -->
     <div class="card">
-      <div class="card-header text-center text-white bg-secondary" id="headingThree" data-toggle="collapse" data-target="#collapseThree">
+      <div class="card-header text-center text-white bg-secondary" id="headingThree" data-toggle="collapse"
+        data-target="#collapseThree">
         <h4 class="mb-0">
-          <!-- <button class="btn btn-link collapsed" aria-expanded="false" aria-controls="collapseThree"> -->
           Uploaded by Others
-          <!-- </button> -->
           <!-- Badge displaying total number of recipes in this section -->
           <span class="badge badge-light">{{ other_length }}</span>
           <span class="sr-only">recipes uploaded by others</span>
@@ -184,11 +201,11 @@ All Recipes
 
             <!-- Recipe Name -->
             <li>
-              <a href="{{ url_for('recipe_detail', recipe_id=recipe.recipe_id) }}" class="text-decoration-none">
-                <h3 class="text-center">{{ recipe.recipe_name }}</h3>
+              <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}" class="text-decoration-none">
+                <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
                 <!-- Recipe Image -->
-                {% if recipe.recipe_image_url != None %}
-                <img id="preview" src="{{ recipe.recipe_image_url}}" class="center img-fluid small-image"
+                {% if recipe.Recipe.recipe_image_url != None %}
+                <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center img-fluid small-image"
                   alt="Responsive image" />
                 {% else %}
                 <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center img-fluid small-image"
@@ -196,29 +213,45 @@ All Recipes
                 {% endif %}
               </a>
 
-
               <div class="form-group">
                 <!-- Display button so that user can view recipe's page -->
                 <div class="row" style="padding-top: 20px;">
                   <div class="form-group col-sm">
-                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.recipe_id) }}"
+                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
                       class="btn btn-primary btn-block">View Recipe</a>
                   </div>
 
                   <!-- Display button so that user can view recipe's source website -->
                   <div class="form-group col-sm">
-                    <a href="https://{{ recipe.recipe_url }}" target="_blank" class="btn btn-primary btn-block">Source
+                    <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
+                      class="btn btn-primary btn-block">Source
                       Website</a>
                   </div>
+                </div>
 
-                  <!-- Display button so that user can add recipe to their current meal plan -->
+                <!-- Display button so that user can add the recipe to their current meal plan -->
+                <div class="row">
                   <div class="form-group col-sm">
-                    <form role="form" method='POST' id="other_meal_plan_form" name="other_meal_plan_form">
-                      <input type="hidden" name="recipe_id" value="{{ recipe.recipe_id }}" />
-                      <button type="submit" class="btn btn-success btn-block" id="other_meal_plan_submit"
-                        name="other_meal_plan_submit">Add to Meal Plan</button>
-                    </form>
+                    <button name="{{ recipe.Recipe.recipe_id }}" id="meal-{{ recipe.Recipe.recipe_id }}" class="meal-button meal-{{ recipe.Recipe.recipe_id }} btn btn-block 
+                            {% if recipe.app_user_id == current_user.id and recipe.active_ind == True %}
+                            btn-danger">Remove from Meal Plan
+                      {% else %}
+                      btn-success">Add to Meal Plan
+                      {% endif %}
+                    </button>
                   </div>
+
+                  <!-- Display button so that user can add the recipe to their favorites -->
+                  <div class="form-group col-sm">
+                    <button name="{{ recipe.Recipe.recipe_id }}" id="fav-{{ recipe.Recipe.recipe_id }}" class="favorite-button fav-{{ recipe.Recipe.recipe_id }} btn btn-block 
+                            {% if recipe.Favorite_Recipe.app_user_id == current_user.id and recipe.Favorite_Recipe.favorite_recipe_id != None %}
+                            btn-danger">Remove from Favorites
+                      {% else %}
+                      btn-success">Add to Favorites
+                      {% endif %}
+                    </button>
+                  </div>
+
 
                 </div>
               </div>
@@ -245,4 +278,5 @@ All Recipes
 {% endblock %}
 
 {% block footer %}
+<script type="text/javascript" src="{{ url_for('static', filename='all_recipes.js') }}"></script>
 {% endblock %}

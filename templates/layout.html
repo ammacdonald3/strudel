@@ -27,15 +27,11 @@
   <!-- include PWACompat _after_ your manifest -->
   <script async src="https://unpkg.com/pwacompat" crossorigin="anonymous"></script>
 
-  <style>
-    .container {
-      max-width: 1000px;
-    }
-  </style>
+
 </head>
 
 <body id="{% block bodyid %}{% endblock %}">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="{{ url_for('index') }}">Strudel</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,9 +41,6 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         {% if current_user.is_active %}
-        <!-- <li class="nav-item {% block nav_home %}{% endblock %}">
-          <a class="nav-link" href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
-        </li> -->
 
         <!-- Add New Recipes menu-->
         <li class="nav-item {% block nav_add_menu %}{% endblock %} dropdown">
@@ -103,6 +96,9 @@
       </form>
     </div>
   </nav>
+<br>
+<br>
+<br>
   <div class="container" id="title">
     <h2>{% block heading %}{% endblock %}</h2>
   </div>

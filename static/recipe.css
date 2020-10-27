@@ -111,6 +111,10 @@ html {
 	height: 100%;
 }
 
+.container {
+	max-width: 1000px;
+}
+
 button {
     border-color: #575757;
 }

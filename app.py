@@ -665,6 +665,131 @@ def _shopping_list_items():
     return render_template('shopping_list.html', shop_list=shop_list)
 
 
+# Define route for manually adding recipe to meal plan
+@app.route('/_meal_plan', methods=['GET', 'POST'])
+@login_required
+def _meal_plan():
+    status = request.form.get('status')
+    recipe_id = request.form.get('recipe_id')
+
+    # If user selected to add recipe to meal plan, update table
+    if status == 'checked':
+        # If recipe is categorized as a breakfast recipe, add to Meal Plan as a breakfast meal
+        if (db.session.query(Recipe.meal_breakfast).filter(Recipe.recipe_id==recipe_id)).scalar() == True:
+
+            breakfast_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).filter_by(meal='breakfast').first()
+
+            if breakfast_exists is None:
+
+                current_meal = Current_Meal(
+                    recipe_id=recipe_id,
+                    app_user_id=current_user.id,
+                    day_number=0,
+                    meal='breakfast',
+                    active_ind=True,
+                    insert_datetime=datetime.now()
+                )
+                db.session.add(current_meal)
+                db.session.flush()
+                db.session.commit()
+
+        # If recipe is categorized as a lunch recipe, add to Meal Plan as a lunch meal
+        if (db.session.query(Recipe.meal_lunch).filter(Recipe.recipe_id==recipe_id)).scalar() == True:
+
+            lunch_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).filter_by(meal='lunch').first()
+
+            if lunch_exists is None:
+
+                current_meal = Current_Meal(
+                    recipe_id=recipe_id,
+                    app_user_id=current_user.id,
+                    day_number=0,
+                    meal='lunch',
+                    active_ind=True,
+                    insert_datetime=datetime.now()
+                )
+                db.session.add(current_meal)
+                db.session.flush()
+                db.session.commit()
+
+        # If recipe is categorized as a dinner recipe, add to Meal Plan as a dinner meal
+        if (db.session.query(Recipe.meal_dinner).filter(Recipe.recipe_id==recipe_id)).scalar() == True:
+
+            dinner_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).filter_by(meal='dinner').first()
+
+            if dinner_exists is None:
+
+                current_meal = Current_Meal(
+                    recipe_id=recipe_id,
+                    app_user_id=current_user.id,
+                    day_number=0,
+                    meal='dinner',
+                    active_ind=True,
+                    insert_datetime=datetime.now()
+                )
+                db.session.add(current_meal)
+                db.session.flush()
+                db.session.commit()
+    
+    # If user selected to remove recipe to meal plan, update table
+    elif status == 'unchecked':
+        db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).update(dict(active_ind=False))
+
+        db.session.flush()
+        db.session.commit()
+
+    return render_template('all_recipes.html')
+
+
+# Define route for manually adding recipe to favorites
+@app.route('/_favorite', methods=['GET', 'POST'])
+@login_required
+def _favorite():
+    status = request.form.get('status')
+    recipe_id = request.form.get('recipe_id')
+
+    # If user selected to add recipe to favorites, update table
+    if status == 'checked':
+        if db.session.query(Favorite_Recipe).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Favorite_Recipe.recipe_id==recipe_id).first() == None:
+            favorite_recipe = Favorite_Recipe(
+                            recipe_id=recipe_id,
+                            app_user_id=current_user.id,
+                            owner_ind=True,
+                            insert_datetime=datetime.now()
+                        )
+
+            db.session.add(favorite_recipe)
+            db.session.flush()
+            db.session.commit()
+
+        favorite_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
+
+        fav_length = len(favorite_recipe_list)
+
+        if fav_length != 0:
+            fav_exists = True
+        else:
+            fav_exists = False 
+
+    # If user selected to remove recipe from favorites, update table
+    elif status == 'unchecked':
+        db.session.query(Favorite_Recipe).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Favorite_Recipe.recipe_id==recipe_id).delete()
+
+        db.session.flush()
+        db.session.commit()
+
+        favorite_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
+
+        fav_length = len(favorite_recipe_list)
+
+        if fav_length != 0:
+            fav_exists = True
+        else:
+            fav_exists = False 
+
+    return render_template('all_recipes.html', favorite_recipe_list=favorite_recipe_list, fav_length=fav_length, fav_exists=fav_exists)
+
+
 # Define route for deleting shopping list items
 @app.route('/_del_shopping_list_items', methods=['GET', 'POST'])
 @login_required
@@ -1298,7 +1423,15 @@ def auto_import():
 @login_required
 def all_recipes():
     # Your favorite recipes (created both by you and others)
-    favorite_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
+    favorite_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.app_user_id, Current_Meal.active_ind) \
+        .join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id) \
+        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True), isouter=True) \
+        .filter(Recipe.created_by==current_user.id) \
+        .filter((Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None)) \
+        .filter((Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None)) \
+        .filter(Recipe.recipe_deleted==None)) \
+        .order_by(Recipe.recipe_name) \
+        .all()
 
     fav_length = len(favorite_recipe_list)
 
@@ -1309,7 +1442,16 @@ def all_recipes():
 
 
     # Recipes created by you
-    your_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
+
+    your_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.app_user_id, Current_Meal.active_ind) \
+        .join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id, isouter=True) \
+        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True), isouter=True) \
+        .filter(Recipe.created_by==current_user.id) \
+        .filter((Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None)) \
+        .filter((Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None)) \
+        .filter(Recipe.recipe_deleted==None)) \
+        .order_by(Recipe.recipe_name) \
+        .all()
 
     your_length = len(your_recipe_list)
 
@@ -1320,8 +1462,16 @@ def all_recipes():
 
 
     # Recipes created by others
-    other_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by!=current_user.id).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
-
+    other_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.app_user_id, Current_Meal.active_ind) \
+        .join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id, isouter=True) \
+        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True), isouter=True) \
+        .filter(Recipe.created_by!=current_user.id) \
+        .filter((Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None)) \
+        .filter((Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None)) \
+        .filter(Recipe.recipe_deleted==None)) \
+        .order_by(Recipe.recipe_name) \
+        .all()
+    
     other_length = len(other_recipe_list)
 
     if other_length != 0:
