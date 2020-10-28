@@ -235,3 +235,7 @@ dt {
 	margin-top: 30px;
 	margin-bottom: 30px;
 }
+
+.hidden-check {
+	font-size: 0;
+}

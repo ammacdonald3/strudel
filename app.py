@@ -629,7 +629,7 @@ def shopping_list():
         Recipe, Recipe.recipe_id==Shopping_List.recipe_id
     ).filter(
         Shopping_List.app_user_id==current_user.id
-    ).order_by(Shopping_List.item_sort).all())
+    ).order_by(Shopping_List.checked_status).order_by(Shopping_List.insert_datetime.desc()).all())
     
     return render_template('shopping_list.html', shop_list=shop_list)
 
