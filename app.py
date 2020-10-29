@@ -129,39 +129,112 @@ def meal_selector():
             if request.form['recipe_source'] == 'fav':
 
                 # Retrieve a list of user's favorite breakfast recipes
-                bfast_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.meal_breakfast==True).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
+                bfast_recipe_list = (db.session.query(Recipe, Favorite_Recipe) \
+                    .join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe \
+                    .recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id) \
+                    .filter(Recipe.meal_breakfast==True) \
+                    .filter(Recipe.recipe_deleted==None)) \
+                    .order_by(Recipe.recipe_name) \
+                    .all()
 
                 # Retrieve a list of user's favorite lunch recipes
-                lunch_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.meal_lunch==True).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
+                lunch_recipe_list = (db.session.query(Recipe, Favorite_Recipe) \
+                    .join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id) \
+                    .filter(Favorite_Recipe.app_user_id==current_user.id) \
+                    .filter(Recipe.meal_lunch==True) \
+                    .filter(Recipe.recipe_deleted==None)) \
+                    .order_by(Recipe.recipe_name) \
+                    .all()
 
                 # Retrieve a list of user's favorite dinner recipes
-                dinner_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.meal_dinner==True).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
+                dinner_recipe_list = (db.session.query(Recipe, Favorite_Recipe) \
+                    .join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id) \
+                    .filter(Favorite_Recipe.app_user_id==current_user.id) \
+                    .filter(Recipe.meal_dinner==True) \
+                    .filter(Recipe.recipe_deleted==None)) \
+                    .order_by(Recipe.recipe_name) \
+                    .all()
 
             
             # If user wants to generate plan from all recipes they uploaded
             elif request.form['recipe_source'] == 'you':
 
                 # Retrieve a list of user's breakfast recipes
-                bfast_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id).filter(Recipe.meal_breakfast==True).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
+                bfast_recipe_list = (db.session.query(Recipe) \
+                    .filter(Recipe.created_by==current_user.id) \
+                    .filter(Recipe.meal_breakfast==True) \
+                    .filter(Recipe.recipe_deleted==None)) \
+                    .order_by(Recipe.recipe_name) \
+                    .all()
 
                 # Retrieve a list of user's lunch recipes
-                lunch_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id).filter(Recipe.meal_lunch==True).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
+                lunch_recipe_list = (db.session.query(Recipe) \
+                    .filter(Recipe.created_by==current_user.id) \
+                    .filter(Recipe.meal_lunch==True) \
+                    .filter(Recipe.recipe_deleted==None)) \
+                    .order_by(Recipe.recipe_name) \
+                    .all()
 
                 # Retrieve a list of user's dinner recipes
-                dinner_recipe_list = (db.session.query(Recipe).filter(Recipe.created_by==current_user.id).filter(Recipe.meal_dinner==True).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
+                dinner_recipe_list = (db.session.query(Recipe) \
+                    .filter(Recipe.created_by==current_user.id) \
+                    .filter(Recipe.meal_dinner==True) \
+                    .filter(Recipe.recipe_deleted==None)) \
+                    .order_by(Recipe.recipe_name) \
+                    .all()
+
+
+            # If user wants to generate plan from the editor's picks
+            elif request.form['recipe_source'] == 'editor':
+
+                # Retrieve a list of editor's breakfast recipes
+                bfast_recipe_list = (db.session.query(Recipe, Favorite_Recipe) \
+                    .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==1)) \
+                    .filter(Recipe.meal_breakfast==True) \
+                    .filter(Recipe.recipe_deleted==None)) \
+                    .order_by(Recipe.recipe_name) \
+                    .all()
+
+                # Retrieve a list of editor's lunch recipes
+                lunch_recipe_list = (db.session.query(Recipe, Favorite_Recipe) \
+                    .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==1)) \
+                    .filter(Recipe.meal_lunch==True) \
+                    .filter(Recipe.recipe_deleted==None)) \
+                    .order_by(Recipe.recipe_name) \
+                    .all()
+
+                # Retrieve a list of editor's dinner recipes
+                dinner_recipe_list = (db.session.query(Recipe, Favorite_Recipe) \
+                    .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==1)) \
+                    .filter(Recipe.meal_dinner==True) \
+                    .filter(Recipe.recipe_deleted==None)) \
+                    .order_by(Recipe.recipe_name) \
+                    .all()
 
 
             # If user wants to generate plan from all recipes in the app
             elif request.form['recipe_source'] == 'all':
 
                 # Retrieve a list of user's breakfast recipes
-                bfast_recipe_list = (db.session.query(Recipe).filter(Recipe.meal_breakfast==True).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
+                bfast_recipe_list = (db.session.query(Recipe) \
+                    .filter(Recipe.meal_breakfast==True) \
+                    .filter(Recipe.recipe_deleted==None)) \
+                    .order_by(Recipe.recipe_name) \
+                    .all()
 
                 # Retrieve a list of user's lunch recipes
-                lunch_recipe_list = (db.session.query(Recipe).filter(Recipe.meal_lunch==True).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
+                lunch_recipe_list = (db.session.query(Recipe) \
+                    .filter(Recipe.meal_lunch==True) \
+                    .filter(Recipe.recipe_deleted==None)) \
+                    .order_by(Recipe.recipe_name) \
+                    .all()
 
                 # Retrieve a list of user's dinner recipes
-                dinner_recipe_list = (db.session.query(Recipe).filter(Recipe.meal_dinner==True).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
+                dinner_recipe_list = (db.session.query(Recipe) \
+                    .filter(Recipe.meal_dinner==True) \
+                    .filter(Recipe.recipe_deleted==None)) \
+                    .order_by(Recipe.recipe_name) \
+                    .all()
             
 
             
@@ -188,7 +261,7 @@ def meal_selector():
 
             
             # Below IF/ELSE is required because Favorite Recipes sqlalchemy object is referenced as val.Recipe.recipe_id, but User-Uploaded / All Recipes sqlalchemy objects are referenced as val.recipe_id
-            if request.form['recipe_source'] == 'fav':
+            if (request.form['recipe_source'] == 'fav') or (request.form['recipe_source'] == 'editor'):
 
                 # Insert selected breakfast meals to current_meal table
                 day_counter = 0
@@ -1424,11 +1497,10 @@ def auto_import():
 def all_recipes():
     # Your favorite recipes (created both by you and others)
     favorite_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.app_user_id, Current_Meal.active_ind) \
-        .join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id) \
-        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True), isouter=True) \
-        .filter(Recipe.created_by==current_user.id) \
-        .filter((Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None)) \
-        .filter((Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None)) \
+        .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==current_user.id)) \
+        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None), isouter=True) \
+        # .filter(Favorite_Recipe.app_user_id==current_user.id) \
+        # .filter((Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None)) \
         .filter(Recipe.recipe_deleted==None)) \
         .order_by(Recipe.recipe_name) \
         .all()
@@ -1442,13 +1514,12 @@ def all_recipes():
 
 
     # Recipes created by you
-
     your_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.app_user_id, Current_Meal.active_ind) \
-        .join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id, isouter=True) \
-        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True), isouter=True) \
+        .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None), isouter=True) \
+        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None), isouter=True) \
         .filter(Recipe.created_by==current_user.id) \
-        .filter((Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None)) \
-        .filter((Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None)) \
+        # .filter((Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None)) \
+        # .filter((Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None)) \
         .filter(Recipe.recipe_deleted==None)) \
         .order_by(Recipe.recipe_name) \
         .all()
@@ -1460,14 +1531,32 @@ def all_recipes():
     else:
         your_exists = False 
 
+    
+    # Editor's Picks recipes (recipes favorited by Admin)
+    editor_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.app_user_id, Current_Meal.active_ind) \
+        .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==1)) \
+        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None), isouter=True) \
+        # .filter(Favorite_Recipe.app_user_id==1) \
+        # .filter((Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None)) \
+        .filter(Recipe.recipe_deleted==None)) \
+        .order_by(Recipe.recipe_name) \
+        .all()
+
+    editor_length = len(editor_recipe_list)
+
+    if editor_length != 0:
+        editor_exists = True
+    else:
+        editor_exists = False 
+
 
     # Recipes created by others
     other_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.app_user_id, Current_Meal.active_ind) \
-        .join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id, isouter=True) \
-        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True), isouter=True) \
+        .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None), isouter=True) \
+        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None), isouter=True) \
         .filter(Recipe.created_by!=current_user.id) \
-        .filter((Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None)) \
-        .filter((Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None)) \
+        # .filter((Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None)) \
+        # .filter((Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None)) \
         .filter(Recipe.recipe_deleted==None)) \
         .order_by(Recipe.recipe_name) \
         .all()
@@ -1568,7 +1657,7 @@ def all_recipes():
 
 
     # Render the all_recipes.html template (main page for this route)
-    return render_template("all_recipes.html", favorite_recipe_list=favorite_recipe_list, your_recipe_list=your_recipe_list, other_recipe_list=other_recipe_list, fav_exists=fav_exists, your_exists=your_exists, other_exists=other_exists, fav_length=fav_length, your_length=your_length, other_length=other_length)
+    return render_template("all_recipes.html", favorite_recipe_list=favorite_recipe_list, your_recipe_list=your_recipe_list, editor_recipe_list=editor_recipe_list, other_recipe_list=other_recipe_list, fav_exists=fav_exists, your_exists=your_exists, editor_exists=editor_exists, other_exists=other_exists, fav_length=fav_length, your_length=your_length, editor_length=editor_length, other_length=other_length)
 
 
 # Define route for page to view detailed info about one recipe

@@ -239,3 +239,9 @@ dt {
 .hidden-check {
 	font-size: 0;
 }
+
+@media (prefers-color-scheme: dark) {
+	a {
+		color: ghostwhite;
+	}
+}
