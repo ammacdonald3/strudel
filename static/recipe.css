@@ -169,6 +169,17 @@ dt {
     margin-bottom: 10px;
 }
 
+.big-checkbox {
+	zoom: 1.5;
+}
+
+.vertical-center {
+	/* vertical-align: center; */
+	display : flex;
+	align-items : center;
+	justify-content: center;
+}
+
 /* END OF INGREDIENT LIST CHECKBOXES */
 
 .error {
@@ -244,4 +255,10 @@ dt {
 	a {
 		color: ghostwhite;
 	}
+}
+
+
+.slist-recipe {
+	font-size: 0.8rem;
+	font-style: italic;
 }

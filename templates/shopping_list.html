@@ -42,21 +42,23 @@ Shopping List
     <table class="table table-bordered" id="shopping-table">
         <thead>
             <tr>
-                <th scope="col" class="trash-column"></th>
+                <!-- <th scope="col" class="trash-column"></th> -->
                 <th scope="col"></th>
                 <th scope="col">Item</th>
-                <th scope="col" class="recipe-column">Recipe</th>
+                <!-- <th scope="col" class="recipe-column">Recipe</th> -->
             </tr>
         </thead>
         <tbody>
             {% for ingredient in shop_list %}
             <tr>
-                <td class="text-center trash-column">
+                <!-- Column #1 - Trash Icon -->
+                <!-- <td class="text-center trash-column">
                     <span class="trash"><i class="fa fa-trash"
                             id="{{ ingredient.Shopping_List.shopping_list_id }}"></i></span>
-                </td>
+                </td> -->
 
-                <td class="text-center">
+                <!-- Column #2 - Checkboxes -->
+                <td class="text-center align-middle">
                     <!-- Below If/Else used for sorting in DataTable -->
                     <span class="hidden-check">
                         {% if ingredient.Shopping_List.checked_status == True %}
@@ -70,16 +72,23 @@ Shopping List
                         {% if ingredient.Shopping_List.checked_status == True %} checked {% endif %}>
                 </td>
 
-
+                <!-- Column #3 - Item Name -->
                 <td {% if ingredient.Shopping_List.checked_status == True %} class="completed" {% endif %}>
-                    {{ ingredient.Shopping_List.item_desc }}
+                    <div>{{ ingredient.Shopping_List.item_desc }}</div>
+                    <div class="slist-recipe">
+                        {% if ingredient.Recipe.recipe_id %}
+                        {{ ingredient.Recipe.recipe_name }}
+                        {% endif %}
+                    </div>
                 </td>
-                <td {% if ingredient.Shopping_List.checked_status == True %} class="completed recipe-column" {% else %}
+
+                <!-- Column #3 - Recipe Name -->
+                <!-- <td {% if ingredient.Shopping_List.checked_status == True %} class="completed recipe-column" {% else %}
                     class="recipe-column" {% endif %}>
                     {% if ingredient.Recipe.recipe_id %}
                     {{ ingredient.Recipe.recipe_name }}
                     {% endif %}
-                </td>
+                </td> -->
 
             </tr>
             {% endfor %}
@@ -92,7 +101,7 @@ Shopping List
     <br>
 
     <!-- Toggle displaying / hiding the Trash Can or Recipe Name columns -->
-    <div class="form-group">
+    <!-- <div class="form-group">
         <div class="row">
             <div class="btn-group-toggle form-group col-sm" data-toggle="buttons" style="margin-top: 10px;">
                 <label class="btn btn-outline-warning active btn-block">
@@ -105,7 +114,7 @@ Shopping List
                     Column</label>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <br>
 
