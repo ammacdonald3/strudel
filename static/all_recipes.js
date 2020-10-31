@@ -44,6 +44,7 @@ $(document).ready(function(){
             $(mealId).addClass("btn-danger")
             $(mealId).removeClass("btn-success")
             $(mealId).text("Remove from Meal Plan")
+            $('.toast').toast('show');
             $.ajax({
                 url: '/_meal_plan',
                 type: 'POST',

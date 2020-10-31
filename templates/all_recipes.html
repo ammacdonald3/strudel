@@ -48,10 +48,10 @@ All Recipes
                 <!-- Badges indicating if the recipe is for Breakfast, Lunch, and/or Dinner -->
                 <div class="mealtime-badge d-flex justify-content-center">
                   {% if recipe.Recipe.meal_breakfast == True %}
-                  <span class="badge badge-pill badge-warning">Breakfast</span>
+                  <span class="badge badge-pill badge-success">Breakfast</span>
                   {% endif %}
                   {% if recipe.Recipe.meal_lunch == True %}
-                  <span class="badge badge-pill badge-danger">Lunch</span>
+                  <span class="badge badge-pill badge-success">Lunch</span>
                   {% endif %}
                   {% if recipe.Recipe.meal_dinner == True %}
                   <span class="badge badge-pill badge-success">Dinner</span>
@@ -141,16 +141,16 @@ All Recipes
                 </h6>
                 <!-- Badges indicating if the recipe is for Breakfast, Lunch, and/or Dinner -->
                 <div class="mealtime-badge d-flex justify-content-center">
-                    {% if recipe.Recipe.meal_breakfast == True %}
-                    <span class="badge badge-pill badge-warning">Breakfast</span>
-                    {% endif %}
-                    {% if recipe.Recipe.meal_lunch == True %}
-                    <span class="badge badge-pill badge-danger">Lunch</span>
-                    {% endif %}
-                    {% if recipe.Recipe.meal_dinner == True %}
-                    <span class="badge badge-pill badge-success">Dinner</span>
-                    {% endif %}
-                  </div>
+                  {% if recipe.Recipe.meal_breakfast == True %}
+                  <span class="badge badge-pill badge-success">Breakfast</span>
+                  {% endif %}
+                  {% if recipe.Recipe.meal_lunch == True %}
+                  <span class="badge badge-pill badge-success">Lunch</span>
+                  {% endif %}
+                  {% if recipe.Recipe.meal_dinner == True %}
+                  <span class="badge badge-pill badge-success">Dinner</span>
+                  {% endif %}
+                </div>
                 <!-- Recipe Image -->
                 {% if recipe.Recipe.recipe_image_url != None %}
                 <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center rounded img-fluid small-image"
@@ -250,16 +250,16 @@ All Recipes
                 </h6>
                 <!-- Badges indicating if the recipe is for Breakfast, Lunch, and/or Dinner -->
                 <div class="mealtime-badge d-flex justify-content-center">
-                    {% if recipe.Recipe.meal_breakfast == True %}
-                    <span class="badge badge-pill badge-warning">Breakfast</span>
-                    {% endif %}
-                    {% if recipe.Recipe.meal_lunch == True %}
-                    <span class="badge badge-pill badge-danger">Lunch</span>
-                    {% endif %}
-                    {% if recipe.Recipe.meal_dinner == True %}
-                    <span class="badge badge-pill badge-success">Dinner</span>
-                    {% endif %}
-                  </div>
+                  {% if recipe.Recipe.meal_breakfast == True %}
+                  <span class="badge badge-pill badge-success">Breakfast</span>
+                  {% endif %}
+                  {% if recipe.Recipe.meal_lunch == True %}
+                  <span class="badge badge-pill badge-success">Lunch</span>
+                  {% endif %}
+                  {% if recipe.Recipe.meal_dinner == True %}
+                  <span class="badge badge-pill badge-success">Dinner</span>
+                  {% endif %}
+                </div>
                 <!-- Recipe Image -->
                 {% if recipe.Recipe.recipe_image_url != None %}
                 <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center rounded img-fluid small-image"
@@ -358,16 +358,16 @@ All Recipes
                 </h6>
                 <!-- Badges indicating if the recipe is for Breakfast, Lunch, and/or Dinner -->
                 <div class="mealtime-badge d-flex justify-content-center">
-                    {% if recipe.Recipe.meal_breakfast == True %}
-                    <span class="badge badge-pill badge-warning">Breakfast</span>
-                    {% endif %}
-                    {% if recipe.Recipe.meal_lunch == True %}
-                    <span class="badge badge-pill badge-danger">Lunch</span>
-                    {% endif %}
-                    {% if recipe.Recipe.meal_dinner == True %}
-                    <span class="badge badge-pill badge-success">Dinner</span>
-                    {% endif %}
-                  </div>
+                  {% if recipe.Recipe.meal_breakfast == True %}
+                  <span class="badge badge-pill badge-success">Breakfast</span>
+                  {% endif %}
+                  {% if recipe.Recipe.meal_lunch == True %}
+                  <span class="badge badge-pill badge-success">Lunch</span>
+                  {% endif %}
+                  {% if recipe.Recipe.meal_dinner == True %}
+                  <span class="badge badge-pill badge-success">Dinner</span>
+                  {% endif %}
+                </div>
                 <!-- Recipe Image -->
                 {% if recipe.Recipe.recipe_image_url != None %}
                 <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center rounded img-fluid small-image"
@@ -395,7 +395,7 @@ All Recipes
                 </div>
 
 
-                <div class="row">
+                <div class="row" style="position: relative;">
                   <!-- Display button so that user can add the recipe to their current meal plan -->
                   <div class="form-group col-sm">
                     <button name="{{ recipe.Recipe.recipe_id }}" id="meal-{{ recipe.Recipe.recipe_id }}" class="meal-button meal-{{ recipe.Recipe.recipe_id }} btn btn-block 
@@ -405,7 +405,12 @@ All Recipes
                       btn-success">Add to Meal Plan
                       {% endif %}
                     </button>
+
+
+
                   </div>
+
+
 
                   <!-- Display button so that user can add the recipe to their favorites -->
                   <div class="form-group col-sm">
@@ -418,9 +423,29 @@ All Recipes
                     </button>
                   </div>
 
+                  <!-- Toast message after user chooses to add recipe to meal plan -->
+                  <div aria-live="polite" aria-atomic="true" >
+                  <div class="toast hide" role="alert" aria-live="assertive" aria-atomic="true"
+                    style="position: absolute; top: 0px; left: 125px;" data-autohide="false">
+                    <div class="toast-header">
+
+                      <strong class="mr-auto">Meal Selection</strong>
+                      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="toast-body">
+                      <div><button class="btn btn-block btn-success toast-button">Add as Breakfast Meal</button></div>
+                      <div><button class="btn btn-block btn-success toast-button">Add as Lunch Meal</button></div>
+                      <div><button class="btn btn-block btn-success toast-button">Add as Dinner Meal</button></div>
+                    </div>
+                  </div>
+                  </div>
+
 
                 </div>
               </div>
+
 
             </li>
             <hr class="recipe-list-hr" />
@@ -444,5 +469,5 @@ All Recipes
 {% endblock %}
 
 {% block footer %}
-<script type="text/javascript" src="{{ url_for('static', filename='all_recipes.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='all_recipes.js') }}?v=1.01"></script>
 {% endblock %}
