@@ -262,3 +262,15 @@ dt {
 	font-size: 0.8rem;
 	font-style: italic;
 }
+
+
+.mealtime-badge {
+	margin-top: 10px;
+	margin-bottom: 15px;
+}
+
+
+.center {
+	margin-left: auto;
+    margin-right: auto;
+}

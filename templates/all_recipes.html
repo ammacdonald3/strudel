@@ -45,6 +45,18 @@ All Recipes
                   ({{ recipe.Recipe.recipe_total_time }} minutes total prep/cook time)
                   {% endif %}
                 </h6>
+                <!-- Badges indicating if the recipe is for Breakfast, Lunch, and/or Dinner -->
+                <div class="mealtime-badge d-flex justify-content-center">
+                  {% if recipe.Recipe.meal_breakfast == True %}
+                  <span class="badge badge-pill badge-warning">Breakfast</span>
+                  {% endif %}
+                  {% if recipe.Recipe.meal_lunch == True %}
+                  <span class="badge badge-pill badge-danger">Lunch</span>
+                  {% endif %}
+                  {% if recipe.Recipe.meal_dinner == True %}
+                  <span class="badge badge-pill badge-success">Dinner</span>
+                  {% endif %}
+                </div>
                 <!-- Recipe Image -->
                 {% if recipe.Recipe.recipe_image_url != None %}
                 <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center rounded img-fluid small-image"
@@ -127,6 +139,18 @@ All Recipes
                   ({{ recipe.Recipe.recipe_total_time }} minutes total prep/cook time)
                   {% endif %}
                 </h6>
+                <!-- Badges indicating if the recipe is for Breakfast, Lunch, and/or Dinner -->
+                <div class="mealtime-badge d-flex justify-content-center">
+                    {% if recipe.Recipe.meal_breakfast == True %}
+                    <span class="badge badge-pill badge-warning">Breakfast</span>
+                    {% endif %}
+                    {% if recipe.Recipe.meal_lunch == True %}
+                    <span class="badge badge-pill badge-danger">Lunch</span>
+                    {% endif %}
+                    {% if recipe.Recipe.meal_dinner == True %}
+                    <span class="badge badge-pill badge-success">Dinner</span>
+                    {% endif %}
+                  </div>
                 <!-- Recipe Image -->
                 {% if recipe.Recipe.recipe_image_url != None %}
                 <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center rounded img-fluid small-image"
@@ -224,6 +248,18 @@ All Recipes
                   ({{ recipe.Recipe.recipe_total_time }} minutes total prep/cook time)
                   {% endif %}
                 </h6>
+                <!-- Badges indicating if the recipe is for Breakfast, Lunch, and/or Dinner -->
+                <div class="mealtime-badge d-flex justify-content-center">
+                    {% if recipe.Recipe.meal_breakfast == True %}
+                    <span class="badge badge-pill badge-warning">Breakfast</span>
+                    {% endif %}
+                    {% if recipe.Recipe.meal_lunch == True %}
+                    <span class="badge badge-pill badge-danger">Lunch</span>
+                    {% endif %}
+                    {% if recipe.Recipe.meal_dinner == True %}
+                    <span class="badge badge-pill badge-success">Dinner</span>
+                    {% endif %}
+                  </div>
                 <!-- Recipe Image -->
                 {% if recipe.Recipe.recipe_image_url != None %}
                 <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center rounded img-fluid small-image"
@@ -320,6 +356,18 @@ All Recipes
                   ({{ recipe.Recipe.recipe_total_time }} minutes total prep/cook time)
                   {% endif %}
                 </h6>
+                <!-- Badges indicating if the recipe is for Breakfast, Lunch, and/or Dinner -->
+                <div class="mealtime-badge d-flex justify-content-center">
+                    {% if recipe.Recipe.meal_breakfast == True %}
+                    <span class="badge badge-pill badge-warning">Breakfast</span>
+                    {% endif %}
+                    {% if recipe.Recipe.meal_lunch == True %}
+                    <span class="badge badge-pill badge-danger">Lunch</span>
+                    {% endif %}
+                    {% if recipe.Recipe.meal_dinner == True %}
+                    <span class="badge badge-pill badge-success">Dinner</span>
+                    {% endif %}
+                  </div>
                 <!-- Recipe Image -->
                 {% if recipe.Recipe.recipe_image_url != None %}
                 <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center rounded img-fluid small-image"
