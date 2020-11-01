@@ -395,9 +395,9 @@ All Recipes
                 </div>
 
 
-                <div class="row" style="position: relative;">
+                <div class="row">
                   <!-- Display button so that user can add the recipe to their current meal plan -->
-                  <div class="form-group col-sm">
+                  <div class="form-group col-sm" style="position: relative;">
                     <button name="{{ recipe.Recipe.recipe_id }}" id="meal-{{ recipe.Recipe.recipe_id }}" class="meal-button meal-{{ recipe.Recipe.recipe_id }} btn btn-block 
                             {% if recipe.app_user_id == current_user.id and recipe.active_ind == True %}
                             btn-danger">Remove from Meal Plan
@@ -406,6 +406,26 @@ All Recipes
                       {% endif %}
                     </button>
 
+
+                    <!-- Toast message after user chooses to add recipe to meal plan -->
+                    <div class="toast hide" role="alert" aria-live="assertive" aria-atomic="true"
+                      style="position: absolute; top: 0px; left: 25%; z-index: 1" data-autohide="false">
+                      <div class="toast-header">
+
+                        <strong class="mr-auto">Meal Selection</strong>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="toast-body">
+                        <!-- Breakfast button -->
+                        <div><button name="{{ recipe.Recipe.recipe_id }}" class="btn btn-block btn-success toast-button meal-breakfast">Add as Breakfast Meal</button></div>
+                        <!-- Lunch button -->
+                        <div><button name="{{ recipe.Recipe.recipe_id }}" class="btn btn-block btn-success toast-button meal-lunch">Add as Lunch Meal</button></div>
+                        <!-- Dinner button -->
+                        <div><button name="{{ recipe.Recipe.recipe_id }}" class="btn btn-block btn-success toast-button meal-dinner">Add as Dinner Meal</button></div>
+                      </div>
+                    </div>
 
 
                   </div>
@@ -423,24 +443,7 @@ All Recipes
                     </button>
                   </div>
 
-                  <!-- Toast message after user chooses to add recipe to meal plan -->
-                  <div aria-live="polite" aria-atomic="true" >
-                  <div class="toast hide" role="alert" aria-live="assertive" aria-atomic="true"
-                    style="position: absolute; top: 0px; left: 125px;" data-autohide="false">
-                    <div class="toast-header">
 
-                      <strong class="mr-auto">Meal Selection</strong>
-                      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="toast-body">
-                      <div><button class="btn btn-block btn-success toast-button">Add as Breakfast Meal</button></div>
-                      <div><button class="btn btn-block btn-success toast-button">Add as Lunch Meal</button></div>
-                      <div><button class="btn btn-block btn-success toast-button">Add as Dinner Meal</button></div>
-                    </div>
-                  </div>
-                  </div>
 
 
                 </div>
@@ -469,5 +472,5 @@ All Recipes
 {% endblock %}
 
 {% block footer %}
-<script type="text/javascript" src="{{ url_for('static', filename='all_recipes.js') }}?v=1.01"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='all_recipes.js') }}?v=1.02"></script>
 {% endblock %}
