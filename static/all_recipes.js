@@ -39,18 +39,24 @@ $(document).ready(function(){
     // Toggle "meal plan" button color depending on whether the recipe is on the user's meal plan
     $('.meal-button').click(function () {
         var $this = $(this);
+        var baseMealId = $(this).attr("name")
         var mealId = ".".concat($(this).attr("id"));
         if ($this.hasClass("btn-success")) {
+            $(mealId).attr("data-toggle", "modal")
+            $(mealId).attr("data-target", "#mealtime-modal-".concat(baseMealId))
 /*             $(mealId).addClass("btn-danger")
             $(mealId).removeClass("btn-success")
             $(mealId).text("Remove from Meal Plan") */
-            $('.toast').toast('show');
+            // $('.modal').modal('show');
+            // $('.toast').toast('show');
 /*             $.ajax({
                 url: '/_meal_plan',
                 type: 'POST',
                 data: { recipe_id:$(this).attr("name"), status:"checked" }
             }); */
         } else {
+            // $(mealId).attr("onclick", "return confirm('Are you sure that you want to delete {{ recipe.Recipe.recipe_name }} from your meal plan?');")
+            if ( !confirm("Do you want to delete this item from your meal plan?")) return alert("Okay, item will not be deleted.")
             $(mealId).addClass("btn-success")
             $(mealId).removeClass("btn-danger")
             $(mealId).text("Add to Meal Plan")
@@ -62,6 +68,7 @@ $(document).ready(function(){
         }
     });
 
+
     // AJAX for adding recipe to user's meal plan as Breakfast
     $('.meal-breakfast').click(function () {
         var $this = $(this);
@@ -69,13 +76,16 @@ $(document).ready(function(){
         console.log(mealId)
         $(mealId).addClass("btn-danger")
         $(mealId).removeClass("btn-success")
+        $(mealId).removeAttr("data-toggle")
+        $(mealId).removeAttr("data-target")
         $(mealId).text("Remove from Meal Plan")
-        $('.toast').toast('hide');
-/*         $.ajax({
+        // $('.toast').toast('hide');
+        $('.modal').modal('hide');
+        $.ajax({
             url: '/_meal_breakfast',
             type: 'POST',
             data: { recipe_id:$(this).attr("name"), status:"checked" }
-        }); */
+        });
     });
 
     // AJAX for adding recipe to user's meal plan as Lunch
@@ -85,10 +95,13 @@ $(document).ready(function(){
         console.log(mealId)
         $(mealId).addClass("btn-danger")
         $(mealId).removeClass("btn-success")
+        $(mealId).removeAttr("data-toggle")
+        $(mealId).removeAttr("data-target")
         $(mealId).text("Remove from Meal Plan")
-        $('.toast').toast('hide');
+        // $('.toast').toast('hide');
+        $('.modal').modal('hide');
 /*         $.ajax({
-            url: '/_meal_breakfast',
+            url: '/_meal_lunch',
             type: 'POST',
             data: { recipe_id:$(this).attr("name"), status:"checked" }
         }); */
@@ -101,10 +114,13 @@ $(document).ready(function(){
         console.log(mealId)
         $(mealId).addClass("btn-danger")
         $(mealId).removeClass("btn-success")
+        $(mealId).removeAttr("data-toggle")
+        $(mealId).removeAttr("data-target")
         $(mealId).text("Remove from Meal Plan")
-        $('.toast').toast('hide');
+        // $('.toast').toast('hide');
+        $('.modal').modal('hide');
 /*         $.ajax({
-            url: '/_meal_breakfast',
+            url: '/_meal_dinner',
             type: 'POST',
             data: { recipe_id:$(this).attr("name"), status:"checked" }
         }); */

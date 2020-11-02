@@ -349,7 +349,7 @@ All Recipes
             <!-- Recipe Name -->
             <li>
               <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}" class="text-decoration-none">
-                <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
+                <h3 class="text-center">{{ recipe.Recipe.recipe_name }} - ID {{ recipe.Recipe.recipe_id }}</h3>
                 <!-- Recipe Prep/Cook Time -->
                 <h6 class="text-center">
                   {% if recipe.Recipe.recipe_total_time != None %}
@@ -402,14 +402,46 @@ All Recipes
                             {% if recipe.app_user_id == current_user.id and recipe.active_ind == True %}
                             btn-danger">Remove from Meal Plan
                       {% else %}
-                      btn-success">Add to Meal Plan
+                      btn-success" data-toggle="modal" data-target="#mealtime-modal-{{ recipe.Recipe.recipe_id }}">Add to Meal Plan
+                      <!--  -->
                       {% endif %}
                     </button>
 
 
+                    <!-- Modal -->
+                    <div class="modal fade" id="mealtime-modal-{{ recipe.Recipe.recipe_id }}" tabindex="-1" role="dialog"
+                      aria-labelledby="mealtime-modal-title" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="mealtime-modal-title">Meal Selection</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <!-- Breakfast button -->
+                            <div><button name="{{ recipe.Recipe.recipe_id }}"
+                                class="btn btn-block btn-success toast-button meal-breakfast">Add as Breakfast
+                                Meal</button>
+                            </div>
+                            <!-- Lunch button -->
+                            <div><button name="{{ recipe.Recipe.recipe_id }}"
+                                class="btn btn-block btn-success toast-button meal-lunch">Add as Lunch Meal</button>
+                            </div>
+                            <!-- Dinner button -->
+                            <div><button name="{{ recipe.Recipe.recipe_id }}"
+                                class="btn btn-block btn-success toast-button meal-dinner">Add as Dinner Meal</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
                     <!-- Toast message after user chooses to add recipe to meal plan -->
-                    <div class="toast hide" role="alert" aria-live="assertive" aria-atomic="true"
-                      style="position: absolute; top: 0px; left: 25%; z-index: 1" data-autohide="false">
+                    <!-- <div class="toast hide" role="alert" aria-live="assertive" aria-atomic="true"
+                      style="position: absolute; top: 0; left: 0; z-index: 1" data-autohide="false">
                       <div class="toast-header">
 
                         <strong class="mr-auto">Meal Selection</strong>
@@ -417,18 +449,21 @@ All Recipes
                           <span aria-hidden="true">&times;</span>
                         </button>
                       </div>
-                      <div class="toast-body">
+                      <div class="toast-body"> -->
                         <!-- Breakfast button -->
-                        <div><button name="{{ recipe.Recipe.recipe_id }}" class="btn btn-block btn-success toast-button meal-breakfast">Add as Breakfast Meal</button></div>
+                        <!-- <div><button name="{{ recipe.Recipe.recipe_id }}"
+                            class="btn btn-block btn-success toast-button meal-breakfast">Add as Breakfast Meal</button>
+                        </div> -->
                         <!-- Lunch button -->
-                        <div><button name="{{ recipe.Recipe.recipe_id }}" class="btn btn-block btn-success toast-button meal-lunch">Add as Lunch Meal</button></div>
+                        <!-- <div><button name="{{ recipe.Recipe.recipe_id }}"
+                            class="btn btn-block btn-success toast-button meal-lunch">Add as Lunch Meal</button></div> -->
                         <!-- Dinner button -->
-                        <div><button name="{{ recipe.Recipe.recipe_id }}" class="btn btn-block btn-success toast-button meal-dinner">Add as Dinner Meal</button></div>
-                      </div>
+                        <!-- <div><button name="{{ recipe.Recipe.recipe_id }}"
+                            class="btn btn-block btn-success toast-button meal-dinner">Add as Dinner Meal</button></div>
+                      </div> -->
                     </div>
 
 
-                  </div>
 
 
 

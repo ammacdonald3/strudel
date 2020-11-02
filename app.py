@@ -814,6 +814,44 @@ def _meal_plan():
     return render_template('all_recipes.html')
 
 
+
+# Define route for manually adding BREAKFAST recipe to meal plan
+@app.route('/_meal_breakfast', methods=['GET', 'POST'])
+@login_required
+def _meal_breakfast():
+    status = request.form.get('status')
+    recipe_id = request.form.get('recipe_id')
+
+    # If user selected to add recipe to meal plan, update table
+    if status == 'checked':
+
+        breakfast_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).filter_by(meal='breakfast').first()
+
+        if breakfast_exists is None:
+
+            current_meal = Current_Meal(
+                recipe_id=recipe_id,
+                app_user_id=current_user.id,
+                day_number=0,
+                meal='breakfast',
+                active_ind=True,
+                insert_datetime=datetime.now()
+            )
+            db.session.add(current_meal)
+            db.session.flush()
+            db.session.commit()
+
+    
+    # If user selected to remove recipe to meal plan, update table
+    elif status == 'unchecked':
+        db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).update(dict(active_ind=False))
+
+        db.session.flush()
+        db.session.commit()
+
+    return render_template('all_recipes.html')
+
+
 # Define route for manually adding recipe to favorites
 @app.route('/_favorite', methods=['GET', 'POST'])
 @login_required
