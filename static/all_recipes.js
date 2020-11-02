@@ -56,7 +56,7 @@ $(document).ready(function(){
             }); */
         } else {
             // $(mealId).attr("onclick", "return confirm('Are you sure that you want to delete {{ recipe.Recipe.recipe_name }} from your meal plan?');")
-            if ( !confirm("Do you want to delete this item from your meal plan?")) return alert("Okay, item will not be deleted.")
+            if ( !confirm("Do you want to delete this item from your meal plan?")) return; //alert("Okay, item will not be deleted.")
             $(mealId).addClass("btn-success")
             $(mealId).removeClass("btn-danger")
             $(mealId).text("Add to Meal Plan")
@@ -86,6 +86,7 @@ $(document).ready(function(){
             type: 'POST',
             data: { recipe_id:$(this).attr("name"), status:"checked" }
         });
+        return alert("Added to breakfast meal plan!")
     });
 
     // AJAX for adding recipe to user's meal plan as Lunch
@@ -100,11 +101,12 @@ $(document).ready(function(){
         $(mealId).text("Remove from Meal Plan")
         // $('.toast').toast('hide');
         $('.modal').modal('hide');
-/*         $.ajax({
+        $.ajax({
             url: '/_meal_lunch',
             type: 'POST',
             data: { recipe_id:$(this).attr("name"), status:"checked" }
-        }); */
+        });
+        return alert("Added to lunch meal plan!")
     });
 
     // AJAX for adding recipe to user's meal plan as Dinner
@@ -119,11 +121,12 @@ $(document).ready(function(){
         $(mealId).text("Remove from Meal Plan")
         // $('.toast').toast('hide');
         $('.modal').modal('hide');
-/*         $.ajax({
+        $.ajax({
             url: '/_meal_dinner',
             type: 'POST',
             data: { recipe_id:$(this).attr("name"), status:"checked" }
-        }); */
+        });
+        return alert("Added to dinner meal plan!")
     });
 });
 

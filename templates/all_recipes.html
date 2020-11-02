@@ -349,7 +349,7 @@ All Recipes
             <!-- Recipe Name -->
             <li>
               <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}" class="text-decoration-none">
-                <h3 class="text-center">{{ recipe.Recipe.recipe_name }} - ID {{ recipe.Recipe.recipe_id }}</h3>
+                <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
                 <!-- Recipe Prep/Cook Time -->
                 <h6 class="text-center">
                   {% if recipe.Recipe.recipe_total_time != None %}
@@ -396,7 +396,7 @@ All Recipes
 
 
                 <div class="row">
-                  <!-- Display button so that user can add the recipe to their current meal plan -->
+                  <!-- Display button so that user can add the recipe to their current meal plan via subsequent buttons on modal -->
                   <div class="form-group col-sm" style="position: relative;">
                     <button name="{{ recipe.Recipe.recipe_id }}" id="meal-{{ recipe.Recipe.recipe_id }}" class="meal-button meal-{{ recipe.Recipe.recipe_id }} btn btn-block 
                             {% if recipe.app_user_id == current_user.id and recipe.active_ind == True %}
@@ -408,7 +408,7 @@ All Recipes
                     </button>
 
 
-                    <!-- Modal -->
+                    <!-- Modal allowing user to add recipe to their meal plan -->
                     <div class="modal fade" id="mealtime-modal-{{ recipe.Recipe.recipe_id }}" tabindex="-1" role="dialog"
                       aria-labelledby="mealtime-modal-title" aria-hidden="true">
                       <div class="modal-dialog modal-dialog-centered" role="document">
@@ -422,16 +422,30 @@ All Recipes
                           <div class="modal-body">
                             <!-- Breakfast button -->
                             <div><button name="{{ recipe.Recipe.recipe_id }}"
-                                class="btn btn-block btn-success toast-button meal-breakfast">Add as Breakfast
-                                Meal</button>
+                                class="btn btn-block modal-meal-button meal-breakfast {% if recipe.Recipe.meal_breakfast == True %} btn-success">Add as Breakfast
+                                Meal (Recommended)
+                                {% else %}
+                                btn-warning">Add as Breakfast Meal
+                                {% endif %}
+                              </button>
                             </div>
                             <!-- Lunch button -->
                             <div><button name="{{ recipe.Recipe.recipe_id }}"
-                                class="btn btn-block btn-success toast-button meal-lunch">Add as Lunch Meal</button>
+                                class="btn btn-block modal-meal-button meal-lunch {% if recipe.Recipe.meal_lunch == True %} btn-success">Add as Lunch
+                                Meal (Recommended)
+                                {% else %}
+                                btn-warning">Add as Lunch Meal
+                                {% endif %}
+                              </button>
                             </div>
                             <!-- Dinner button -->
                             <div><button name="{{ recipe.Recipe.recipe_id }}"
-                                class="btn btn-block btn-success toast-button meal-dinner">Add as Dinner Meal</button>
+                                class="btn btn-block modal-meal-button meal-dinner {% if recipe.Recipe.meal_dinner == True %} btn-success">Add as Dinner
+                                Meal (Recommended)
+                                {% else %}
+                                btn-warning">Add as Dinner Meal
+                                {% endif %}
+                              </button>
                             </div>
                           </div>
                         </div>
@@ -507,5 +521,5 @@ All Recipes
 {% endblock %}
 
 {% block footer %}
-<script type="text/javascript" src="{{ url_for('static', filename='all_recipes.js') }}?v=1.02"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='all_recipes.js') }}?v=1.03"></script>
 {% endblock %}
