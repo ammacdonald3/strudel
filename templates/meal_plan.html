@@ -105,7 +105,7 @@ Meal Plan
                       <input type="hidden" name="recipe_id" value="{{ recipe.Recipe.recipe_id }}" />
                       <input type="hidden" name="meal_time" value="breakfast" />
                       <button type="submit" class="btn btn-danger btn-block" id="bfast_meal_plan_submit"
-                        name="bfast_meal_plan_submit">Remove from Meal Plan</button>
+                        name="bfast_meal_plan_submit" onclick="return confirm('Are you sure that you want to delete {{ recipe.Recipe.recipe_name }} from the Breakfast section of your meal plan?');">Remove from Meal Plan</button>
                     </form>
                   </div>
 
@@ -186,7 +186,7 @@ Meal Plan
                       <input type="hidden" name="recipe_id" value="{{ recipe.Recipe.recipe_id }}" />
                       <input type="hidden" name="meal_time" value="lunch" />
                       <button type="submit" class="btn btn-danger btn-block" id="lunch_meal_plan_submit"
-                        name="lunch_meal_plan_submit">Remove from Meal Plan</button>
+                        name="lunch_meal_plan_submit" onclick="return confirm('Are you sure that you want to delete {{ recipe.Recipe.recipe_name }} from the Lunch section of your meal plan?');">Remove from Meal Plan</button>
                     </form>
                   </div>
 
@@ -267,7 +267,7 @@ Meal Plan
                       <input type="hidden" name="recipe_id" value="{{ recipe.Recipe.recipe_id }}" />
                       <input type="hidden" name="meal_time" value="dinner" />
                       <button type="submit" class="btn btn-danger btn-block" id="dinner_meal_plan_submit"
-                        name="dinner_meal_plan_submit">Remove from Meal Plan</button>
+                        name="dinner_meal_plan_submit" onclick="return confirm('Are you sure that you want to delete {{ recipe.Recipe.recipe_name }} from the Dinner section of your meal plan?');">Remove from Meal Plan</button>
                     </form>
                   </div>
 

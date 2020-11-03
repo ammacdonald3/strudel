@@ -42,24 +42,23 @@ Shopping List
     <table class="table table-bordered" id="shopping-table">
         <thead>
             <tr>
-                <!-- <th scope="col" class="trash-column"></th> -->
+                <th scope="col" class="trash-column d-none"></th>
                 <th scope="col"></th>
                 <th scope="col">Item</th>
-                <!-- <th scope="col" class="recipe-column">Recipe</th> -->
             </tr>
         </thead>
         <tbody>
             {% for ingredient in shop_list %}
             <tr>
                 <!-- Column #1 - Trash Icon -->
-                <!-- <td class="text-center trash-column">
+                <td class="text-center trash-column d-none align-middle">
                     <span class="trash"><i class="fa fa-trash"
                             id="{{ ingredient.Shopping_List.shopping_list_id }}"></i></span>
-                </td> -->
+                </td>
 
                 <!-- Column #2 - Checkboxes -->
                 <td class="text-center align-middle">
-                    <!-- Below If/Else used for sorting in DataTable -->
+                    <!-- Below code used for sorting in DataTable (TBD) -->
                     <span class="hidden-check">
                         {% if ingredient.Shopping_List.checked_status == True %}
                         Checked
@@ -82,14 +81,6 @@ Shopping List
                     </div>
                 </td>
 
-                <!-- Column #3 - Recipe Name -->
-                <!-- <td {% if ingredient.Shopping_List.checked_status == True %} class="completed recipe-column" {% else %}
-                    class="recipe-column" {% endif %}>
-                    {% if ingredient.Recipe.recipe_id %}
-                    {{ ingredient.Recipe.recipe_name }}
-                    {% endif %}
-                </td> -->
-
             </tr>
             {% endfor %}
         </tbody>
@@ -100,21 +91,16 @@ Shopping List
     <br>
     <br>
 
-    <!-- Toggle displaying / hiding the Trash Can or Recipe Name columns -->
-    <!-- <div class="form-group">
+    <!-- Button for showing/hiding trash can column used to delete individual shopping list items -->
+    <div class="form-group">
         <div class="row">
-            <div class="btn-group-toggle form-group col-sm" data-toggle="buttons" style="margin-top: 10px;">
+            <div class="btn-group-toggle form-group col-lg" data-toggle="buttons" style="margin-top: 10px;">
                 <label class="btn btn-outline-warning active btn-block">
-                    <input type="checkbox" name="diet_vegan" id="hide-del" autocomplete="off" />Hide Delete Column
+                    <input type="checkbox" id="hide-del" autocomplete="off" />Edit Mode
                 </label>
             </div>
-            <div class="btn-group-toggle form-group col-sm" data-toggle="buttons" style="margin-top: 10px;">
-                <label class="btn btn-outline-warning active btn-block">
-                    <input type="checkbox" name="diet_vegetarian" id="hide-recipe" autocomplete="off" />Hide Recipe
-                    Column</label>
-            </div>
         </div>
-    </div> -->
+    </div>
 
     <br>
 
@@ -163,7 +149,7 @@ Shopping List
 
 
 {% block footer %}
-<script type="text/javascript" src="{{ url_for('static', filename='shopping_list.js') }}?v=1.0"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='shopping_list.js') }}?v=1.1"></script>
 
 <!-- jQuery UI -->
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"

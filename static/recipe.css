@@ -275,15 +275,12 @@ dt {
     margin-right: auto;
 }
 
-/* .toast {
-	opacity: 1;
-  } */
 
 .modal-meal-button {
 	margin-top: 5px;
 }
 
-/* body {
-    height: 100%;
-} */
 
+.fa-trash {
+	zoom: 1.5;
+}

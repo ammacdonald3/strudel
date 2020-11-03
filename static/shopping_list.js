@@ -59,9 +59,9 @@ $(document).ready(function(){
     $('#hide-del').click(function () {
         var $this = $(this);
         if (this.checked) {
-            $(".trash-column").addClass("d-none")
-        } else {
             $(".trash-column").removeClass("d-none")
+        } else {
+            $(".trash-column").addClass("d-none")
         }
     });
 
