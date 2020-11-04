@@ -548,7 +548,9 @@ All Recipes
                   <div class="form-group col-sm">
                     <button name="{{ recipe.Recipe.recipe_id }}" id="meal-{{ recipe.Recipe.recipe_id }}" class="meal-button other-meal-button meal-{{ recipe.Recipe.recipe_id }} btn btn-block 
                             {% if recipe.app_user_id == current_user.id and recipe.active_ind == True %}
-                            btn-danger">Remove from Meal Plan
+                            btn-danger" data-toggle="modal"
+                      data-target="#mealtime-modal-other-confirm-delete-{{ recipe.Recipe.recipe_id }}">Remove from Meal
+                      Plan
                       {% else %}
                       btn-success" data-toggle="modal"
                       data-target="#mealtime-modal-other-{{ recipe.Recipe.recipe_id }}">Add to Meal Plan
@@ -602,6 +604,62 @@ All Recipes
                         </div>
                       </div>
                     </div>
+
+                    <!-- Modal confirming to the user that the recipe was added to their meal plan -->
+                    <div class="modal fade mealtime-modal-other-success"
+                      id="mealtime-modal-other-success-{{ recipe.Recipe.recipe_id }}" tabindex="-1" role="dialog"
+                      aria-labelledby="mealtime-modal-other-success-title" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="mealtime-modal-other-success-title">Success!</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            {{ recipe.Recipe.recipe_name }} was added to your dinner meal plan.
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-primary center" data-dismiss="modal">
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <!-- Modal prompting whether to delete recipe from their meal plan -->
+                    <div class="modal fade mealtime-modal-other-confirm-delete"
+                      id="mealtime-modal-other-confirm-delete-{{ recipe.Recipe.recipe_id }}" tabindex="-1" role="dialog"
+                      aria-labelledby="mealtime-modal-other-confirm-delete-title" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="mealtime-modal-other-confirm-delete-title">Confirm</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            Are you sure that you want to remove {{ recipe.Recipe.recipe_name }} from your meal plan?
+                          </div>
+                          <!-- Button to proceed with removal -->
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-danger center meal-button-proceed"
+                              data-dismiss="modal">
+                              Remove from Meal Plan
+                            </button>
+                            <!-- Button to cancel and close modal -->
+                            <button type="button" class="btn btn-secondary center" data-dismiss="modal">
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
 
                   </div>
 

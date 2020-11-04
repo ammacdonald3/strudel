@@ -55,16 +55,24 @@ $(document).ready(function(){
                 $(mealId).attr("data-target", "#mealtime-modal-other-".concat(baseMealId))
             };
 
+            // If recipe is already on the user's meal plan, prompt whether to remove it
         } else {
-            if ( !confirm("Do you want to delete this item from your meal plan?")) return;
-            $(mealId).addClass("btn-success")
-            $(mealId).removeClass("btn-danger")
-            $(mealId).text("Add to Meal Plan")
-            $.ajax({
-                url: '/_meal_plan',
-                type: 'POST',
-                data: { recipe_id:$(this).attr("name"), status:"unchecked" }
-            });
+            // User selects 'cancel' button (i.e. do not remove recipe from meal plan)
+            /* $('.meal-button-cancel').click(function () {
+                $('.modal').modal('hide');
+                return;
+            }) */
+            // User selects 'proceed' button (i.e. remove recipe from meal plan)
+            $('.meal-button-proceed').click(function () {
+                $(mealId).addClass("btn-success")
+                $(mealId).removeClass("btn-danger")
+                $(mealId).text("Add to Meal Plan")
+                $.ajax({
+                    url: '/_meal_plan',
+                    type: 'POST',
+                    data: { recipe_id:$(this).attr("name"), status:"unchecked" }
+                });
+            })
         }
     });
 
@@ -85,7 +93,10 @@ $(document).ready(function(){
             type: 'POST',
             data: { recipe_id:$(this).attr("name"), status:"checked" }
         });
-        return alert("Added to breakfast meal plan!")
+        bootbox.alert({
+            message: "Added to your breakfast meal plan!",
+            backdrop: true
+        });
     });
 
     // AJAX for adding recipe to user's meal plan as Lunch
@@ -104,7 +115,10 @@ $(document).ready(function(){
             type: 'POST',
             data: { recipe_id:$(this).attr("name"), status:"checked" }
         });
-        return alert("Added to lunch meal plan!")
+        bootbox.alert({
+            message: "Added to your lunch meal plan!",
+            backdrop: true
+        });
     });
 
     // AJAX for adding recipe to user's meal plan as Dinner
@@ -123,7 +137,10 @@ $(document).ready(function(){
             type: 'POST',
             data: { recipe_id:$(this).attr("name"), status:"checked" }
         });
-        return alert("Added to dinner meal plan!")
+        
+        var successModalId = "#mealtime-modal-other-success-".concat($(this).attr("name"));
+        console.log(successModalId)
+        $(successModalId).modal('show')
     });
 });
 
