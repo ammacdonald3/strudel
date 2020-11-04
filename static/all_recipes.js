@@ -75,7 +75,22 @@ $(document).ready(function(){
                 $(mealId).text("Add to Meal Plan")
 
                 // Change button data target so that it renders the Breakfast/Lunch/Dinner modal if clicked again
-                $(mealId).attr("data-target", "#mealtime-modal-other-".concat(baseMealId))
+                    // "Favorites" section
+                if ($this.hasClass("fav-meal-button")) {
+                    $(mealId).attr("data-target", "#mealtime-modal-fav-".concat(baseMealId))
+                }
+                    // "Your Recipes" section
+                if ($this.hasClass("your-meal-button")) {
+                    $(mealId).attr("data-target", "#mealtime-modal-your-".concat(baseMealId))
+                }
+                    // "Editor's Picks" section
+                if ($this.hasClass("editor-meal-button")) {
+                    $(mealId).attr("data-target", "#mealtime-modal-editor-".concat(baseMealId))
+                }
+                    // "Uploaded by Others" section
+                if ($this.hasClass("other-meal-button")) {
+                    $(mealId).attr("data-target", "#mealtime-modal-other-".concat(baseMealId))
+                }
 
                 // Execute AJAX to remove from database
                 $.ajax({
@@ -100,7 +115,22 @@ $(document).ready(function(){
         $(mealId).addClass("btn-danger")
 
         // Change button data target so that it renders the Delete Confirm modal if clicked again
-        $(mealId).attr("data-target", "#mealtime-modal-other-confirm-delete-".concat(baseMealId))
+            // "Favorites" section
+        if ($this.hasClass("meal-breakfast-fav")) {
+            $(mealId).attr("data-target", "#mealtime-modal-fav-confirm-delete-".concat(baseMealId))
+        }
+            // "Your Recipes" section
+        if ($this.hasClass("meal-breakfast-your")) {
+            $(mealId).attr("data-target", "#mealtime-modal-your-confirm-delete-".concat(baseMealId))
+        }
+            // "Editor's Picks" section
+        if ($this.hasClass("meal-breakfast-editor")) {
+            $(mealId).attr("data-target", "#mealtime-modal-editor-confirm-delete-".concat(baseMealId))
+        }
+            // "Uploaded by Others" section
+        if ($this.hasClass("meal-breakfast-other")) {
+            $(mealId).attr("data-target", "#mealtime-modal-other-confirm-delete-".concat(baseMealId))
+        }
 
         // Change text of Meal Plan button
         $(mealId).text("Remove from Meal Plan")
@@ -116,7 +146,22 @@ $(document).ready(function(){
         });
 
         // Render the "success" modal displaying that the recipe was added to the breakfast meal plan
-        var successModalId = "#mealtime-modal-other-success-".concat($(this).attr("name"));
+            // "Favorites" section
+        if ($this.hasClass("meal-breakfast-fav")) {
+            var successModalId = "#mealtime-modal-fav-success-".concat($(this).attr("name"));
+        }
+            // "Your Recipes" section
+        if ($this.hasClass("meal-breakfast-your")) {
+            var successModalId = "#mealtime-modal-your-success-".concat($(this).attr("name"));
+        }
+            // "Editor's Picks" section
+        if ($this.hasClass("meal-breakfast-editor")) {
+            var successModalId = "#mealtime-modal-editor-success-".concat($(this).attr("name"));
+        }
+            // "Uploaded by Others" section
+        if ($this.hasClass("meal-breakfast-other")) {
+            var successModalId = "#mealtime-modal-other-success-".concat($(this).attr("name"));
+        }
         $(successModalId).modal('show')
 
     });
@@ -132,7 +177,22 @@ $(document).ready(function(){
         $(mealId).addClass("btn-danger")
 
         // Change button data target so that it renders the Delete Confirm modal if clicked again
-        $(mealId).attr("data-target", "#mealtime-modal-other-confirm-delete-".concat(baseMealId))
+            // "Favorites" section
+        if ($this.hasClass("meal-lunch-fav")) {
+            $(mealId).attr("data-target", "#mealtime-modal-fav-confirm-delete-".concat(baseMealId))
+        }
+            // "Your Recipes" section
+        if ($this.hasClass("meal-lunch-your")) {
+            $(mealId).attr("data-target", "#mealtime-modal-your-confirm-delete-".concat(baseMealId))
+        }
+            // "Editor's Picks" section
+        if ($this.hasClass("meal-lunch-editor")) {
+            $(mealId).attr("data-target", "#mealtime-modal-editor-confirm-delete-".concat(baseMealId))
+        }
+            // "Uploaded by Others" section
+        if ($this.hasClass("meal-lunch-other")) {
+            $(mealId).attr("data-target", "#mealtime-modal-other-confirm-delete-".concat(baseMealId))
+        }
 
         // Change text of Meal Plan button
         $(mealId).text("Remove from Meal Plan")
@@ -148,7 +208,22 @@ $(document).ready(function(){
         });
 
         // Render the "success" modal displaying that the recipe was added to the lunch meal plan
-        var successModalId = "#mealtime-modal-other-success-".concat($(this).attr("name"));
+            // "Favorites" section
+        if ($this.hasClass("meal-lunch-fav")) {
+            var successModalId = "#mealtime-modal-fav-success-".concat($(this).attr("name"));
+        }
+                // "Your Recipes" section
+        if ($this.hasClass("meal-lunch-your")) {
+            var successModalId = "#mealtime-modal-your-success-".concat($(this).attr("name"));
+        }
+                // "Editor's Picks" section
+        if ($this.hasClass("meal-lunch-editor")) {
+            var successModalId = "#mealtime-modal-editor-success-".concat($(this).attr("name"));
+        }
+                // "Uploaded by Others" section
+        if ($this.hasClass("meal-lunch-other")) {
+            var successModalId = "#mealtime-modal-other-success-".concat($(this).attr("name"));
+        }
         $(successModalId).modal('show')
 
     });
@@ -164,7 +239,22 @@ $(document).ready(function(){
         $(mealId).addClass("btn-danger")
 
         // Change button data target so that it renders the Delete Confirm modal if clicked again
-        $(mealId).attr("data-target", "#mealtime-modal-other-confirm-delete-".concat(baseMealId))
+            // "Favorites" section
+        if ($this.hasClass("meal-dinner-fav")) {
+            $(mealId).attr("data-target", "#mealtime-modal-fav-confirm-delete-".concat(baseMealId))
+        }
+            // "Your Recipes" section
+        if ($this.hasClass("meal-dinner-your")) {
+            $(mealId).attr("data-target", "#mealtime-modal-your-confirm-delete-".concat(baseMealId))
+        }
+            // "Editor's Picks" section
+        if ($this.hasClass("meal-dinner-editor")) {
+            $(mealId).attr("data-target", "#mealtime-modal-editor-confirm-delete-".concat(baseMealId))
+        }
+            // "Uploaded by Others" section
+        if ($this.hasClass("meal-dinner-other")) {
+            $(mealId).attr("data-target", "#mealtime-modal-other-confirm-delete-".concat(baseMealId))
+        }
 
         // Change text of Meal Plan button
         $(mealId).text("Remove from Meal Plan")
@@ -180,7 +270,22 @@ $(document).ready(function(){
         });
 
         // Render the "success" modal displaying that the recipe was added to the dinner meal plan
-        var successModalId = "#mealtime-modal-other-success-".concat($(this).attr("name"));
+            // "Favorites" section
+        if ($this.hasClass("meal-dinner-fav")) {
+            var successModalId = "#mealtime-modal-fav-success-".concat($(this).attr("name"));
+        }
+            // "Your Recipes" section
+        if ($this.hasClass("meal-dinner-your")) {
+            var successModalId = "#mealtime-modal-your-success-".concat($(this).attr("name"));
+        }
+            // "Editor's Picks" section
+        if ($this.hasClass("meal-dinner-editor")) {
+            var successModalId = "#mealtime-modal-editor-success-".concat($(this).attr("name"));
+        }
+            // "Uploaded by Others" section
+        if ($this.hasClass("meal-dinner-other")) {
+            var successModalId = "#mealtime-modal-other-success-".concat($(this).attr("name"));
+        }
         $(successModalId).modal('show')
 
     });
