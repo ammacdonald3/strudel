@@ -96,9 +96,9 @@ $(document).ready(function(){
                 $.ajax({
                     url: '/_meal_plan',
                     type: 'POST',
-                    data: { recipe_id:$(this).attr("name"), status:"unchecked" }
+                    data: { recipe_id:baseMealId, status:"unchecked" }
                 });
-
+                console.log(baseMealId)
             })
         }
     });
@@ -202,7 +202,7 @@ $(document).ready(function(){
 
         // Execute AJAX to add to database
         $.ajax({
-            url: '/meal_lunch',
+            url: '/_meal_lunch',
             type: 'POST',
             data: { recipe_id:$(this).attr("name"), status:"checked" }
         });
