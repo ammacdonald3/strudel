@@ -591,7 +591,7 @@ All Recipes
                               </button>
                             </div>
                             <!-- Dinner button -->
-                            <div><button name="{{ recipe.Recipe.recipe_id }}"
+                            <div><button name="{{ recipe.Recipe.recipe_id }}" 
                                 class="btn btn-block modal-meal-button meal-dinner {% if recipe.Recipe.meal_dinner == True %} btn-success">Add
                                 as Dinner
                                 Meal (Recommended)
@@ -612,13 +612,13 @@ All Recipes
                       <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <h5 class="modal-title" id="mealtime-modal-other-success-title">Success!</h5>
+                            <h5 class="modal-title" id="mealtime-modal-other-success-title">Success</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                             </button>
                           </div>
                           <div class="modal-body">
-                            {{ recipe.Recipe.recipe_name }} was added to your dinner meal plan.
+                            <strong>{{ recipe.Recipe.recipe_name }}</strong> was added to your meal plan!
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-primary center" data-dismiss="modal">
@@ -643,7 +643,7 @@ All Recipes
                             </button>
                           </div>
                           <div class="modal-body">
-                            Are you sure that you want to remove {{ recipe.Recipe.recipe_name }} from your meal plan?
+                            Are you sure that you want to remove <strong>{{ recipe.Recipe.recipe_name }}</strong> from your meal plan?
                           </div>
                           <!-- Button to proceed with removal -->
                           <div class="modal-footer">
