@@ -27,13 +27,49 @@ Meal Plan
 
       <!-- Display button so that user can delete all recipes from their current meal plan -->
       <div class="form-group col-sm">
-        <form role="form" method='POST' id="all_meal_plan_form" name="all_meal_plan_form">
-          <button type="submit" class="btn btn-danger btn-block" id="all_meal_plan_submit" name="all_meal_plan_submit"
+        <button class="btn btn-danger btn-block" id="clear-meal-plan-submit" name="clear-meal-plan-submit"
+          data-toggle="modal" data-target="#clear-mealplan-modal-confirm-delete">Clear Current Meal Plan</button>
+        <!-- <form role="form" method='POST' id="all-meal-plan-form" name="all-meal-plan-form"> -->
+        <!-- <button type="submit" class="btn btn-danger btn-block" id="all_meal_plan_submit" name="all_meal_plan_submit"
             onclick="return confirm('Are you sure that you want to delete all items from your current meal plan?');">Clear
-            Current Meal Plan</button>
-        </form>
+            Current Meal Plan</button> -->
+
+
+
+
+
+
+        <!-- </form> -->
       </div>
 
+      <!-- Modal prompting whether to delete recipe from their meal plan -->
+      <div class="modal fade clear-mealplan-modal-confirm-delete" id="clear-mealplan-modal-confirm-delete" tabindex="-1"
+        role="dialog" aria-labelledby="clear-mealplan-modal-confirm-delete-title" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="clear-mealplan-modal-confirm-delete-title">Confirm</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              Are you sure that you want to clear your entire meal plan?
+            </div>
+            <!-- Button to proceed with removal -->
+            <div class="modal-footer">
+              <button type="button" id="clear-mealplan-proceed" class="btn btn-danger center clear-mealplan-proceed"
+                data-dismiss="modal">
+                Clear Meal Plan
+              </button>
+              <!-- Button to cancel and close modal -->
+              <button type="button" class="btn btn-secondary center" data-dismiss="modal">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
 
     </div>
@@ -78,8 +114,8 @@ Meal Plan
                 <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center rounded img-fluid small-image"
                   alt="Responsive image" />
                 {% else %}
-                <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center rounded img-fluid small-image"
-                  alt="Responsive image" />
+                <img id="preview" src="/static/placeholder-recipe-image.jpg"
+                  class="center rounded img-fluid small-image" alt="Responsive image" />
                 {% endif %}
               </a>
 
@@ -105,7 +141,9 @@ Meal Plan
                       <input type="hidden" name="recipe_id" value="{{ recipe.Recipe.recipe_id }}" />
                       <input type="hidden" name="meal_time" value="breakfast" />
                       <button type="submit" class="btn btn-danger btn-block" id="bfast_meal_plan_submit"
-                        name="bfast_meal_plan_submit" onclick="return confirm('Are you sure that you want to delete {{ recipe.Recipe.recipe_name }} from the Breakfast section of your meal plan?');">Remove from Meal Plan</button>
+                        name="bfast_meal_plan_submit"
+                        onclick="return confirm('Are you sure that you want to delete {{ recipe.Recipe.recipe_name }} from the Breakfast section of your meal plan?');">Remove
+                        from Meal Plan</button>
                     </form>
                   </div>
 
@@ -159,8 +197,8 @@ Meal Plan
                 <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center rounded img-fluid small-image"
                   alt="Responsive image" />
                 {% else %}
-                <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center rounded img-fluid small-image"
-                  alt="Responsive image" />
+                <img id="preview" src="/static/placeholder-recipe-image.jpg"
+                  class="center rounded img-fluid small-image" alt="Responsive image" />
                 {% endif %}
               </a>
 
@@ -186,7 +224,9 @@ Meal Plan
                       <input type="hidden" name="recipe_id" value="{{ recipe.Recipe.recipe_id }}" />
                       <input type="hidden" name="meal_time" value="lunch" />
                       <button type="submit" class="btn btn-danger btn-block" id="lunch_meal_plan_submit"
-                        name="lunch_meal_plan_submit" onclick="return confirm('Are you sure that you want to delete {{ recipe.Recipe.recipe_name }} from the Lunch section of your meal plan?');">Remove from Meal Plan</button>
+                        name="lunch_meal_plan_submit"
+                        onclick="return confirm('Are you sure that you want to delete {{ recipe.Recipe.recipe_name }} from the Lunch section of your meal plan?');">Remove
+                        from Meal Plan</button>
                     </form>
                   </div>
 
@@ -240,8 +280,8 @@ Meal Plan
                 <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center rounded img-fluid small-image"
                   alt="Responsive image" />
                 {% else %}
-                <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center rounded img-fluid small-image"
-                  alt="Responsive image" />
+                <img id="preview" src="/static/placeholder-recipe-image.jpg"
+                  class="center rounded img-fluid small-image" alt="Responsive image" />
                 {% endif %}
               </a>
 
@@ -267,7 +307,9 @@ Meal Plan
                       <input type="hidden" name="recipe_id" value="{{ recipe.Recipe.recipe_id }}" />
                       <input type="hidden" name="meal_time" value="dinner" />
                       <button type="submit" class="btn btn-danger btn-block" id="dinner_meal_plan_submit"
-                        name="dinner_meal_plan_submit" onclick="return confirm('Are you sure that you want to delete {{ recipe.Recipe.recipe_name }} from the Dinner section of your meal plan?');">Remove from Meal Plan</button>
+                        name="dinner_meal_plan_submit"
+                        onclick="return confirm('Are you sure that you want to delete {{ recipe.Recipe.recipe_name }} from the Dinner section of your meal plan?');">Remove
+                        from Meal Plan</button>
                     </form>
                   </div>
 
@@ -299,5 +341,5 @@ Meal Plan
 
 
 {% block footer %}
-<script type="text/javascript" src="{{ url_for('static', filename='ingredients.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='meal_plan.js') }}?v=1.01"></script>
 {% endblock %}

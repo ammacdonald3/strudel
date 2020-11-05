@@ -400,7 +400,7 @@ def meal_plan():
         output = []
         try:
             # User selects button to remove all meals from their current meal plan
-            if "all_meal_plan_submit" in request.form:
+            if "clear_meal_plan_submit" in request.form:
 
                 db.session.query(Current_Meal).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).update(dict(active_ind=False))
 
@@ -813,6 +813,38 @@ def _meal_plan():
 
     return render_template('all_recipes.html')
 
+
+# Define route for clearing all items from meal plan
+@app.route('/_clear_meal_plan', methods=['GET','POST'])
+@login_required
+def _clear_meal_plan():
+    
+    # Inactivate all items from user's meal plan
+    try:
+        db.session.query(Current_Meal).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).update(dict(active_ind=False))
+
+        db.session.flush()
+        db.session.commit()
+    
+    # Error handling
+    except Exception as e:
+            output=[]
+            db.session.rollback()
+            output.append("Application encountered an error, and the recipe didn't write to the database. Better luck in the future!")
+            output.append(str(e))
+            print(output)
+
+            # Write errors to APP_ERROR table
+            app_error = App_Error(
+                app_user_id=current_user.id,
+                insert_datetime=datetime.now(),
+                error_val=str(e)
+            )
+            db.session.add(app_error)
+            db.session.flush()
+            db.session.commit()
+
+    return render_template('meal_plan.html')
 
 
 # Define route for manually adding BREAKFAST recipe to meal plan
