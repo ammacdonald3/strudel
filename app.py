@@ -395,45 +395,45 @@ def meal_selector():
 @app.route('/meal_plan', methods=['GET', 'POST'])
 @login_required
 def meal_plan():
-    if request.method == "POST":
-        error = ""
-        output = []
-        try:
+    # if request.method == "POST":
+    #     error = ""
+    #     output = []
+    #     try:
             # User selects button to remove all meals from their current meal plan
-            if "clear_meal_plan_submit" in request.form:
+            # if "clear_meal_plan_submit" in request.form:
 
-                db.session.query(Current_Meal).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).update(dict(active_ind=False))
+            #     db.session.query(Current_Meal).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).update(dict(active_ind=False))
 
-                db.session.flush()
-                db.session.commit()
+            #     db.session.flush()
+            #     db.session.commit()
                 
 
             # User selects button to remove respective meal from their current meal plan
-            if ("bfast_meal_plan_submit" in request.form) or ("lunch_meal_plan_submit" in request.form) or ("dinner_meal_plan_submit" in request.form):
+        #     if ("bfast_meal_plan_submit" in request.form) or ("lunch_meal_plan_submit" in request.form) or ("dinner_meal_plan_submit" in request.form):
 
-                recipe_id = request.form['recipe_id']
-                meal_time = request.form['meal_time']
+        #         recipe_id = request.form['recipe_id']
+        #         meal_time = request.form['meal_time']
 
-                db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(meal=meal_time).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).update(dict(active_ind=False))
+        #         db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(meal=meal_time).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).update(dict(active_ind=False))
 
-                db.session.flush()
-                db.session.commit()
+        #         db.session.flush()
+        #         db.session.commit()
 
-        except Exception as e:
-            db.session.rollback()
-            output.append("Application encountered an error, and the recipe didn't write to the database. Better luck in the future!")
-            output.append(str(e))
-            print(output)
+        # except Exception as e:
+        #     db.session.rollback()
+        #     output.append("Application encountered an error, and the recipe didn't write to the database. Better luck in the future!")
+        #     output.append(str(e))
+        #     print(output)
 
-            # Write errors to APP_ERROR table
-            app_error = App_Error(
-                app_user_id=current_user.id,
-                insert_datetime=datetime.now(),
-                error_val=str(e)
-            )
-            db.session.add(app_error)
-            db.session.flush()
-            db.session.commit()
+        #     # Write errors to APP_ERROR table
+        #     app_error = App_Error(
+        #         app_user_id=current_user.id,
+        #         insert_datetime=datetime.now(),
+        #         error_val=str(e)
+        #     )
+        #     db.session.add(app_error)
+        #     db.session.flush()
+        #     db.session.commit()
 
 
     # Get list of user's selected breakfast meals
@@ -957,6 +957,47 @@ def _meal_dinner():
 
     return render_template('all_recipes.html')
 
+
+# Define route for manually removing BREAKFAST recipe from meal plan
+@app.route('/_remove_bfast_meal_plan', methods=['GET', 'POST'])
+@login_required
+def _remove_bfast_meal_plan():
+    recipe_id = request.form.get('recipe_id')
+
+    db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).filter_by(meal='breakfast').update(dict(active_ind=False))
+
+    db.session.flush()
+    db.session.commit()
+
+    return render_template('meal_plan.html')
+
+
+# Define route for manually removing LUNCH recipe from meal plan
+@app.route('/_remove_lunch_meal_plan', methods=['GET', 'POST'])
+@login_required
+def _remove_lunch_meal_plan():
+    recipe_id = request.form.get('recipe_id')
+
+    db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).filter_by(meal='lunch').update(dict(active_ind=False))
+
+    db.session.flush()
+    db.session.commit()
+
+    return render_template('meal_plan.html')
+
+
+# Define route for manually removing DINNER recipe from meal plan
+@app.route('/_remove_dinner_meal_plan', methods=['GET', 'POST'])
+@login_required
+def _remove_dinner_meal_plan():
+    recipe_id = request.form.get('recipe_id')
+
+    db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).filter_by(meal='dinner').update(dict(active_ind=False))
+
+    db.session.flush()
+    db.session.commit()
+
+    return render_template('meal_plan.html')
 
 
 # Define route for manually adding recipe to favorites

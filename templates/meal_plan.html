@@ -42,7 +42,7 @@ Meal Plan
         <!-- </form> -->
       </div>
 
-      <!-- Modal prompting whether to delete recipe from their meal plan -->
+      <!-- Modal prompting whether to clear their entire meal plan -->
       <div class="modal fade clear-mealplan-modal-confirm-delete" id="clear-mealplan-modal-confirm-delete" tabindex="-1"
         role="dialog" aria-labelledby="clear-mealplan-modal-confirm-delete-title" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -81,13 +81,13 @@ Meal Plan
   <div id="accordion">
 
     <!-- Card #1: Breakfast recipes -->
-    <div class="card">
+    <div class="card" id="breakfast-card">
       <div class="card-header text-center text-white bg-secondary" id="headingOne" data-toggle="collapse"
         data-target="#collapseOne">
         <h4 class="mb-0">
           Breakfast
           <!-- Badge displaying total number of recipes in this section -->
-          <span class="badge badge-light">{{ bfast_length }}</span>
+          <span class="badge badge-light" id="bfast-length">{{ bfast_length }}</span>
           <span class="sr-only">breakfast recipes</span>
         </h4>
       </div>
@@ -100,7 +100,7 @@ Meal Plan
             {% for recipe in selected_bfast_meals_list %}
 
             <!-- Recipe Name -->
-            <li>
+            <li id="bfast-li-{{ recipe.Recipe.recipe_id }}">
               <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}" class="text-decoration-none">
                 <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
                 <!-- Recipe Prep/Cook Time -->
@@ -137,21 +137,52 @@ Meal Plan
 
                   <!-- Display button so that user can delete recipe from their current meal plan -->
                   <div class="form-group col-sm">
-                    <form role="form" method='POST' id="bfast_meal_plan_form" name="bfast_meal_plan_form">
                       <input type="hidden" name="recipe_id" value="{{ recipe.Recipe.recipe_id }}" />
                       <input type="hidden" name="meal_time" value="breakfast" />
+                      <!-- Upon selecting the "Remove from Meal Plan" button, render the confirmation modal -->
                       <button type="submit" class="btn btn-danger btn-block" id="bfast_meal_plan_submit"
-                        name="bfast_meal_plan_submit"
-                        onclick="return confirm('Are you sure that you want to delete {{ recipe.Recipe.recipe_name }} from the Breakfast section of your meal plan?');">Remove
+                        name="bfast_meal_plan_submit" data-toggle="modal"
+                        data-target="#mealtime-modal-bfast-confirm-delete-{{ recipe.Recipe.recipe_id }}">Remove
                         from Meal Plan</button>
-                    </form>
                   </div>
 
                 </div>
               </div>
 
-            </li>
+              <!-- Modal prompting whether to delete recipe from their meal plan -->
+              <div class="modal mealtime-modal-bfast-confirm-delete"
+              id="mealtime-modal-bfast-confirm-delete-{{ recipe.Recipe.recipe_id }}" tabindex="-1" role="dialog"
+              aria-labelledby="mealtime-modal-bfast-confirm-delete-title" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="mealtime-modal-bfast-confirm-delete-title">Confirm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    Are you sure that you want to remove <strong>{{ recipe.Recipe.recipe_name }}</strong> from the Breakfast section of your meal plan?
+                  </div>
+                  <!-- Button to proceed with removal -->
+                  <div class="modal-footer">
+                    <button type="button" name="{{ recipe.Recipe.recipe_id }}" id="bfast-{{ recipe.Recipe.recipe_id }}" class="btn btn-danger center remove-bfast-recipe-proceed"
+                      data-dismiss="modal">
+                      Remove from Meal Plan
+                    </button>
+                    <!-- Button to cancel and close modal -->
+                    <button type="button" class="btn btn-secondary center" data-dismiss="modal">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <hr class="recipe-list-hr" />
+
+            </li>
+            
             {% endfor %}
 
           </ul>
@@ -165,13 +196,13 @@ Meal Plan
     </div>
 
     <!-- Card #2: Lunch recipes -->
-    <div class="card">
+    <div class="card" id="lunch-card">
       <div class="card-header text-center text-white bg-secondary" id="headingTwo" data-toggle="collapse"
         data-target="#collapseTwo">
         <h4 class="mb-0">
           Lunch
           <!-- Badge displaying total number of recipes in this section -->
-          <span class="badge badge-light">{{ lunch_length }}</span>
+          <span class="badge badge-light" id="lunch-length">{{ lunch_length }}</span>
           <span class="sr-only">lunch recipes</span>
         </h4>
       </div>
@@ -183,7 +214,7 @@ Meal Plan
             {% for recipe in selected_lunch_meals_list %}
 
             <!-- Recipe Name -->
-            <li>
+            <li id="lunch-li-{{ recipe.Recipe.recipe_id }}">
               <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}" class="text-decoration-none">
                 <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
                 <!-- Recipe Prep/Cook Time -->
@@ -220,21 +251,52 @@ Meal Plan
 
                   <!-- Display button so that user can delete recipe from their current meal plan -->
                   <div class="form-group col-sm">
-                    <form role="form" method='POST' id="lunch_meal_plan_form" name="lunch_meal_plan_form">
                       <input type="hidden" name="recipe_id" value="{{ recipe.Recipe.recipe_id }}" />
                       <input type="hidden" name="meal_time" value="lunch" />
                       <button type="submit" class="btn btn-danger btn-block" id="lunch_meal_plan_submit"
                         name="lunch_meal_plan_submit"
-                        onclick="return confirm('Are you sure that you want to delete {{ recipe.Recipe.recipe_name }} from the Lunch section of your meal plan?');">Remove
+                        data-toggle="modal"
+                        data-target="#mealtime-modal-lunch-confirm-delete-{{ recipe.Recipe.recipe_id }}">Remove
                         from Meal Plan</button>
-                    </form>
                   </div>
 
                 </div>
               </div>
 
-            </li>
+
+              <!-- Modal prompting whether to delete recipe from their meal plan -->
+              <div class="modal mealtime-modal-lunch-confirm-delete"
+              id="mealtime-modal-lunch-confirm-delete-{{ recipe.Recipe.recipe_id }}" tabindex="-1" role="dialog"
+              aria-labelledby="mealtime-modal-lunch-confirm-delete-title" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="mealtime-modal-lunch-confirm-delete-title">Confirm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    Are you sure that you want to remove <strong>{{ recipe.Recipe.recipe_name }}</strong> from the Lunch section of your meal plan?
+                  </div>
+                  <!-- Button to proceed with removal -->
+                  <div class="modal-footer">
+                    <button type="button" name="{{ recipe.Recipe.recipe_id }}" id="lunch-{{ recipe.Recipe.recipe_id }}" class="btn btn-danger center remove-lunch-recipe-proceed"
+                      data-dismiss="modal">
+                      Remove from Meal Plan
+                    </button>
+                    <!-- Button to cancel and close modal -->
+                    <button type="button" class="btn btn-secondary center" data-dismiss="modal">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <hr class="recipe-list-hr" />
+            </li>
+            
             {% endfor %}
 
           </ul>
@@ -248,13 +310,13 @@ Meal Plan
     </div>
 
     <!-- Card #3: Dinner recipes -->
-    <div class="card">
+    <div class="card" id="dinner-card">
       <div class="card-header text-center text-white bg-secondary" id="headingThree" data-toggle="collapse"
         data-target="#collapseThree">
         <h4 class="mb-0">
           Dinner
           <!-- Badge displaying total number of recipes in this section -->
-          <span class="badge badge-light">{{ dinner_length }}</span>
+          <span class="badge badge-light" id="dinner-length">{{ dinner_length }}</span>
           <span class="sr-only">dinner recipes</span>
         </h4>
       </div>
@@ -266,7 +328,7 @@ Meal Plan
             {% for recipe in selected_dinner_meals_list %}
 
             <!-- Recipe Name -->
-            <li>
+            <li id="dinner-li-{{ recipe.Recipe.recipe_id }}"> 
               <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}" class="text-decoration-none">
                 <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
                 <!-- Recipe Prep/Cook Time -->
@@ -303,21 +365,50 @@ Meal Plan
 
                   <!-- Display button so that user can delete recipe from their current meal plan -->
                   <div class="form-group col-sm">
-                    <form role="form" method='POST' id="dinner_meal_plan_form" name="dinner_meal_plan_form">
                       <input type="hidden" name="recipe_id" value="{{ recipe.Recipe.recipe_id }}" />
                       <input type="hidden" name="meal_time" value="dinner" />
                       <button type="submit" class="btn btn-danger btn-block" id="dinner_meal_plan_submit"
-                        name="dinner_meal_plan_submit"
-                        onclick="return confirm('Are you sure that you want to delete {{ recipe.Recipe.recipe_name }} from the Dinner section of your meal plan?');">Remove
+                        name="dinner_meal_plan_submit" data-toggle="modal"
+                        data-target="#mealtime-modal-dinner-confirm-delete-{{ recipe.Recipe.recipe_id }}">Remove
                         from Meal Plan</button>
-                    </form>
                   </div>
 
                 </div>
               </div>
 
-            </li>
+              <!-- Modal prompting whether to delete recipe from their meal plan -->
+              <div class="modal mealtime-modal-dinner-confirm-delete"
+              id="mealtime-modal-dinner-confirm-delete-{{ recipe.Recipe.recipe_id }}" tabindex="-1" role="dialog"
+              aria-labelledby="mealtime-modal-dinner-confirm-delete-title" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="mealtime-modal-dinner-confirm-delete-title">Confirm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    Are you sure that you want to remove <strong>{{ recipe.Recipe.recipe_name }}</strong> from the Dinner section of your meal plan?
+                  </div>
+                  <!-- Button to proceed with removal -->
+                  <div class="modal-footer">
+                    <button type="button" name="{{ recipe.Recipe.recipe_id }}" id="dinner-{{ recipe.Recipe.recipe_id }}" class="btn btn-danger center remove-dinner-recipe-proceed"
+                      data-dismiss="modal">
+                      Remove from Meal Plan
+                    </button>
+                    <!-- Button to cancel and close modal -->
+                    <button type="button" class="btn btn-secondary center" data-dismiss="modal">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <hr class="recipe-list-hr" />
+            </li>
+            
             {% endfor %}
 
           </ul>
@@ -341,5 +432,5 @@ Meal Plan
 
 
 {% block footer %}
-<script type="text/javascript" src="{{ url_for('static', filename='meal_plan.js') }}?v=1.01"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='meal_plan.js') }}?v=1.02"></script>
 {% endblock %}
