@@ -56,12 +56,20 @@ $(document).ready(function(){
     })
 
     // Show or hide table column for trash can icon
-    $('#hide-del').click(function () {
+    $('#edit-button').click(function () {
         var $this = $(this);
-        if (this.checked) {
-            $(".trash-column").removeClass("d-none")
-        } else {
-            $(".trash-column").addClass("d-none")
+        if ($this.hasClass("edit-inactive")) {
+            $(this).addClass("edit-active");
+            $(this).removeClass("edit-inactive");
+            document.getElementById("edit-button").innerText="Exit Edit Mode";
+            $(".trash-column").removeClass("d-none");
+        }
+
+        else {
+            $(this).addClass("edit-inactive");
+            $(this).removeClass("edit-active");
+            document.getElementById("edit-button").innerText="Enter Edit Mode";
+            $(".trash-column").addClass("d-none");
         }
     });
 
