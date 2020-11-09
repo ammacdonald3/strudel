@@ -41,21 +41,21 @@ Meal Selector
                 <div class="form-group col-sm">
                     <label for="num_bfast_meals">Number of Breakfast Meals</label>
                     <input type="number" name="num_bfast_meals" max="7" class="form-control" id="num_bfast_meals"
-                        placeholder="Enter number of meals needed" autofocus required>
+                        placeholder="Enter number of meals needed" autofocus>
                 </div>
 
                 <!-- Input for number of lunch meals needed -->
                 <div class="form-group col-sm">
                     <label for="num_lunch_meals">Number of Lunch Meals</label>
                     <input type="number" name="num_lunch_meals" max="7" class="form-control" id="num_lunch_meals"
-                        placeholder="Enter number of meals needed" autofocus required>
+                        placeholder="Enter number of meals needed" autofocus>
                 </div>
 
                 <!-- Input for number of dinner meals needed -->
                 <div class="form-group col-sm">
                     <label for="num_dinner_meals">Number of Dinner Meals</label>
                     <input type="number" name="num_dinner_meals" max="7" class="form-control" id="num_dinner_meals"
-                        placeholder="Enter number of meals needed" autofocus required>
+                        placeholder="Enter number of meals needed" autofocus>
                 </div>
 
             </div>
@@ -65,9 +65,40 @@ Meal Selector
             <br>
 
 
-            <button type="submit" class="btn btn-primary btn-block"
-                onclick="return confirm('Generating a new meal plan will delete your existing plan. Are you sure that you want to continue?');">Generate
-                Recipes</button>
+            <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#mealtime-modal-new-plan">
+                Generate Recipes
+            </button>
+
+
+            <!-- Modal prompting whether to proceed with generating a new meal plan -->
+            <div class="modal fade mealtime-modal-new-plan"
+            id="mealtime-modal-new-plan" tabindex="-1" role="dialog"
+            aria-labelledby="mealtime-modal-new-plan-title" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="mealtime-modal-new-plan-title">Confirm</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                        Generating a new meal plan will delete your existing plan. Are you sure that you want to continue?
+                </div>
+                <!-- Button to proceed with removal -->
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary center">
+                    Generate Meal Plan
+                  </button>
+                  <!-- Button to cancel and close modal -->
+                  <button type="button" class="btn btn-secondary center" data-dismiss="modal">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </form>
     </div>
 </div>
@@ -81,5 +112,5 @@ Meal Selector
 
 
 {% block footer %}
-<script type="text/javascript" src="{{ url_for('static', filename='ingredients.js') }}"></script>
+<!-- <script type="text/javascript" src="{{ url_for('static', filename='ingredients.js') }}"></script> -->
 {% endblock %}

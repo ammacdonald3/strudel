@@ -121,9 +121,21 @@ def meal_selector():
             db.session.commit()
 
             # Retrieve number of days of meals to generate per user input form
-            num_bfast_meals = int(request.form['num_bfast_meals'])
-            num_lunch_meals = int(request.form['num_lunch_meals'])
-            num_dinner_meals = int(request.form['num_dinner_meals'])
+            try:
+                num_bfast_meals = int(request.form['num_bfast_meals'])
+            except:
+                num_bfast_meals = 0
+
+            try:
+                num_lunch_meals = int(request.form['num_lunch_meals'])
+            except:
+                num_lunch_meals = 0
+
+            try:
+                num_dinner_meals = int(request.form['num_dinner_meals'])
+            except:
+                num_dinner_meals = 0
+
 
             # If user wants to generate plan from Favorite recipes
             if request.form['recipe_source'] == 'fav':
