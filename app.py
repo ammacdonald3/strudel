@@ -1476,7 +1476,9 @@ def auto_import():
     output = []
     # If user inputs URL, scrape website for recipe data and write to DB:
     if request.method == "POST":
+
         try:
+            
             # HTML form only passes checked inputs
             # Below code calculates boolean value if the input exists
             if 'diet_vegan' in request.form:
@@ -1514,7 +1516,7 @@ def auto_import():
             try:
                 url_input = request.form['recipe_url']
                 auto_import_clean_url = clean(url_input)
-                scraper = scrape_me(url_input)
+                scraper = scrape_me(url_input, wild_mode=True)
                 yields = scraper.yields()
             except Exception as e:
                 output.append("Recipe didn't scrape")
@@ -1639,6 +1641,12 @@ def auto_import():
                     db.session.flush()
                     db.session.commit()
 
+                    # BELOW LINES USED FOR TROUBLESHOOTING IMPORT ISSUES
+                    # error = 'This website is not supported at this time. Please manually add this recipe, and use the Auto Import function for one of the supported websites below.'
+
+                    # return render_template("auto_import.html", error=error)
+
+
             # Insert data to FAVORITE_RECIPE table
             try:
                 if request.form['mark_fav'] == 'fav':
@@ -1668,8 +1676,10 @@ def auto_import():
                 db.session.flush()
                 db.session.commit()
 
+
             # Render recipe_confirm.html template after recipe is written to DB
             return(render_template('recipe_confirm.html', recipe_id=recipe.recipe_id, recipe_name=scraper.title(), output=output))
+
             
         except Exception as e:
             error = 'This website is not supported at this time. Please manually add this recipe, and use the Auto Import function for one of the supported websites below.'
