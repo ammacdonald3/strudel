@@ -1851,10 +1851,10 @@ def recipe_detail(recipe_id):
     favorite = db.session.query(Favorite_Recipe).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).first()
 
     # Get ingredient list for recipe
-    ingredient_list = Ingredient.query.filter_by(recipe_id=recipe_id)
+    ingredient_list = Ingredient.query.filter_by(recipe_id=recipe_id).order_by(Ingredient.ingredient_id)
 
     # Get step list for recipe
-    step_list = Recipe_Step.query.filter_by(recipe_id=recipe_id)
+    step_list = Recipe_Step.query.filter_by(recipe_id=recipe_id).order_by(Recipe_Step.step_order)
 
     output = []
     if request.method == "POST":
