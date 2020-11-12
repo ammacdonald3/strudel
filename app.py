@@ -22,7 +22,7 @@ app.config['SQLALCHEMY_DATABASE_URL'] = ['DATABASE_URL']
 
 # Below config for image uploads
 app.config['MAX_CONTENT_LENGTH'] = 2048 * 2048
-app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.webp']
+app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.webp', '.jpeg']
 app.config['UPLOAD_PATH'] = 'uploads'
 BUCKET = os.environ.get('S3_BUCKET')
 
@@ -84,7 +84,7 @@ def validate_image(stream):
     format = imghdr.what(None, header)
     if not format:
         return None
-    return '.' + (format if format != 'jpeg' else 'jpg')
+    return '.' + (format)
 
 
 # Define error handler route for 413
@@ -407,46 +407,6 @@ def meal_selector():
 @app.route('/meal_plan', methods=['GET', 'POST'])
 @login_required
 def meal_plan():
-    # if request.method == "POST":
-    #     error = ""
-    #     output = []
-    #     try:
-            # User selects button to remove all meals from their current meal plan
-            # if "clear_meal_plan_submit" in request.form:
-
-            #     db.session.query(Current_Meal).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).update(dict(active_ind=False))
-
-            #     db.session.flush()
-            #     db.session.commit()
-                
-
-            # User selects button to remove respective meal from their current meal plan
-        #     if ("bfast_meal_plan_submit" in request.form) or ("lunch_meal_plan_submit" in request.form) or ("dinner_meal_plan_submit" in request.form):
-
-        #         recipe_id = request.form['recipe_id']
-        #         meal_time = request.form['meal_time']
-
-        #         db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(meal=meal_time).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).update(dict(active_ind=False))
-
-        #         db.session.flush()
-        #         db.session.commit()
-
-        # except Exception as e:
-        #     db.session.rollback()
-        #     output.append("Application encountered an error, and the recipe didn't write to the database. Better luck in the future!")
-        #     output.append(str(e))
-        #     print(output)
-
-        #     # Write errors to APP_ERROR table
-        #     app_error = App_Error(
-        #         app_user_id=current_user.id,
-        #         insert_datetime=datetime.now(),
-        #         error_val=str(e)
-        #     )
-        #     db.session.add(app_error)
-        #     db.session.flush()
-        #     db.session.commit()
-
 
     # Get list of user's selected breakfast meals
     selected_bfast_meals_list = (db.session.query(Recipe, Current_Meal).join(Current_Meal, Recipe.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.app_user_id==current_user.id).filter(Current_Meal.active_ind==True).filter(Current_Meal.meal=='breakfast').order_by(Current_Meal.day_number)).all()
