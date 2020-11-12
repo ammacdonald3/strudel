@@ -84,7 +84,7 @@ def validate_image(stream):
     format = imghdr.what(None, header)
     if not format:
         return None
-    return '.' + (format)
+    return '.' + (format if format != 'jpeg' else 'jpg')
 
 
 # Define error handler route for 413
@@ -1215,7 +1215,12 @@ def upload_image(recipe_id):
             uploaded_file = request.files['file']
             filename_sec = secure_filename(uploaded_file.filename)
             if filename_sec != '':
-                file_ext = os.path.splitext(filename_sec)[1]
+                file_ext_base = os.path.splitext(filename_sec)[1]
+                if file_ext_base == '.jpeg':
+                    file_ext = '.jpg'
+                else:
+                    file_ext = file_ext_base
+
                 if file_ext in app.config['UPLOAD_EXTENSIONS'] and \
                         file_ext == validate_image(uploaded_file.stream):
                         # Generate unique file name
@@ -1227,6 +1232,8 @@ def upload_image(recipe_id):
 
                         db.session.flush()
                         db.session.commit()
+                else:
+                    print("WHAT THE F")
 
             else:
                 error = "Invalid image upload. Images must be a maximum size of 1024x1024 and one of the following types: .JPG or .PNG"
