@@ -1,5 +1,8 @@
 # Strudel
 
+Please visit the functioning app!
+
+### [Strudel Recipes](https://www.strudelrecipes.com)
 
 Strudel is a recipe tracker, built with some helpful features:
 * Automatically import recipes from external websites.
