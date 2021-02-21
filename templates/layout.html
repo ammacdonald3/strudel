@@ -63,10 +63,19 @@
           </div>
         </li>
 
-
-        <li class="nav-item {% block nav_recipes %}{% endblock %}">
-          <a class="nav-link" href="{{ url_for('all_recipes') }}">View All Recipes</a>
+        <!-- View Recipes menu-->
+        <li class="nav-item {% block nav_view_menu %}{% endblock %} dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            View Recipes
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item {% block nav_search %}{% endblock %}" href="{{ url_for('search') }}">Search</a>
+            <a class="dropdown-item {% block nav_recipes %}{% endblock %}" href="{{ url_for('all_recipes') }}">View All Recipes</a>
+          </div>
         </li>
+
+
 
         <li class="nav-item {% block nav_meal_selector %}{% endblock %}">
           <a class="nav-link" href="{{ url_for('meal_selector') }}">Meal Selector</a>

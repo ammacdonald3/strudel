@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 from recipe_scrapers import scrape_me
 from datetime import datetime
 from uuid import uuid4
+from sqlalchemy import or_, func
 import re
 import random
 import sys
@@ -1837,6 +1838,61 @@ def all_recipes():
 
     # Render the all_recipes.html template (main page for this route)
     return render_template("all_recipes.html", favorite_recipe_list=favorite_recipe_list, your_recipe_list=your_recipe_list, editor_recipe_list=editor_recipe_list, other_recipe_list=other_recipe_list, fav_exists=fav_exists, your_exists=your_exists, editor_exists=editor_exists, other_exists=other_exists, fav_length=fav_length, your_length=your_length, editor_length=editor_length, other_length=other_length)
+
+
+# Define route for recipe search
+@app.route('/search', methods=['GET', 'POST'])
+@login_required
+def search():
+
+    if request.method == "POST":
+
+        search_terms = request.form['search_terms']
+
+        # Split the search terms into individual list items
+        split_search_terms = search_terms.split()
+
+        # Query database for search terms. Only query for the first 5 words.
+        new_split_search_terms = []
+        for word in split_search_terms:
+            search_word = "%" + word.lower() + "%"
+            new_split_search_terms.append(search_word)
+
+        # Ensure that list of words length is >= 5 so that queries execute successfully
+        missing_items = 5 - len(new_split_search_terms)
+        if missing_items > 0:
+            for x in range(5):
+                new_split_search_terms.append('abcxyz')
+
+            
+        print("SEARCH TERMS")
+        print(new_split_search_terms)
+
+
+        # search_results = db.session.query(Recipe).filter(or_(Recipe.recipe_name.like(new_split_search_terms[0]), Recipe.recipe_name.like(new_split_search_terms[1]), Recipe.recipe_name.like(new_split_search_terms[2]), Recipe.recipe_name.like(new_split_search_terms[3]), Recipe.recipe_name.like(new_split_search_terms[4])))
+
+        search_results = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.app_user_id, Current_Meal.active_ind) \
+        .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None), isouter=True) \
+        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None), isouter=True) \
+        .filter(Recipe.recipe_deleted==None)) \
+        .filter(or_(func.lower(Recipe.recipe_name).like(new_split_search_terms[0]), func.lower(Recipe.recipe_name).like(new_split_search_terms[1]), func.lower(Recipe.recipe_name).like(new_split_search_terms[2]), func.lower(Recipe.recipe_name).like(new_split_search_terms[3]), func.lower(Recipe.recipe_name).like(new_split_search_terms[4]))) \
+        .order_by(Recipe.recipe_name) \
+        .all()
+
+        search_results_length = len(search_results)
+
+        if search_results_length != 0:
+            search_results_exist = True
+        else:
+            search_results_exist = False 
+
+        print("SEARCH RESULTS")
+        print(search_results)
+
+        return render_template('search.html', search_results=search_results, search_results_exist=search_results_exist, search_results_length=search_results_length, search_terms=search_terms)
+
+    else:
+        return render_template('search.html')
 
 
 # Define route for page to view detailed info about one recipe
