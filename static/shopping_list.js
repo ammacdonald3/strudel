@@ -7,7 +7,7 @@ $(document).ready(function(){
 
 
     // Strikethrough and fade shopping list items when checked
-    $("input:checkbox").click(function () {
+    $(".container").on("click", ".big-checkbox", function() {
         var $this = $(this);
         var $this_parent = $this.parent()
         var row = $this.closest('tr')
@@ -82,4 +82,13 @@ $(document).ready(function(){
             $(".recipe-column").removeClass("d-none")
         }
     });
+
+    // Reload shopping list items to account for changes made by an alternate user
+    $(function() {
+        setInterval(function() {
+            $('#shopping-table').load(document.URL +  ' #shopping-table');
+        }, 5000);
+    });
+
+
 });

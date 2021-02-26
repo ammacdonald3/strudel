@@ -36,5 +36,16 @@
 11. Update Heroku database
     * ``` heroku run python manage.py db upgrade --app recipe-stage ```
     * ``` heroku run python manage.py db upgrade --app recipe-prod ```
+12. After each update
+    * Commit changes in local git
+    * Push committed changes to remote STAGE git branch
+    * Check out MASTER branch
+        * ``` git checkout master ```
+    * Merge changes from STAGE branch into MASTER
+        * ``` git merge stage ```
+    * Push changes to remote MASTER
+        * ``` git push origin master ```
+    * Check out STAGE again for future development
+        * ``` git checkout stage ```
 
 
