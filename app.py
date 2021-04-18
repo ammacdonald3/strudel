@@ -1903,14 +1903,30 @@ def recipe_detail(recipe_id):
     # Get recipe details
     recipe = db.session.query(Recipe).filter_by(recipe_id=recipe_id).join(App_User).first()
 
+    # Identify if recipe is on curent meal plan
+    current = db.session.query(Current_Meal) \
+        .filter_by(recipe_id=recipe_id) \
+        .filter_by(app_user_id=current_user.id) \
+        .first()
+
+
     # Determine if recipe is one of the user's favorite recipes
-    favorite = db.session.query(Favorite_Recipe).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).first()
+    favorite = db.session.query(Favorite_Recipe) \
+        .filter_by(recipe_id=recipe_id) \
+        .filter_by(app_user_id=current_user.id) \
+        .first()
 
     # Get ingredient list for recipe
-    ingredient_list = Ingredient.query.filter_by(recipe_id=recipe_id).order_by(Ingredient.ingredient_id)
+    ingredient_list = Ingredient \
+        .query \
+        .filter_by(recipe_id=recipe_id) \
+        .order_by(Ingredient.ingredient_id)
 
     # Get step list for recipe
-    step_list = Recipe_Step.query.filter_by(recipe_id=recipe_id).order_by(Recipe_Step.step_order)
+    step_list = Recipe_Step \
+        .query \
+        .filter_by(recipe_id=recipe_id) \
+        .order_by(Recipe_Step.step_order)
 
     output = []
     if request.method == "POST":
@@ -2078,7 +2094,7 @@ def recipe_detail(recipe_id):
         owner_ind = False
 
     # Render the recipe_detail.html template (main page for this route)
-    return render_template('recipe_detail.html', recipe=recipe, ingredient_list=ingredient_list, step_list=step_list, favorite=favorite, owner_ind=owner_ind)
+    return render_template('recipe_detail.html', recipe=recipe, current=current, ingredient_list=ingredient_list, step_list=step_list, favorite=favorite, owner_ind=owner_ind)
     
     
 
