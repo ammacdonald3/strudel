@@ -1675,20 +1675,78 @@ def auto_import():
 @app.route('/all_recipes', methods=['GET', 'POST'])
 @login_required
 def all_recipes():
-    # All recipes list (created both by you and others)
-    all_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.app_user_id, Current_Meal.active_ind) \
-        .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==current_user.id), isouter=True) \
+    # Your favorite recipes (created both by you and others)
+    favorite_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.app_user_id, Current_Meal.active_ind) \
+        .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==current_user.id)) \
         .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None), isouter=True) \
+        # .filter(Favorite_Recipe.app_user_id==current_user.id) \
+        # .filter((Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None)) \
         .filter(Recipe.recipe_deleted==None)) \
         .order_by(Recipe.recipe_name) \
         .all()
 
-    recipe_list_length = len(all_recipe_list)
+    fav_length = len(favorite_recipe_list)
 
-    if recipe_list_length != 0:
-        recipe_list_exists = True
+    if fav_length != 0:
+        fav_exists = True
     else:
-        recipe_list_exists = False 
+        fav_exists = False 
+
+
+    # Recipes created by you
+    your_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.app_user_id, Current_Meal.active_ind) \
+        .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None), isouter=True) \
+        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None), isouter=True) \
+        .filter(Recipe.created_by==current_user.id) \
+        # .filter((Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None)) \
+        # .filter((Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None)) \
+        .filter(Recipe.recipe_deleted==None)) \
+        .order_by(Recipe.recipe_name) \
+        .all()
+
+    your_length = len(your_recipe_list)
+
+    if your_length != 0:
+        your_exists = True
+    else:
+        your_exists = False 
+
+    
+    # Editor's Picks recipes (recipes favorited by Admin)
+    editor_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.app_user_id, Current_Meal.active_ind) \
+        .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==1)) \
+        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None), isouter=True) \
+        # .filter(Favorite_Recipe.app_user_id==1) \
+        # .filter((Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None)) \
+        .filter(Recipe.recipe_deleted==None)) \
+        .order_by(Recipe.recipe_name) \
+        .all()
+
+    editor_length = len(editor_recipe_list)
+
+    if editor_length != 0:
+        editor_exists = True
+    else:
+        editor_exists = False 
+
+
+    # Recipes created by others
+    other_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.app_user_id, Current_Meal.active_ind) \
+        .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None), isouter=True) \
+        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None), isouter=True) \
+        .filter(Recipe.created_by!=current_user.id) \
+        # .filter((Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None)) \
+        # .filter((Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None)) \
+        .filter(Recipe.recipe_deleted==None)) \
+        .order_by(Recipe.recipe_name) \
+        .all()
+    
+    other_length = len(other_recipe_list)
+
+    if other_length != 0:
+        other_exists = True
+    else:
+        other_exists = False 
 
 
     if request.method == "POST":
@@ -1779,7 +1837,7 @@ def all_recipes():
 
 
     # Render the all_recipes.html template (main page for this route)
-    return render_template("all_recipes.html", all_recipe_list=all_recipe_list, recipe_list_exists=recipe_list_exists, recipe_list_length=recipe_list_length)
+    return render_template("all_recipes.html", favorite_recipe_list=favorite_recipe_list, your_recipe_list=your_recipe_list, editor_recipe_list=editor_recipe_list, other_recipe_list=other_recipe_list, fav_exists=fav_exists, your_exists=your_exists, editor_exists=editor_exists, other_exists=other_exists, fav_length=fav_length, your_length=your_length, editor_length=editor_length, other_length=other_length)
 
 
 # Define route for recipe search
