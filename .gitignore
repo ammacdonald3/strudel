@@ -110,3 +110,11 @@ venv.bak/
 /.vscode
 /vscode
 .vscode/settings.json
+
+# virtual environments
+*venv
+
+
+# working files
+*extra
+*extra-2

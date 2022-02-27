@@ -14,26 +14,10 @@ import imghdr
 import json
 import boto3
 
+from app import app, db
 
 
-app = Flask(__name__)
-app.config.from_object(os.environ['APP_SETTINGS'])
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.config['SQLALCHEMY_DATABASE_URL'] = ['DATABASE_URL']
-
-# Below config for image uploads
-app.config['MAX_CONTENT_LENGTH'] = 2048 * 2048
-app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.webp', '.jpeg']
-app.config['UPLOAD_PATH'] = 'uploads'
-BUCKET = os.environ.get('S3_BUCKET')
-
-
-login = LoginManager(app)
-login.login_view = 'login'
-db = flask_sqlalchemy.SQLAlchemy(app)
-
-
-from models import Recipe, Ingredient, Recipe_Step, App_User, LoginForm, RegistrationForm, Current_Meal, User_Recipe, Favorite_Recipe, Shopping_List, App_Error
+from app.models import Recipe, Ingredient, Recipe_Step, App_User, LoginForm, RegistrationForm, Current_Meal, User_Recipe, Favorite_Recipe, Shopping_List, App_Error
 
 
 # Function to upload a file to an S3 bucket
@@ -2107,5 +2091,7 @@ def register():
     return render_template('register.html', title='Register', form=form)
 
 
-if __name__ == '__main__':
-    app.run()
+# if __name__ == '__main__':
+#     app.run()
+
+#app.run()

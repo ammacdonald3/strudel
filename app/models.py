@@ -5,9 +5,7 @@ from flask_login import UserMixin
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
-from app import login
-from app import db
-
+from app import db, login
 
 class App_User(UserMixin, db.Model):
     __tablename__ = 'app_user'

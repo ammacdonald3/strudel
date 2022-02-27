@@ -18,11 +18,11 @@
     * ```\q```
 7. Set environment variables
     * MAC OS
-        * ```export FLASK_APP="app.py"```
+        * ```export FLASK_APP="strudel.py"```
         * ```export APP_SETTINGS="config.DevelopmentConfig"```
         * ```export DATABASE_URL="postgresql:///recipe-dev"```
     * WINDOWS
-        * ```$env:FLASK_APP="app.py"```
+        * ```$env:FLASK_APP="strudel.py"```
         * ```$env:APP_SETTINGS="config.DevelopmentConfig"```
         * ```$env:DATABASE_URL="postgresql:///recipe-dev"```
 8. Navigate to root directory of project
