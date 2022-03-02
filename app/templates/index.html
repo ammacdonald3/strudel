@@ -14,12 +14,14 @@
                     <h3>An App to Store and Select Recipes</h3>
                     <hr>
                     {% if current_user.is_anonymous %}
-                    <a class="nav-link" href="{{ url_for('login') }}">
-                    <button class="btn btn-light btn-lg">
-                        <i class="fas fa-thumbs-up"></i> 
-                        Get Started
-                    </button>
-                    </a>
+                    <div class="btn-group-lg">
+                        <a class="btn btn-primary btn-index" href="{{ url_for('register') }}">
+                            Register
+                        </a>
+                        <a class="btn btn-success btn-index" href="{{ url_for('login') }}">
+                            Login
+                        </a>
+                    </div>
                     {% endif %}
                 </div>
             </div>
