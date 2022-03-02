@@ -28,7 +28,11 @@ Sign In
         <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
         <p>{{ form.submit(class="btn btn-primary") }}</p>
     </form>
-    <h5>New User? <a href="{{ url_for('register') }}">Click to Register!</a></h5>
+    <h5>
+        Forgot Your Password?
+        <a href="{{ url_for('reset_password_request') }}"><span class="dark-link">Click Here to reset</span></a>
+    </h5>
+    <h5>New User? <a href="{{ url_for('register') }}"><span class="dark-link">Click Here to register!</span></a></h5>
 
 </div>
 {% endblock %}
