@@ -34,6 +34,10 @@
   <!-- include PWACompat _after_ your manifest -->
   <script async src="https://unpkg.com/pwacompat" crossorigin="anonymous"></script>
 
+  <!-- Custom Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Lato&display=swap" rel="stylesheet">
 
 </head>
 
@@ -96,11 +100,11 @@
       </ul>
       <form class="form-inline">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active d-none d-lg-block">
+          <!-- <li class="nav-item active d-none d-lg-block">
             {% if current_user.is_active %}
             <a class="nav-link" href="#">Welcome, {{ current_user.first_name }}!</a>
             {% endif %}
-          </li>
+          </li> -->
           <li class="nav-item active">
             {% if current_user.is_anonymous %}
             <a class="nav-link" href="{{ url_for('login') }}">Login</a>
@@ -112,9 +116,7 @@
       </form>
     </div>
   </nav>
-<br>
-<br>
-<br>
+
   <div class="container" id="title">
     <h2>{% block heading %}{% endblock %}</h2>
   </div>

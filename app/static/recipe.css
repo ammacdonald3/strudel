@@ -166,9 +166,10 @@ hr {
 	border-bottom: 1px solid rgba(0,0,0,0.2);
 }
 
-#title {
-	margin-top: 1rem;
-	margin-bottom: 1rem;
+body {
+	padding-top: 100px;
+	padding-bottom: 40px;
+	font-family: Lato
 }
 
 
@@ -310,4 +311,36 @@ dt {
 	width: 30%;
 	margin-left: 5px;
 	margin-right: 5px;
+}
+
+
+/* @media (max-width: 479px) { */
+@media (max-width: 500px) {
+	.fixed-top {
+		position: fixed;
+		top: unset;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 1030;
+		}
+	.navbar {
+		border-top:2px solid #f0f0f0;
+		border-bottom:unset;
+	}
+	.dropdown-item {
+		text-align: right;
+	}
+	.navbar-collapse {
+		text-align: right;
+	}
+	body {
+		padding-bottom: 130px;
+		padding-top: 30px;
+	}
+}
+
+.navbar-brand {
+	font-family: "Architects Daughter", sans-serif;
+	font-size: 25px;
 }
