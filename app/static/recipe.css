@@ -13,10 +13,6 @@
 	cursor: pointer;
 }
 
-/* body {
-	padding-top: 20px;
-} */
-
 .click span {
 	margin-left: 4px;
 	margin-top: 3px;
@@ -133,10 +129,6 @@ button {
 }
 
 #index {
-	/* background-image: url("title_image.jpg");
-	background-size: cover;
-	font-family: 'Lato', sans-serif;
-	color: white; */
 	background:
 		linear-gradient(
 		rgba(0, 0, 0, 0.5), 
@@ -150,8 +142,7 @@ button {
 
 #content {
 	text-align: center;
-	padding-top: 25%;
-	/* text-shadow: 2px 2px black; */
+	padding-top: 15%;
 }
 
 h1 {
@@ -192,7 +183,6 @@ dt {
 }
 
 .vertical-center {
-	/* vertical-align: center; */
 	display : flex;
 	align-items : center;
 	justify-content: center;
@@ -237,7 +227,6 @@ dt {
 
 .image-container {
   width: 90%;
-  /* max-height: 100px; */
 }
 
 .image-container img {
@@ -317,7 +306,6 @@ dt {
 	font-size: 25px;
 }
 
-/* @media (max-width: 479px) { */
 @media (max-width: 500px) {
 	.fixed-top {
 		position: fixed;
@@ -342,14 +330,8 @@ dt {
 		padding-top: 30px;
 	}
 	.navbar-brand {
-		font-size: 35px;
+		font-size: 40px;
 	}
-	/* .dropdown-menu {
-		max-width: 100px;
-	  } */
 }
 
-.title-name {
-	font-family: "Architects Daughter", sans-serif;
-}
 
