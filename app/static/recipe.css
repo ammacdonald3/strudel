@@ -333,14 +333,19 @@ dt {
 		font-size: 25px;
 	}
 	.navbar-true {
-		margin-bottom: 30px;
 		border-top:2px solid #f0f0f0;
 		border-bottom:unset;
 	}
-	.navbar-false {
-		display: block;
-		height: 30px;
-	}
 }
 
+
+@media (max-width: 500px) and (display-mode: standalone) {
+	.navbar-false {
+		display: block;
+		height: 40px;
+	}
+	.navbar-true {
+		margin-bottom: 40px;
+	}
+}
 
