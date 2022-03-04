@@ -313,6 +313,9 @@ dt {
 	margin-right: 5px;
 }
 
+.navbar-brand {
+	font-size: 25px;
+}
 
 /* @media (max-width: 479px) { */
 @media (max-width: 500px) {
@@ -338,9 +341,15 @@ dt {
 		padding-bottom: 130px;
 		padding-top: 30px;
 	}
+	.navbar-brand {
+		font-size: 35px;
+	}
+	/* .dropdown-menu {
+		max-width: 100px;
+	  } */
 }
 
-.navbar-brand {
+.title-name {
 	font-family: "Architects Daughter", sans-serif;
-	font-size: 25px;
 }
+
