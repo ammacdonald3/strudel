@@ -120,7 +120,7 @@ html {
 	max-width: 1000px;
 }
 
-.navbar {
+.navbar-true {
 	border-bottom:2px solid #f0f0f0;
 }
 
@@ -306,6 +306,10 @@ dt {
 	font-size: 25px;
 }
 
+.navbar-false {
+	display:none;
+}
+
 @media (max-width: 500px) {
 	.fixed-top {
 		position: fixed;
@@ -315,10 +319,6 @@ dt {
 		left: 0;
 		z-index: 1030;
 		}
-	.navbar {
-		border-top:2px solid #f0f0f0;
-		border-bottom:unset;
-	}
 	.dropdown-item {
 		text-align: right;
 	}
@@ -330,7 +330,16 @@ dt {
 		padding-top: 30px;
 	}
 	.navbar-brand {
-		font-size: 40px;
+		font-size: 25px;
+	}
+	.navbar-true {
+		margin-bottom: 30px;
+		border-top:2px solid #f0f0f0;
+		border-bottom:unset;
+	}
+	.navbar-false {
+		display: block;
+		height: 30px;
 	}
 }
 
