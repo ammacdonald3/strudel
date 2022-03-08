@@ -6,411 +6,897 @@ active
 active
 {% endblock %}
 
-
-{% block heading %}
-All Recipes
-{% endblock %}
-
 {% block body %}
-<br>
+<div class="container feature-page">
 
-
-<div class="container">
-
-  <p>
-    <button class="btn btn-primary btn-block" type="button" data-toggle="collapse" data-target="#filters" aria-expanded="false"
-      aria-controls="filters">
-      Filters
-    </button>
-  </p>
-  <div class="collapse" id="filters">
-    <div class="card card-body">
-
-      <div class="row">
-        
-      <!-- Breakfast / Lunch / Dinner filters -->
-      <div class="col-sm">
-      <h5>Meal Time</h5>
-      <div class="form-group form-check">
-        <input class="form-check-input big-checkbox breakfast-check" type="checkbox" value="" id="breakfast-check"
-          checked>
-        <label class="form-check-label align-middle" for="breakfast-check">
-          Breakfast
-        </label>
-        <br>
-        <input class="form-check-input big-checkbox lunch-check" type="checkbox" value="" id="lunch-check" checked>
-        <label class="form-check-label align-middle" for="lunch-check">
-          Lunch
-        </label>
-        <br>
-        <input class="form-check-input big-checkbox dinner-check" type="checkbox" value="" id="dinner-check" checked>
-        <label class="form-check-label align-middle" for="dinner-check">
-          Dinner
-        </label>
-        <br>
-        <input class="form-check-input big-checkbox meal-uncategorized-check" type="checkbox" value="" id="meal-uncategorized-check" checked>
-        <label class="form-check-label align-middle" for="meal-uncategorized-check">
-          Other
-        </label>
-      </div>
-    </div>
-
-<br>
-
-    
-      <!-- Vegan / Vegetarian / Gluten-Free Filters -->
-      <div class="col-sm">
-      <h5>Dietary Restrictions</h5>
-      <div class="form-group form-check">
-        <input class="form-check-input big-checkbox vegan-check" type="checkbox" value="" id="vegan-check" checked>
-        <label class="form-check-label align-middle" for="vegan-check">
-          Vegan
-        </label>
-        <br>
-        <input class="form-check-input big-checkbox vegetarian-check" type="checkbox" value="" id="vegetarian-check"
-          checked>
-        <label class="form-check-label align-middle" for="vegetarian-check">
-          Vegetarian
-        </label>
-        <br>
-        <input class="form-check-input big-checkbox gluten-check" type="checkbox" value="" id="gluten-check" checked>
-        <label class="form-check-label align-middle" for="gluten-check">
-          Gluten-free
-        </label>
-        <br>
-        <input class="form-check-input big-checkbox no-diet-check" type="checkbox" value="" id="no-diet-check" checked>
-        <label class="form-check-label align-middle" for="no-diet-check">
-          No Dietary Restrictions
-        </label>
-      </div>
-    </div>
-
-    
-
-      <br>
-
-      <div class="col-sm">
-      <!-- Total Cook Time Filters -->
-      <h5>Cook Time</h5>
-      <div class="form-group form-check">
-        <input class="form-check-input big-checkbox total-time-30-check" type="checkbox" value=""
-          id="total-time-30-check" checked>
-        <label class="form-check-label align-middle" for="total-time-30-check">
-          Total Cook Time - 30 Minutes or Less
-        </label>
-        <br>
-        <input class="form-check-input big-checkbox total-time-60-check" type="checkbox" value=""
-          id="total-time-60-check" checked>
-        <label class="form-check-label align-middle" for="total-time-60-check">
-          Total Cook Time - 31 to 60 Minutes
-        </label>
-        <br>
-        <input class="form-check-input big-checkbox total-time-90-check" type="checkbox" value=""
-          id="total-time-90-check" checked>
-        <label class="form-check-label align-middle" for="total-time-90-check">
-          Total Cook Time - 61 to 90 Minutes
-        </label>
-        <br>
-        <input class="form-check-input big-checkbox total-time-over-90-check" type="checkbox" value=""
-          id="total-time-over-90-check" checked>
-        <label class="form-check-label align-middle" for="total-time-over-90-check">
-          Total Cook Time - Over 90 Minutes
-        </label>
-      </div>
-      </div>
-
-      <br>
-
-      <!-- Favorite Recipe Filter -->
-      <div class="col-sm">
-        <h5>Other</h5>
-      <div class="form-group form-check">
-        <input class="form-check-input big-checkbox favorite-check" type="checkbox" value="" id="favorite-check">
-        <label class="form-check-label align-middle" for="favorite-check">
-          Favorite Recipes Only
-        </label>
-      </div>
-
-      <!-- User's Recipe Filter -->
-      <div class="form-group form-check">
-          <input class="form-check-input big-checkbox user-recipe-check" type="checkbox" value="" id="user-recipe-check">
-          <label class="form-check-label align-middle" for="user-recipe-check">
-            Your Recipes Only
-          </label>
-        </div>
-</div>
-      </div>
-
-    </div>
+  <div class="container" id="title">
+    <h2>All Recipes</h2>
   </div>
 
-  <div class="card-body">
-    <h4 class="text-center recipe-length"><span></span> Recipes Returned</h4>
-    <hr class="recipe-list-hr" />
+  <br>
 
-    {% if recipe_list_exists == True %}
+  <!-- Accordion functionality for user's recipes -->
+  <div class="container">
+    <div id="accordion">
 
-    <ul class="list-unstyled">
-      {% for recipe in all_recipe_list %}
+      <!-- Card #1: User's "Favorites" recipes -->
+      <div class="card" id="favorites-card">
+        <div class="card-header text-center text-white bg-secondary" id="headingOne" data-toggle="collapse"
+          data-target="#collapseOne">
+          <h4 class="mb-0">
+            Favorites
+            <!-- Badge displaying total number of recipes in this section -->
+            <span class="badge badge-light">{{ fav_length }}</span>
+            <span class="sr-only">favorite recipes</span>
+          </h4>
+        </div>
 
-      <!-- Recipe Name -->
-      <li class="
-          {% if recipe.Recipe.meal_breakfast == True and recipe.Recipe.meal_lunch == True and recipe.Recipe.meal_dinner == True %}
-          breakfast-lunch-dinner
-          {% elif recipe.Recipe.meal_breakfast == False and recipe.Recipe.meal_lunch == False and recipe.Recipe.meal_dinner == False %}
-          meal-uncategorized
-          {% elif recipe.Recipe.meal_breakfast == True and recipe.Recipe.meal_lunch == True %}
-          breakfast-lunch
-          {% elif recipe.Recipe.meal_lunch == True and recipe.Recipe.meal_dinner == True %}
-          lunch-dinner
-          {% elif recipe.Recipe.meal_breakfast == True and recipe.Recipe.meal_dinner == True %}
-          breakfast-dinner
-          {% elif recipe.Recipe.meal_breakfast == True %}
-          breakfast
-          {% elif recipe.Recipe.meal_lunch == True %}
-          lunch
-          {% elif recipe.Recipe.meal_dinner == True %}
-          dinner
-          {% endif %}
+        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+          <div class="card-body">
+            {% if fav_exists == True %}
 
-          {% if recipe.Recipe.diet_vegan == True and recipe.Recipe.diet_vegetarian == True and recipe.Recipe.diet_gluten == True %}
-          vegan-vegetarian-gluten
-          {% elif recipe.Recipe.diet_vegan == False and recipe.Recipe.diet_vegetarian == False and recipe.Recipe.diet_gluten == False %}
-          no-diet
-          {% elif recipe.Recipe.diet_vegan == True and recipe.Recipe.diet_vegetarian == True %}
-          vegan-vegetarian
-          {% elif recipe.Recipe.diet_vegetarian == True and recipe.Recipe.diet_gluten == True %}
-          vegetarian-gluten
-          {% elif recipe.Recipe.diet_vegan == True and recipe.Recipe.diet_gluten == True %}
-          vegan-gluten
-          {% elif recipe.Recipe.diet_vegan == True %}
-          vegan
-          {% elif recipe.Recipe.diet_vegetarian == True %}
-          vegetarian
-          {% elif recipe.Recipe.diet_gluten == True %}
-          gluten
-          {% endif %}
-        
-          {% if recipe.Recipe.recipe_total_time <= 30 %}
-          total-time-30
-          {% elif recipe.Recipe.recipe_total_time <= 60 %}
-          total-time-60
-          {% elif recipe.Recipe.recipe_total_time <= 90 %}
-          total-time-90
-          {% else %}
-          total-time-over-90
-          {% endif %}
+            <ul class="list-unstyled">
+              {% for recipe in favorite_recipe_list %}
 
-          {% if recipe.Favorite_Recipe.app_user_id == current_user.id and recipe.Favorite_Recipe.favorite_recipe_id != None %}
-          favorite
-          {% else %}
-          not-favorite
-          {% endif %}
+              <!-- Recipe Name -->
+              <li>
+                <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                  class="text-decoration-none">
+                  <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
+                  <!-- Recipe Prep/Cook Time -->
+                  <h6 class="text-center">
+                    {% if recipe.Recipe.recipe_total_time != None %}
+                    ({{ recipe.Recipe.recipe_total_time }} minutes total prep/cook time)
+                    {% endif %}
+                  </h6>
+                  <!-- Badges indicating if the recipe is for Breakfast, Lunch, and/or Dinner -->
+                  <div class="mealtime-badge d-flex justify-content-center">
+                    {% if recipe.Recipe.meal_breakfast == True %}
+                    <span class="badge badge-pill badge-success">Breakfast</span>
+                    {% endif %}
+                    {% if recipe.Recipe.meal_lunch == True %}
+                    <span class="badge badge-pill badge-success">Lunch</span>
+                    {% endif %}
+                    {% if recipe.Recipe.meal_dinner == True %}
+                    <span class="badge badge-pill badge-success">Dinner</span>
+                    {% endif %}
+                  </div>
+                  <!-- Recipe Image -->
+                  {% if recipe.Recipe.recipe_image_url != None %}
+                  <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}"
+                    class="center rounded img-fluid small-image" alt="Responsive image" />
+                  {% else %}
+                  <img id="preview" src="/static/placeholder-recipe-image.jpg"
+                    class="center rounded img-fluid small-image" alt="Responsive image" />
+                  {% endif %}
+                </a>
 
-          {% if recipe.Recipe.created_by == current_user.id %}
-          user-recipe
-          {% else %}
-          not-user-recipe
-          {% endif %} 
-          recipe-item
+                <div class="form-group">
 
-      ">
-        <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}" class="text-decoration-none">
-          <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
-          <!-- Recipe Prep/Cook Time -->
-          <h6 class="text-center">
-            {% if recipe.Recipe.recipe_total_time != None %}
-            ({{ recipe.Recipe.recipe_total_time }} minutes total prep/cook time)
-            {% endif %}
-          </h6>
-          <!-- Badges indicating if the recipe is for Breakfast, Lunch, and/or Dinner -->
-          <div class="mealtime-badge d-flex justify-content-center">
-            {% if recipe.Recipe.meal_breakfast == True %}
-            <span class="badge badge-pill badge-success">Breakfast</span>
-            {% endif %}
-            {% if recipe.Recipe.meal_lunch == True %}
-            <span class="badge badge-pill badge-success">Lunch</span>
-            {% endif %}
-            {% if recipe.Recipe.meal_dinner == True %}
-            <span class="badge badge-pill badge-success">Dinner</span>
-            {% endif %}
-          </div>
-          <!-- Recipe Image -->
-          {% if recipe.Recipe.recipe_image_url != None %}
-          <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}" class="center rounded img-fluid small-image"
-            alt="Responsive image" />
-          {% else %}
-          <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center rounded img-fluid small-image"
-            alt="Responsive image" />
-          {% endif %}
-        </a>
+                  <div class="row" style="padding-top: 20px;">
+                    <!-- Display button so that user can view recipe's page -->
+                    <div class="form-group col-sm">
+                      <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                        class="btn btn-primary btn-block">View Recipe</a>
+                    </div>
 
-        <div class="form-group">
+                    <!-- Display button so that user can view recipe's source website -->
+                    <div class="form-group col-sm">
+                      <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
+                        class="btn btn-primary btn-block">Source
+                        Website</a>
+                    </div>
 
-          <div class="row" style="padding-top: 20px;">
-            <!-- Display button so that user can view recipe's page -->
-            <div class="form-group col-sm">
-              <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
-                class="btn btn-primary btn-block">View Recipe</a>
-            </div>
-
-            <!-- Display button so that user can view recipe's source website -->
-            <div class="form-group col-sm">
-              <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank" class="btn btn-primary btn-block">Source
-                Website</a>
-            </div>
-          </div>
-          <div class="row">
-            <!-- Display button so that user can add the recipe to their current meal plan via subsequent buttons on modal -->
-            <div class="form-group col-sm">
-              <button name="{{ recipe.Recipe.recipe_id }}" id="meal-{{ recipe.Recipe.recipe_id }}" class="meal-button fav-meal-button meal-{{ recipe.Recipe.recipe_id }} btn btn-block 
+                    <!-- Display button so that user can add the recipe to their current meal plan via subsequent buttons on modal -->
+                    <div class="form-group col-sm">
+                      <button name="{{ recipe.Recipe.recipe_id }}" id="meal-{{ recipe.Recipe.recipe_id }}" class="meal-button fav-meal-button meal-{{ recipe.Recipe.recipe_id }} btn btn-block 
                               {% if recipe.app_user_id == current_user.id and recipe.active_ind == True %}
                               btn-danger" data-toggle="modal"
-                data-target="#mealtime-modal-fav-confirm-delete-{{ recipe.Recipe.recipe_id }}">Remove from Meal
-                Plan
-                {% else %}
-                btn-success" data-toggle="modal"
-                data-target="#mealtime-modal-fav-{{ recipe.Recipe.recipe_id }}">Add to Meal Plan
-                {% endif %}
-              </button>
-
-
-              <!-- Modal allowing user to add recipe to their meal plan -->
-              <div class="modal fade" id="mealtime-modal-fav-{{ recipe.Recipe.recipe_id }}" tabindex="-1" role="dialog"
-                aria-labelledby="mealtime-modal-fav-title" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="mealtime-modal-fav-title">Meal Selection</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        data-target="#mealtime-modal-fav-confirm-delete-{{ recipe.Recipe.recipe_id }}">Remove from Meal
+                        Plan
+                        {% else %}
+                        btn-success" data-toggle="modal"
+                        data-target="#mealtime-modal-fav-{{ recipe.Recipe.recipe_id }}">Add to Meal Plan
+                        {% endif %}
                       </button>
+
+
+                      <!-- Modal allowing user to add recipe to their meal plan -->
+                      <div class="modal fade" id="mealtime-modal-fav-{{ recipe.Recipe.recipe_id }}" tabindex="-1"
+                        role="dialog" aria-labelledby="mealtime-modal-fav-title" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="mealtime-modal-fav-title">Meal Selection</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <!-- Breakfast button -->
+                              <div><button name="{{ recipe.Recipe.recipe_id }}"
+                                  class="btn btn-block modal-meal-button meal-breakfast meal-breakfast-fav {% if recipe.Recipe.meal_breakfast == True %} btn-success">Add
+                                  as Breakfast
+                                  Meal (Recommended)
+                                  {% else %}
+                                  btn-secondary">Add as Breakfast Meal
+                                  {% endif %}
+                                </button>
+                              </div>
+                              <!-- Lunch button -->
+                              <div><button name="{{ recipe.Recipe.recipe_id }}"
+                                  class="btn btn-block modal-meal-button meal-lunch meal-lunch-fav {% if recipe.Recipe.meal_lunch == True %} btn-success">Add
+                                  as Lunch
+                                  Meal (Recommended)
+                                  {% else %}
+                                  btn-secondary">Add as Lunch Meal
+                                  {% endif %}
+                                </button>
+                              </div>
+                              <!-- Dinner button -->
+                              <div><button name="{{ recipe.Recipe.recipe_id }}"
+                                  class="btn btn-block modal-meal-button meal-dinner meal-dinner-fav {% if recipe.Recipe.meal_dinner == True %} btn-success">Add
+                                  as Dinner
+                                  Meal (Recommended)
+                                  {% else %}
+                                  btn-secondary">Add as Dinner Meal
+                                  {% endif %}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Modal confirming to the user that the recipe was added to their meal plan -->
+                      <div class="modal fade mealtime-modal-fav-success"
+                        id="mealtime-modal-fav-success-{{ recipe.Recipe.recipe_id }}" tabindex="-1" role="dialog"
+                        aria-labelledby="mealtime-modal-fav-success-title" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="mealtime-modal-fav-success-title">Success</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <strong>{{ recipe.Recipe.recipe_name }}</strong> was added to your meal plan!
+                            </div>
+                            <div class="modal-footer">
+                              <a href="{{ url_for('meal_plan') }}" class="btn btn-primary center">Go to Meal Plan</a>
+                              <button type="button" class="btn btn-secondary center" data-dismiss="modal">
+                                Close
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <!-- Modal prompting whether to delete recipe from their meal plan -->
+                      <div class="modal fade mealtime-modal-fav-confirm-delete"
+                        id="mealtime-modal-fav-confirm-delete-{{ recipe.Recipe.recipe_id }}" tabindex="-1" role="dialog"
+                        aria-labelledby="mealtime-modal-fav-confirm-delete-title" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="mealtime-modal-fav-confirm-delete-title">Confirm</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              Are you sure that you want to remove <strong>{{ recipe.Recipe.recipe_name }}</strong> from
+                              your meal plan?
+                            </div>
+                            <!-- Button to proceed with removal -->
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-danger center meal-button-proceed"
+                                data-dismiss="modal">
+                                Remove from Meal Plan
+                              </button>
+                              <!-- Button to cancel and close modal -->
+                              <button type="button" class="btn btn-secondary center" data-dismiss="modal">
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
                     </div>
-                    <div class="modal-body">
-                      <!-- Breakfast button -->
-                      <div><button name="{{ recipe.Recipe.recipe_id }}"
-                          class="btn btn-block modal-meal-button meal-breakfast meal-breakfast-fav {% if recipe.Recipe.meal_breakfast == True %} btn-success">Add
-                          as Breakfast
-                          Meal (Recommended)
-                          {% else %}
-                          btn-secondary">Add as Breakfast Meal
-                          {% endif %}
-                        </button>
-                      </div>
-                      <!-- Lunch button -->
-                      <div><button name="{{ recipe.Recipe.recipe_id }}"
-                          class="btn btn-block modal-meal-button meal-lunch meal-lunch-fav {% if recipe.Recipe.meal_lunch == True %} btn-success">Add
-                          as Lunch
-                          Meal (Recommended)
-                          {% else %}
-                          btn-secondary">Add as Lunch Meal
-                          {% endif %}
-                        </button>
-                      </div>
-                      <!-- Dinner button -->
-                      <div><button name="{{ recipe.Recipe.recipe_id }}"
-                          class="btn btn-block modal-meal-button meal-dinner meal-dinner-fav {% if recipe.Recipe.meal_dinner == True %} btn-success">Add
-                          as Dinner
-                          Meal (Recommended)
-                          {% else %}
-                          btn-secondary">Add as Dinner Meal
-                          {% endif %}
-                        </button>
-                      </div>
-                    </div>
+
+
                   </div>
                 </div>
-              </div>
+              </li>
+              <hr class="recipe-list-hr" />
+              {% endfor %}
 
-              <!-- Modal confirming to the user that the recipe was added to their meal plan -->
-              <div class="modal fade mealtime-modal-fav-success"
-                id="mealtime-modal-fav-success-{{ recipe.Recipe.recipe_id }}" tabindex="-1" role="dialog"
-                aria-labelledby="mealtime-modal-fav-success-title" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="mealtime-modal-fav-success-title">Success</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <strong>{{ recipe.Recipe.recipe_name }}</strong> was added to your meal plan!
-                    </div>
-                    <div class="modal-footer">
-                      <a href="{{ url_for('meal_plan') }}" class="btn btn-primary center">Go to Meal Plan</a>
-                      <button type="button" class="btn btn-secondary center" data-dismiss="modal">
-                        Close
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            </ul>
 
-
-              <!-- Modal prompting whether to delete recipe from their meal plan -->
-              <div class="modal fade mealtime-modal-fav-confirm-delete"
-                id="mealtime-modal-fav-confirm-delete-{{ recipe.Recipe.recipe_id }}" tabindex="-1" role="dialog"
-                aria-labelledby="mealtime-modal-fav-confirm-delete-title" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="mealtime-modal-fav-confirm-delete-title">Confirm</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      Are you sure that you want to remove <strong>{{ recipe.Recipe.recipe_name }}</strong> from
-                      your meal plan?
-                    </div>
-                    <!-- Button to proceed with removal -->
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-danger center meal-button-proceed" data-dismiss="modal">
-                        Remove from Meal Plan
-                      </button>
-                      <!-- Button to cancel and close modal -->
-                      <button type="button" class="btn btn-secondary center" data-dismiss="modal">
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-            <!-- Display button so that user can add the recipe to their favorites -->
-            <div class="form-group col-sm">
-              <button name="{{ recipe.Recipe.recipe_id }}" id="fav-{{ recipe.Recipe.recipe_id }}" class="favorite-button fav-{{ recipe.Recipe.recipe_id }} btn btn-block 
-                          {% if recipe.Favorite_Recipe.app_user_id == current_user.id and recipe.Favorite_Recipe.favorite_recipe_id != None %}
-                          btn-danger">Remove from Favorites
-                {% else %}
-                btn-success">Add to Favorites
-                {% endif %}
-              </button>
-            </div>
+            <!-- If user doesn't have any Favorites, display placeholder message -->
+            {% else %}
+            <h5 class="text-center">You haven't favorited any recipes yet. Try adding one!</h5>
+            {% endif %}
 
           </div>
         </div>
-        <hr class="recipe-list-hr" />
-      </li>
+      </div>
 
-      {% endfor %}
+      <!-- Card #2: All of user's uploaded recipes -->
+      <div class="card">
+        <div class="card-header text-center text-white bg-secondary" id="headingTwo" data-toggle="collapse"
+          data-target="#collapseTwo">
+          <h4 class="mb-0">
+            My Recipes
+            <!-- Badge displaying total number of recipes in this section -->
+            <span class="badge badge-light">{{ your_length }}</span>
+            <span class="sr-only">recipes uploaded by you</span>
+          </h4>
+        </div>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+          <div class="card-body">
+            {% if your_exists == True %}
 
-    </ul>
+            <ul class="list-unstyled">
+              {% for recipe in your_recipe_list %}
 
-    <!-- If user doesn't have any Favorites, display placeholder message -->
-    {% else %}
-    <h5 class="text-center">There aren't any recipes yet. Try adding one!</h5>
-    {% endif %}
+              <!-- Recipe Name -->
+              <li>
+                <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                  class="text-decoration-none">
+                  <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
+                  <!-- Recipe Prep/Cook Time -->
+                  <h6 class="text-center">
+                    {% if recipe.Recipe.recipe_total_time != None %}
+                    ({{ recipe.Recipe.recipe_total_time }} minutes total prep/cook time)
+                    {% endif %}
+                  </h6>
+                  <!-- Badges indicating if the recipe is for Breakfast, Lunch, and/or Dinner -->
+                  <div class="mealtime-badge d-flex justify-content-center">
+                    {% if recipe.Recipe.meal_breakfast == True %}
+                    <span class="badge badge-pill badge-success">Breakfast</span>
+                    {% endif %}
+                    {% if recipe.Recipe.meal_lunch == True %}
+                    <span class="badge badge-pill badge-success">Lunch</span>
+                    {% endif %}
+                    {% if recipe.Recipe.meal_dinner == True %}
+                    <span class="badge badge-pill badge-success">Dinner</span>
+                    {% endif %}
+                  </div>
+                  <!-- Recipe Image -->
+                  {% if recipe.Recipe.recipe_image_url != None %}
+                  <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}"
+                    class="center rounded img-fluid small-image" alt="Responsive image" />
+                  {% else %}
+                  <img id="preview" src="/static/placeholder-recipe-image.jpg"
+                    class="center rounded img-fluid small-image" alt="Responsive image" />
+                  {% endif %}
+                </a>
+
+                <div class="form-group">
+                  <div class="row" style="padding-top: 20px;">
+                    <!-- Display button so that user can view recipe's page -->
+                    <div class="form-group col-sm">
+                      <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                        class="btn btn-primary btn-block">View Recipe</a>
+                    </div>
+
+                    <!-- Display button so that user can view recipe's source website -->
+                    <div class="form-group col-sm">
+                      <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
+                        class="btn btn-primary btn-block">Source
+                        Website</a>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <!-- Display button so that user can add the recipe to their current meal plan via subsequent buttons on modal -->
+                    <div class="form-group col-sm">
+                      <button name="{{ recipe.Recipe.recipe_id }}" id="meal-{{ recipe.Recipe.recipe_id }}" class="meal-button your-meal-button meal-{{ recipe.Recipe.recipe_id }} btn btn-block 
+                              {% if recipe.app_user_id == current_user.id and recipe.active_ind == True %}
+                              btn-danger" data-toggle="modal"
+                        data-target="#mealtime-modal-your-confirm-delete-{{ recipe.Recipe.recipe_id }}">Remove from Meal
+                        Plan
+                        {% else %}
+                        btn-success" data-toggle="modal"
+                        data-target="#mealtime-modal-your-{{ recipe.Recipe.recipe_id }}">Add to Meal Plan
+                        {% endif %}
+                      </button>
+
+
+                      <!-- Modal allowing user to add recipe to their meal plan -->
+                      <div class="modal fade" id="mealtime-modal-your-{{ recipe.Recipe.recipe_id }}" tabindex="-1"
+                        role="dialog" aria-labelledby="mealtime-modal-your-title" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="mealtime-modal-your-title">Meal Selection</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <!-- Breakfast button -->
+                              <div><button name="{{ recipe.Recipe.recipe_id }}"
+                                  class="btn btn-block modal-meal-button meal-breakfast meal-breakfast-your {% if recipe.Recipe.meal_breakfast == True %} btn-success">Add
+                                  as Breakfast
+                                  Meal (Recommended)
+                                  {% else %}
+                                  btn-secondary">Add as Breakfast Meal
+                                  {% endif %}
+                                </button>
+                              </div>
+                              <!-- Lunch button -->
+                              <div><button name="{{ recipe.Recipe.recipe_id }}"
+                                  class="btn btn-block modal-meal-button meal-lunch meal-lunch-your {% if recipe.Recipe.meal_lunch == True %} btn-success">Add
+                                  as Lunch
+                                  Meal (Recommended)
+                                  {% else %}
+                                  btn-secondary">Add as Lunch Meal
+                                  {% endif %}
+                                </button>
+                              </div>
+                              <!-- Dinner button -->
+                              <div><button name="{{ recipe.Recipe.recipe_id }}"
+                                  class="btn btn-block modal-meal-button meal-dinner meal-dinner-your {% if recipe.Recipe.meal_dinner == True %} btn-success">Add
+                                  as Dinner
+                                  Meal (Recommended)
+                                  {% else %}
+                                  btn-secondary">Add as Dinner Meal
+                                  {% endif %}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Modal confirming to the user that the recipe was added to their meal plan -->
+                      <div class="modal fade mealtime-modal-your-success"
+                        id="mealtime-modal-your-success-{{ recipe.Recipe.recipe_id }}" tabindex="-1" role="dialog"
+                        aria-labelledby="mealtime-modal-your-success-title" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="mealtime-modal-your-success-title">Success</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <strong>{{ recipe.Recipe.recipe_name }}</strong> was added to your meal plan!
+                            </div>
+                            <div class="modal-footer">
+                              <a href="{{ url_for('meal_plan') }}" class="btn btn-primary center">Go to Meal Plan</a>
+                              <button type="button" class="btn btn-secondary center" data-dismiss="modal">
+                                Close
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <!-- Modal prompting whether to delete recipe from their meal plan -->
+                      <div class="modal fade mealtime-modal-your-confirm-delete"
+                        id="mealtime-modal-your-confirm-delete-{{ recipe.Recipe.recipe_id }}" tabindex="-1"
+                        role="dialog" aria-labelledby="mealtime-modal-your-confirm-delete-title" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="mealtime-modal-your-confirm-delete-title">Confirm</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              Are you sure that you want to remove <strong>{{ recipe.Recipe.recipe_name }}</strong> from
+                              your meal plan?
+                            </div>
+                            <!-- Button to proceed with removal -->
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-danger center meal-button-proceed"
+                                data-dismiss="modal">
+                                Remove from Meal Plan
+                              </button>
+                              <!-- Button to cancel and close modal -->
+                              <button type="button" class="btn btn-secondary center" data-dismiss="modal">
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+                    </div>
+
+                    <!-- Display button so that user can add the recipe to their favorites -->
+                    <div class="form-group col-sm">
+                      <button name="{{ recipe.Recipe.recipe_id }}" id="fav-{{ recipe.Recipe.recipe_id }}" class="favorite-button fav-{{ recipe.Recipe.recipe_id }} btn btn-block 
+                                {% if recipe.Favorite_Recipe.app_user_id == current_user.id and recipe.Favorite_Recipe.favorite_recipe_id != None %}
+                                btn-danger">Remove from Favorites
+                        {% else %}
+                        btn-success">Add to Favorites
+                        {% endif %}
+                      </button>
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </li>
+              <hr class="recipe-list-hr" />
+              {% endfor %}
+
+            </ul>
+
+            <!-- If user hasn't uploaded any recipes, display placeholder message -->
+            {% else %}
+            <h5 class="text-center">You haven't uploaded any recipes yet. Try adding one!</h5>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Card #3: "Editor's Picks" recipes -->
+      <div class="card" id="editor-card">
+        <div class="card-header text-center text-white bg-secondary" id="headingThree" data-toggle="collapse"
+          data-target="#collapseThree">
+          <h4 class="mb-0">
+            Editor's Picks
+            <!-- Badge displaying total number of recipes in this section -->
+            <span class="badge badge-light">{{ editor_length }}</span>
+            <span class="sr-only">editor's picks recipes</span>
+          </h4>
+        </div>
+
+        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+          <div class="card-body">
+            {% if editor_exists == True %}
+
+            <ul class="list-unstyled">
+              {% for recipe in editor_recipe_list %}
+
+              <!-- Recipe Name -->
+              <li>
+                <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                  class="text-decoration-none">
+                  <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
+                  <!-- Recipe Prep/Cook Time -->
+                  <h6 class="text-center">
+                    {% if recipe.Recipe.recipe_total_time != None %}
+                    ({{ recipe.Recipe.recipe_total_time }} minutes total prep/cook time)
+                    {% endif %}
+                  </h6>
+                  <!-- Badges indicating if the recipe is for Breakfast, Lunch, and/or Dinner -->
+                  <div class="mealtime-badge d-flex justify-content-center">
+                    {% if recipe.Recipe.meal_breakfast == True %}
+                    <span class="badge badge-pill badge-success">Breakfast</span>
+                    {% endif %}
+                    {% if recipe.Recipe.meal_lunch == True %}
+                    <span class="badge badge-pill badge-success">Lunch</span>
+                    {% endif %}
+                    {% if recipe.Recipe.meal_dinner == True %}
+                    <span class="badge badge-pill badge-success">Dinner</span>
+                    {% endif %}
+                  </div>
+                  <!-- Recipe Image -->
+                  {% if recipe.Recipe.recipe_image_url != None %}
+                  <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}"
+                    class="center rounded img-fluid small-image" alt="Responsive image" />
+                  {% else %}
+                  <img id="preview" src="/static/placeholder-recipe-image.jpg"
+                    class="center rounded img-fluid small-image" alt="Responsive image" />
+                  {% endif %}
+                </a>
+
+                <div class="form-group">
+                  <div class="row" style="padding-top: 20px;">
+                    <!-- Display button so that user can view recipe's page -->
+                    <div class="form-group col-sm">
+                      <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                        class="btn btn-primary btn-block">View Recipe</a>
+                    </div>
+
+                    <!-- Display button so that user can view recipe's source website -->
+                    <div class="form-group col-sm">
+                      <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
+                        class="btn btn-primary btn-block">Source
+                        Website</a>
+                    </div>
+                  </div>
+
+
+                  <div class="row">
+                    <!-- Display button so that user can add the recipe to their current meal plan via subsequent buttons on modal -->
+                    <div class="form-group col-sm">
+                      <button name="{{ recipe.Recipe.recipe_id }}" id="meal-{{ recipe.Recipe.recipe_id }}" class="meal-button editor-meal-button meal-{{ recipe.Recipe.recipe_id }} btn btn-block 
+                              {% if recipe.app_user_id == current_user.id and recipe.active_ind == True %}
+                              btn-danger" data-toggle="modal"
+                        data-target="#mealtime-modal-editor-confirm-delete-{{ recipe.Recipe.recipe_id }}">Remove from
+                        Meal
+                        Plan
+                        {% else %}
+                        btn-success" data-toggle="modal"
+                        data-target="#mealtime-modal-editor-{{ recipe.Recipe.recipe_id }}">Add to Meal Plan
+                        {% endif %}
+                      </button>
+
+
+                      <!-- Modal allowing user to add recipe to their meal plan -->
+                      <div class="modal fade" id="mealtime-modal-editor-{{ recipe.Recipe.recipe_id }}" tabindex="-1"
+                        role="dialog" aria-labelledby="mealtime-modal-editor-title" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="mealtime-modal-editor-title">Meal Selection</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <!-- Breakfast button -->
+                              <div><button name="{{ recipe.Recipe.recipe_id }}"
+                                  class="btn btn-block modal-meal-button meal-breakfast meal-breakfast-editor {% if recipe.Recipe.meal_breakfast == True %} btn-success">Add
+                                  as Breakfast
+                                  Meal (Recommended)
+                                  {% else %}
+                                  btn-secondary">Add as Breakfast Meal
+                                  {% endif %}
+                                </button>
+                              </div>
+                              <!-- Lunch button -->
+                              <div><button name="{{ recipe.Recipe.recipe_id }}"
+                                  class="btn btn-block modal-meal-button meal-lunch meal-lunch-editor {% if recipe.Recipe.meal_lunch == True %} btn-success">Add
+                                  as Lunch
+                                  Meal (Recommended)
+                                  {% else %}
+                                  btn-secondary">Add as Lunch Meal
+                                  {% endif %}
+                                </button>
+                              </div>
+                              <!-- Dinner button -->
+                              <div><button name="{{ recipe.Recipe.recipe_id }}"
+                                  class="btn btn-block modal-meal-button meal-dinner meal-dinner-editor {% if recipe.Recipe.meal_dinner == True %} btn-success">Add
+                                  as Dinner
+                                  Meal (Recommended)
+                                  {% else %}
+                                  btn-secondary">Add as Dinner Meal
+                                  {% endif %}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Modal confirming to the user that the recipe was added to their meal plan -->
+                      <div class="modal fade mealtime-modal-editor-success"
+                        id="mealtime-modal-editor-success-{{ recipe.Recipe.recipe_id }}" tabindex="-1" role="dialog"
+                        aria-labelledby="mealtime-modal-editor-success-title" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="mealtime-modal-editor-success-title">Success</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <strong>{{ recipe.Recipe.recipe_name }}</strong> was added to your meal plan!
+                            </div>
+                            <div class="modal-footer">
+                              <a href="{{ url_for('meal_plan') }}" class="btn btn-primary center">Go to Meal Plan</a>
+                              <button type="button" class="btn btn-secondary center" data-dismiss="modal">
+                                Close
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <!-- Modal prompting whether to delete recipe from their meal plan -->
+                      <div class="modal fade mealtime-modal-editor-confirm-delete"
+                        id="mealtime-modal-editor-confirm-delete-{{ recipe.Recipe.recipe_id }}" tabindex="-1"
+                        role="dialog" aria-labelledby="mealtime-modal-editor-confirm-delete-title" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="mealtime-modal-editor-confirm-delete-title">Confirm</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              Are you sure that you want to remove <strong>{{ recipe.Recipe.recipe_name }}</strong> from
+                              your meal plan?
+                            </div>
+                            <!-- Button to proceed with removal -->
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-danger center meal-button-proceed"
+                                data-dismiss="modal">
+                                Remove from Meal Plan
+                              </button>
+                              <!-- Button to cancel and close modal -->
+                              <button type="button" class="btn btn-secondary center" data-dismiss="modal">
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+                    </div>
+
+                    <!-- Display button so that user can add the recipe to their favorites -->
+                    <div class="form-group col-sm">
+                      <button name="{{ recipe.Recipe.recipe_id }}" id="fav-{{ recipe.Recipe.recipe_id }}" class="favorite-button fav-{{ recipe.Recipe.recipe_id }} btn btn-block 
+                              {% if recipe.Favorite_Recipe.app_user_id == current_user.id and recipe.Favorite_Recipe.favorite_recipe_id != None %}
+                              btn-danger">Remove from Favorites
+                        {% else %}
+                        btn-success">Add to Favorites
+                        {% endif %}
+                      </button>
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </li>
+              <hr class="recipe-list-hr" />
+              {% endfor %}
+
+            </ul>
+
+            <!-- If there are no Editor's Picks recipes, display placeholder message -->
+            {% else %}
+            <h5 class="text-center">The editor hasn't selected any recommended recipes yet.</h5>
+            {% endif %}
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Card #4: All other users' uploaded recipes -->
+      <div class="card">
+        <div class="card-header text-center text-white bg-secondary" id="headingFour" data-toggle="collapse"
+          data-target="#collapseFour">
+          <h4 class="mb-0">
+            Uploaded by Others
+            <!-- Badge displaying total number of recipes in this section -->
+            <span class="badge badge-light">{{ other_length }}</span>
+            <span class="sr-only">recipes uploaded by others</span>
+          </h4>
+        </div>
+        <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+          <div class="card-body">
+            {% if other_exists == True %}
+
+            <ul class="list-unstyled">
+              {% for recipe in other_recipe_list %}
+
+              <!-- Recipe Name -->
+              <li>
+                <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                  class="text-decoration-none">
+                  <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
+                  <!-- Recipe Prep/Cook Time -->
+                  <h6 class="text-center">
+                    {% if recipe.Recipe.recipe_total_time != None %}
+                    ({{ recipe.Recipe.recipe_total_time }} minutes total prep/cook time)
+                    {% endif %}
+                  </h6>
+                  <!-- Badges indicating if the recipe is for Breakfast, Lunch, and/or Dinner -->
+                  <div class="mealtime-badge d-flex justify-content-center">
+                    {% if recipe.Recipe.meal_breakfast == True %}
+                    <span class="badge badge-pill badge-success">Breakfast</span>
+                    {% endif %}
+                    {% if recipe.Recipe.meal_lunch == True %}
+                    <span class="badge badge-pill badge-success">Lunch</span>
+                    {% endif %}
+                    {% if recipe.Recipe.meal_dinner == True %}
+                    <span class="badge badge-pill badge-success">Dinner</span>
+                    {% endif %}
+                  </div>
+                  <!-- Recipe Image -->
+                  {% if recipe.Recipe.recipe_image_url != None %}
+                  <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}"
+                    class="center rounded img-fluid small-image" alt="Responsive image" />
+                  {% else %}
+                  <img id="preview" src="/static/placeholder-recipe-image.jpg"
+                    class="center rounded img-fluid small-image" alt="Responsive image" />
+                  {% endif %}
+                </a>
+
+                <div class="form-group">
+                  <div class="row" style="padding-top: 20px;">
+                    <!-- Display button so that user can view recipe's page -->
+                    <div class="form-group col-sm">
+                      <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                        class="btn btn-primary btn-block">View Recipe</a>
+                    </div>
+
+                    <!-- Display button so that user can view recipe's source website -->
+                    <div class="form-group col-sm">
+                      <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
+                        class="btn btn-primary btn-block">Source
+                        Website</a>
+                    </div>
+                  </div>
+
+
+                  <div class="row">
+                    <!-- Display button so that user can add the recipe to their current meal plan via subsequent buttons on modal -->
+                    <div class="form-group col-sm">
+                      <button name="{{ recipe.Recipe.recipe_id }}" id="meal-{{ recipe.Recipe.recipe_id }}" class="meal-button other-meal-button meal-{{ recipe.Recipe.recipe_id }} btn btn-block 
+                            {% if recipe.app_user_id == current_user.id and recipe.active_ind == True %}
+                            btn-danger" data-toggle="modal"
+                        data-target="#mealtime-modal-other-confirm-delete-{{ recipe.Recipe.recipe_id }}">Remove from
+                        Meal
+                        Plan
+                        {% else %}
+                        btn-success" data-toggle="modal"
+                        data-target="#mealtime-modal-other-{{ recipe.Recipe.recipe_id }}">Add to Meal Plan
+                        {% endif %}
+                      </button>
+
+
+                      <!-- Modal allowing user to add recipe to their meal plan -->
+                      <div class="modal fade" id="mealtime-modal-other-{{ recipe.Recipe.recipe_id }}" tabindex="-1"
+                        role="dialog" aria-labelledby="mealtime-modal-other-title" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="mealtime-modal-other-title">Meal Selection</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <!-- Breakfast button -->
+                              <div><button name="{{ recipe.Recipe.recipe_id }}"
+                                  class="btn btn-block modal-meal-button meal-breakfast meal-breakfast-other {% if recipe.Recipe.meal_breakfast == True %} btn-success">Add
+                                  as Breakfast
+                                  Meal (Recommended)
+                                  {% else %}
+                                  btn-secondary">Add as Breakfast Meal
+                                  {% endif %}
+                                </button>
+                              </div>
+                              <!-- Lunch button -->
+                              <div><button name="{{ recipe.Recipe.recipe_id }}"
+                                  class="btn btn-block modal-meal-button meal-lunch meal-lunch-other {% if recipe.Recipe.meal_lunch == True %} btn-success">Add
+                                  as Lunch
+                                  Meal (Recommended)
+                                  {% else %}
+                                  btn-secondary">Add as Lunch Meal
+                                  {% endif %}
+                                </button>
+                              </div>
+                              <!-- Dinner button -->
+                              <div><button name="{{ recipe.Recipe.recipe_id }}"
+                                  class="btn btn-block modal-meal-button meal-dinner meal-dinner-other {% if recipe.Recipe.meal_dinner == True %} btn-success">Add
+                                  as Dinner
+                                  Meal (Recommended)
+                                  {% else %}
+                                  btn-secondary">Add as Dinner Meal
+                                  {% endif %}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Modal confirming to the user that the recipe was added to their meal plan -->
+                      <div class="modal fade mealtime-modal-other-success"
+                        id="mealtime-modal-other-success-{{ recipe.Recipe.recipe_id }}" tabindex="-1" role="dialog"
+                        aria-labelledby="mealtime-modal-other-success-title" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="mealtime-modal-other-success-title">Success</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <strong>{{ recipe.Recipe.recipe_name }}</strong> was added to your meal plan!
+                            </div>
+                            <div class="modal-footer">
+                              <a href="{{ url_for('meal_plan') }}" class="btn btn-primary center">Go to Meal Plan</a>
+                              <button type="button" class="btn btn-secondary center" data-dismiss="modal">
+                                Close
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <!-- Modal prompting whether to delete recipe from their meal plan -->
+                      <div class="modal fade mealtime-modal-other-confirm-delete"
+                        id="mealtime-modal-other-confirm-delete-{{ recipe.Recipe.recipe_id }}" tabindex="-1"
+                        role="dialog" aria-labelledby="mealtime-modal-other-confirm-delete-title" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="mealtime-modal-other-confirm-delete-title">Confirm</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              Are you sure that you want to remove <strong>{{ recipe.Recipe.recipe_name }}</strong> from
+                              your meal plan?
+                            </div>
+                            <!-- Button to proceed with removal -->
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-danger center meal-button-proceed"
+                                data-dismiss="modal">
+                                Remove from Meal Plan
+                              </button>
+                              <!-- Button to cancel and close modal -->
+                              <button type="button" class="btn btn-secondary center" data-dismiss="modal">
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+                    </div>
+
+
+
+
+
+                    <!-- Display button so that user can add the recipe to their favorites -->
+                    <div class="form-group col-sm">
+                      <button name="{{ recipe.Recipe.recipe_id }}" id="fav-{{ recipe.Recipe.recipe_id }}" class="favorite-button fav-{{ recipe.Recipe.recipe_id }} btn btn-block 
+                            {% if recipe.Favorite_Recipe.app_user_id == current_user.id and recipe.Favorite_Recipe.favorite_recipe_id != None %}
+                            btn-danger">Remove from Favorites
+                        {% else %}
+                        btn-success">Add to Favorites
+                        {% endif %}
+                      </button>
+                    </div>
+
+
+
+
+                  </div>
+                </div>
+
+
+              </li>
+              <hr class="recipe-list-hr" />
+              {% endfor %}
+
+            </ul>
+
+            <!-- If no one else has uploaded any recipes, display placeholder message -->
+            {% else %}
+            <h5 class="text-center">No one else has uploaded any recipes yet!</h5>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+
   </div>
 
-  </ul>
-
 </div>
-
-
 
 {% endblock %}
 
