@@ -6,205 +6,214 @@ active
 active
 {% endblock %}
 
-{% block heading %}
-Add New Recipe from Website
-{% endblock %}
 
 {% block body %}
-<div class="container">
-  <div class="error">{{ error }}</div>
-  <br>
-  <form role="form" method='POST'>
+<div class="container feature-page">
+
+  <div class="container" id="title">
+    <h2>Add New Recipe from Website</h2>
+  </div>
+
+  <div class="container">
+    <div class="error">{{ error }}</div>
+    <br>
+    <form role="form" method='POST'>
 
 
-    <div class="row">
-      <!-- Pre-assign dietary restrictions before importing recipe -->
-      <div class="form-group col-md">
-        <h3>Dietary Restrictions</h3>
-        <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
-          <label class="btn btn-outline-success active btn-block">
-            <input type="checkbox" name="diet_vegan" id="diet_vegan" autocomplete="off" />Vegan
-          </label>
+      <div class="row">
+        <!-- Pre-assign dietary restrictions before importing recipe -->
+        <div class="form-group col-md">
+          <h3>Dietary Restrictions</h3>
+          <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
+            <label class="btn btn-outline-success active btn-block">
+              <input type="checkbox" name="diet_vegan" id="diet_vegan" autocomplete="off" />Vegan
+            </label>
+          </div>
+          <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
+            <label class="btn btn-outline-success active btn-block">
+              <input type="checkbox" name="diet_vegetarian" id="diet_vegetarian" autocomplete="off" />Vegetarian</label>
+          </div>
+          <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
+            <label class="btn btn-outline-success active btn-block">
+              <input type="checkbox" name="diet_gluten" id="diet_gluten" autocomplete="off">Gluten-free</label>
+          </div>
         </div>
-        <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
-          <label class="btn btn-outline-success active btn-block">
-            <input type="checkbox" name="diet_vegetarian" id="diet_vegetarian" autocomplete="off" />Vegetarian</label>
+
+
+        <br>
+
+        <!-- Pre-assign meal time before importing recipe -->
+        <div class="form-group col-md">
+          <h3>Meal Time</h3>
+          <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
+            <label class="btn btn-outline-success active btn-block">
+              <input type="checkbox" name="meal_breakfast" id="meal_breakfast" autocomplete="off">Breakfast
+            </label>
+          </div>
+          <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
+            <label class="btn btn-outline-success active btn-block">
+              <input type="checkbox" name="meal_lunch" id="meal_lunch" autocomplete="off">Lunch</label>
+          </div>
+          <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
+            <label class="btn btn-outline-success active btn-block">
+              <input type="checkbox" name="meal_dinner" id="meal_dinner" autocomplete="off">Dinner</label>
+          </div>
         </div>
-        <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
-          <label class="btn btn-outline-success active btn-block">
-            <input type="checkbox" name="diet_gluten" id="diet_gluten" autocomplete="off">Gluten-free</label>
-        </div>
+
       </div>
-
 
       <br>
 
-      <!-- Pre-assign meal time before importing recipe -->
-      <div class="form-group col-md">
-        <h3>Meal Time</h3>
-        <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
-          <label class="btn btn-outline-success active btn-block">
-            <input type="checkbox" name="meal_breakfast" id="meal_breakfast" autocomplete="off">Breakfast
-          </label>
-        </div>
-        <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
-          <label class="btn btn-outline-success active btn-block">
-            <input type="checkbox" name="meal_lunch" id="meal_lunch" autocomplete="off">Lunch</label>
-        </div>
-        <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
-          <label class="btn btn-outline-success active btn-block">
-            <input type="checkbox" name="meal_dinner" id="meal_dinner" autocomplete="off">Dinner</label>
-        </div>
-      </div>
-
-    </div>
-
-    <br>
-
-    <div class="btn-group btn-group-toggle btn-block" data-toggle="buttons">
-      <label class="btn btn-outline-success active">
-        <input type="checkbox" name="mark_fav" value="fav" id="fav" autocomplete="off"> Automatically Mark as Favorite
-      </label>
-    </div>
-
-    <br>
-    <br>
-    <br>
-
-    <div class="row">
-      <!-- Recipe URL input -->
-      <div class="form-group col-lg">
-        <label for="recipe_url_box">
-          <h3>URL</h3>
+      <div class="btn-group btn-group-toggle btn-block" data-toggle="buttons">
+        <label class="btn btn-outline-success active">
+          <input type="checkbox" name="mark_fav" value="fav" id="fav" autocomplete="off"> Automatically Mark as Favorite
         </label>
-        <input type="text" name="recipe_url" class="form-control" id="recipe_url_box" placeholder="Enter recipe URL"
-          style="max-width: 1000px;" autofocus required>
       </div>
-    </div>
+
+      <br>
+      <br>
+      <br>
+
+      <div class="row">
+        <!-- Recipe URL input -->
+        <div class="form-group col-lg">
+          <label for="recipe_url_box">
+            <h3>URL</h3>
+          </label>
+          <input type="text" name="recipe_url" class="form-control" id="recipe_url_box" placeholder="Enter recipe URL"
+            style="max-width: 1000px;" autofocus required>
+        </div>
+      </div>
+      <br>
+      <button type="submit" class="btn btn-primary btn-block">Submit</button>
+    </form>
+
+
+
+
+
     <br>
-    <button type="submit" class="btn btn-primary btn-block">Submit</button>
-  </form>
+    <br>
 
-
-
-
-
-  <br>
-  <br>
-
-  <!-- {% for item in output %}
+    <!-- {% for item in output %}
   <h4>{{ item }}</h4>
   {% endfor %} -->
 
-</div>
-
-<br>
-<br>
-
-<div class="container">
-  <h2>Recommended Recipe Websites</h2>
-  <br>
-  <div>
-    <ul>
-      <li><a href="https://acouplecooks.com/" rel="nofollow" target="_blank">https://www.acouplecooks.com</a></li>
-      <li><a href="https://allrecipes.com/" rel="nofollow" target="_blank">https://allrecipes.com/</a></li>
-      <li><a href="https://archanaskitchen.com/" rel="nofollow" target="_blank">https://archanaskitchen.com/</a></li>
-      <li><a href="https://www.averiecooks.com/" rel="nofollow" target="_blank">https://averiecooks.com/</a></li>
-      <li><a href="https://bbc.com/food/recipes" rel="nofollow" target="_blank">https://bbc.com/</a></li>
-      <li><a href="http://bbc.co.uk/food/recipes" rel="nofollow" target="_blank">https://bbc.co.uk/</a></li>
-      <li><a href="https://bbcgoodfood.com" rel="nofollow" target="_blank">https://bbcgoodfood.com/</a></li>
-      <li><a href="https://bettycrocker.com" rel="nofollow" target="_blank">https://bettycrocker.com/</a></li>
-      <li><a href="https://bonappetit.com" rel="nofollow" target="_blank">https://bonappetit.com/</a></li>
-      <li><a href="https://bowlofdelicious.com/" rel="nofollow" target="_blank">https://bowlofdelicious.com/</a></li>
-      <li><a href="https://budgetbytes.com" rel="nofollow" target="_blank">https://budgetbytes.com/</a></li>
-      <li><a href="https://closetcooking.com" rel="nofollow" target="_blank">https://closetcooking.com/</a></li>
-      <li><a href="https://cookieandkate.com/" rel="nofollow" target="_blank">https://cookieandkate.com/</a></li>
-      <li><a href="https://cookpad.com/" rel="nofollow" target="_blank">https://cookpad.com/</a></li>
-      <li><a href="https://cookstr.com" rel="nofollow" target="_blank">https://cookstr.com/</a></li>
-      <li><a href="https://copykat.com" rel="nofollow" target="_blank">https://copykat.com/</a></li>
-      <li><a href="https://countryliving.com" rel="nofollow" target="_blank">https://countryliving.com/</a></li>
-      <li><a href="https://cybercook.com.br/" rel="nofollow" target="_blank">https://cybercook.com.br/</a></li>
-      <li><a href="https://delish.com" rel="nofollow" target="_blank">https://delish.com/</a></li>
-      <li><a href="https://epicurious.com" rel="nofollow" target="_blank">https://epicurious.com/</a></li>
-      <li><a href="https://www.fifteenspatulas.com/" rel="nofollow" target="_blank">https://fifteenspatulas.com/</a>
-      </li>
-      <li><a href="https://www.finedininglovers.com" rel="nofollow" target="_blank">https://finedininglovers.com/</a>
-      </li>
-      <li><a href="https://www.fitmencook.com" rel="nofollow" target="_blank">https://fitmencook.com/</a></li>
-      <li><a href="https://www.food.com" rel="nofollow" target="_blank">https://food.com/</a></li>
-      <li><a href="https://www.foodnetwork.com" rel="nofollow" target="_blank">https://foodnetwork.com/</a></li>
-      <li><a href="https://foodrepublic.com" rel="nofollow" target="_blank">https://foodrepublic.com/</a></li>
-      <li><a href="https://geniuskitchen.com" rel="nofollow" target="_blank">https://geniuskitchen.com/</a></li>
-      <li><a href="https://giallozafferano.it" rel="nofollow" target="_blank">https://giallozafferano.it/</a></li>
-      <li><a href="https://www.gimmesomeoven.com/" rel="nofollow" target="_blank">https://gimmesomeoven.com/</a></li>
-      <li><a href="https://gonnawantseconds.com" rel="nofollow" target="_blank">https://gonnawantseconds.com/</a></li>
-      <li><a href="https://gousto.co.uk" rel="nofollow" target="_blank">https://gousto.co.uk/</a></li>
-      <li><a href="https://greatbritishchefs.com" rel="nofollow" target="_blank">https://greatbritishchefs.com/</a></li>
-      <li><a href="https://www.halfbakedharvest.com/" rel="nofollow" target="_blank">https://halfbakedharvest.com/</a>
-      </li>
-      <li><a href="https://heinzbrasil.com.br" rel="nofollow" target="_blank">https://heinzbrasil.com.br/</a></li>
-      <li><a href="https://hellofresh.com" rel="nofollow" target="_blank">https://hellofresh.com/</a></li>
-      <li><a href="https://hellofresh.co.uk" rel="nofollow" target="_blank">https://hellofresh.co.uk/</a></li>
-      <li><a href="https://hostthetoast.com/" rel="nofollow" target="_blank">https://hostthetoast.com/</a></li>
-      <li><a href="https://101cookbooks.com/" rel="nofollow" target="_blank">https://101cookbooks.com/</a></li>
-      <li><a href="https://receitas.ig.com.br" rel="nofollow" target="_blank">https://receitas.ig.com.br/</a></li>
-      <li><a href="https://inspiralized.com" rel="nofollow" target="_blank">https://inspiralized.com/</a></li>
-      <li><a href="https://jamieoliver.com" rel="nofollow" target="_blank">https://jamieoliver.com/</a></li>
-      <li><a href="https://justbento.com" rel="nofollow" target="_blank">https://justbento.com/</a></li>
-      <li><a href="https://kennymcgovern.com" rel="nofollow" target="_blank">https://kennymcgovern.com/</a></li>
-      <li><a href="https://kochbar.de" rel="nofollow" target="_blank">https://kochbar.de/</a></li>
-      <li><a href="https://lovingitvegan.com/" rel="nofollow" target="_blank">https://lovingitvegan.com/</a></li>
-      <li><a href="https://lecremedelacrumb.com/" rel="nofollow" target="_blank">https://lecremedelacrumb.com/</a></li>
-      <li><a href="https://marmiton.org/" rel="nofollow" target="_blank">https://marmiton.org/</a></li>
-      <li><a href="https://matprat.no/" rel="nofollow" target="_blank">https://matprat.no/</a></li>
-      <li><a href="http://mindmegette.hu/" rel="nofollow" target="_blank">http://mindmegette.hu/</a></li>
-      <li><a href="https://minimalistbaker.com/" rel="nofollow" target="_blank">https://minimalistbaker.com/</a></li>
-      <li><a href="https://misya.info" rel="nofollow" target="_blank">https://misya.info/</a></li>
-      <li><a href="https://momswithcrockpots.com" rel="nofollow" target="_blank">https://momswithcrockpots.com/</a></li>
-      <li><a href="http://motherthyme.com/" rel="nofollow" target="_blank">http://motherthyme.com/</a></li>
-      <li><a href="https://mybakingaddiction.com" rel="nofollow" target="_blank">https://mybakingaddiction.com/</a></li>
-      <li><a href="https://myrecipes.com" rel="nofollow" target="_blank">https://myrecipes.com/</a></li>
-      <li><a href="https://healthyeating.nhlbi.nih.gov" rel="nofollow"
-          target="_blank">https://healthyeating.nhlbi.nih.gov/</a></li>
-      <li><a href="https://cooking.nytimes.com" rel="nofollow" target="_blank">https://cooking.nytimes.com/</a></li>
-      <li><a href="https://ohsheglows.com" rel="nofollow" target="_blank">https://ohsheglows.com/</a></li>
-      <li><a href="https://www.panelinha.com.br" rel="nofollow" target="_blank">https://www.panelinha.com.br/</a></li>
-      <li><a href="https://paninihappy.com" rel="nofollow" target="_blank">https://paninihappy.com/</a></li>
-      <li><a href="https://przepisy.pl" rel="nofollow" target="_blank">https://przepisy.pl/</a></li>
-      <li><a href="https://www.realsimple.com" rel="nofollow" target="_blank">https://realsimple.com/</a></li>
-      <li><a href="https://seriouseats.com" rel="nofollow" target="_blank">https://seriouseats.com/</a></li>
-      <li><a href="https://simplyquinoa.com" rel="nofollow" target="_blank">https://simplyquinoa.com/</a></li>
-      <li><a href="https://simplyrecipes.co" rel="nofollow" target="_blank">https://simplyrecipes.com/</a></li>
-      <li><a href="https://www.skinnytaste.com" rel="nofollow" target="_blank">https://skinnytaste.com/</a></li>
-      <li><a href="https://southernliving.com/" rel="nofollow" target="_blank">https://southernliving.com/</a></li>
-      <li><a href="https://spendwithpennies.com/" rel="nofollow" target="_blank">https://spendwithpennies.com/</a></li>
-      <li><a href="https://steamykitchen.com" rel="nofollow" target="_blank">https://steamykitchen.com/</a></li>
-      <li><a href="https://tastesoflizzyt.com" rel="nofollow" target="_blank">https://tastesoflizzyt.com</a></li>
-      <li><a href="https://tasteofhome.com" rel="nofollow" target="_blank">https://tasteofhome.com</a></li>
-      <li><a href="https://tasty.co" rel="nofollow" target="_blank">https://tasty.co</a></li>
-      <li><a href="https://tastykitchen.com" rel="nofollow" target="_blank">https://tastykitchen.com/</a></li>
-      <li><a href="https://thehappyfoodie.co.uk" rel="nofollow" target="_blank">https://thehappyfoodie.co.uk/</a></li>
-      <li><a href="https://thekitchn.com/" rel="nofollow" target="_blank">https://thekitchn.com/</a></li>
-      <li><a href="https://thepioneerwoman.com" rel="nofollow" target="_blank">https://thepioneerwoman.com/</a></li>
-      <li><a href="https://thespruceeats.com/" rel="nofollow" target="_blank">https://thespruceeats.com/</a></li>
-      <li><a href="https://thevintagemixer.com" rel="nofollow" target="_blank">https://thevintagemixer.com/</a></li>
-      <li><a href="https://thewoksoflife.com/" rel="nofollow" target="_blank">https://thewoksoflife.com/</a></li>
-      <li><a href="https://tine.no" rel="nofollow" target="_blank">https://tine.no/</a></li>
-      <li><a href="https://www.tudogostoso.com.br/" rel="nofollow" target="_blank">https://tudogostoso.com.br/</a></li>
-      <li><a href="http://twopeasandtheirpod.com" rel="nofollow" target="_blank">https://twopeasandtheirpod.com/</a>
-      </li>
-      <li><a href="https://vegolosi.it" rel="nofollow" target="_blank">https://vegolosi.it/</a></li>
-      <li><a href="https://watchwhatueat.com/" rel="nofollow" target="_blank">https://watchwhatueat.com/</a></li>
-      <li><a href="https://whatsgabycooking.com" rel="nofollow" target="_blank">https://whatsgabycooking.com/</a></li>
-      <li><a href="https://en.wikibooks.org" rel="nofollow" target="_blank">https://en.wikibooks.org/</a></li>
-      <li><a href="https://yummly.com" rel="nofollow" target="_blank">https://yummly.com/</a></li>
-    </ul>
   </div>
 
+  <br>
+  <br>
+
+  <div class="container">
+    <h2>Recommended Recipe Websites</h2>
+    <br>
+    <div>
+      <ul>
+        <li><a href="https://acouplecooks.com/" rel="nofollow" target="_blank">https://www.acouplecooks.com</a></li>
+        <li><a href="https://allrecipes.com/" rel="nofollow" target="_blank">https://allrecipes.com/</a></li>
+        <li><a href="https://archanaskitchen.com/" rel="nofollow" target="_blank">https://archanaskitchen.com/</a></li>
+        <li><a href="https://www.averiecooks.com/" rel="nofollow" target="_blank">https://averiecooks.com/</a></li>
+        <li><a href="https://bbc.com/food/recipes" rel="nofollow" target="_blank">https://bbc.com/</a></li>
+        <li><a href="http://bbc.co.uk/food/recipes" rel="nofollow" target="_blank">https://bbc.co.uk/</a></li>
+        <li><a href="https://bbcgoodfood.com" rel="nofollow" target="_blank">https://bbcgoodfood.com/</a></li>
+        <li><a href="https://bettycrocker.com" rel="nofollow" target="_blank">https://bettycrocker.com/</a></li>
+        <li><a href="https://bonappetit.com" rel="nofollow" target="_blank">https://bonappetit.com/</a></li>
+        <li><a href="https://bowlofdelicious.com/" rel="nofollow" target="_blank">https://bowlofdelicious.com/</a></li>
+        <li><a href="https://budgetbytes.com" rel="nofollow" target="_blank">https://budgetbytes.com/</a></li>
+        <li><a href="https://closetcooking.com" rel="nofollow" target="_blank">https://closetcooking.com/</a></li>
+        <li><a href="https://cookieandkate.com/" rel="nofollow" target="_blank">https://cookieandkate.com/</a></li>
+        <li><a href="https://cookpad.com/" rel="nofollow" target="_blank">https://cookpad.com/</a></li>
+        <li><a href="https://cookstr.com" rel="nofollow" target="_blank">https://cookstr.com/</a></li>
+        <li><a href="https://copykat.com" rel="nofollow" target="_blank">https://copykat.com/</a></li>
+        <li><a href="https://countryliving.com" rel="nofollow" target="_blank">https://countryliving.com/</a></li>
+        <li><a href="https://cybercook.com.br/" rel="nofollow" target="_blank">https://cybercook.com.br/</a></li>
+        <li><a href="https://delish.com" rel="nofollow" target="_blank">https://delish.com/</a></li>
+        <li><a href="https://epicurious.com" rel="nofollow" target="_blank">https://epicurious.com/</a></li>
+        <li><a href="https://www.fifteenspatulas.com/" rel="nofollow" target="_blank">https://fifteenspatulas.com/</a>
+        </li>
+        <li><a href="https://www.finedininglovers.com" rel="nofollow" target="_blank">https://finedininglovers.com/</a>
+        </li>
+        <li><a href="https://www.fitmencook.com" rel="nofollow" target="_blank">https://fitmencook.com/</a></li>
+        <li><a href="https://www.food.com" rel="nofollow" target="_blank">https://food.com/</a></li>
+        <li><a href="https://www.foodnetwork.com" rel="nofollow" target="_blank">https://foodnetwork.com/</a></li>
+        <li><a href="https://foodrepublic.com" rel="nofollow" target="_blank">https://foodrepublic.com/</a></li>
+        <li><a href="https://geniuskitchen.com" rel="nofollow" target="_blank">https://geniuskitchen.com/</a></li>
+        <li><a href="https://giallozafferano.it" rel="nofollow" target="_blank">https://giallozafferano.it/</a></li>
+        <li><a href="https://www.gimmesomeoven.com/" rel="nofollow" target="_blank">https://gimmesomeoven.com/</a></li>
+        <li><a href="https://gonnawantseconds.com" rel="nofollow" target="_blank">https://gonnawantseconds.com/</a></li>
+        <li><a href="https://gousto.co.uk" rel="nofollow" target="_blank">https://gousto.co.uk/</a></li>
+        <li><a href="https://greatbritishchefs.com" rel="nofollow" target="_blank">https://greatbritishchefs.com/</a>
+        </li>
+        <li><a href="https://www.halfbakedharvest.com/" rel="nofollow" target="_blank">https://halfbakedharvest.com/</a>
+        </li>
+        <li><a href="https://heinzbrasil.com.br" rel="nofollow" target="_blank">https://heinzbrasil.com.br/</a></li>
+        <li><a href="https://hellofresh.com" rel="nofollow" target="_blank">https://hellofresh.com/</a></li>
+        <li><a href="https://hellofresh.co.uk" rel="nofollow" target="_blank">https://hellofresh.co.uk/</a></li>
+        <li><a href="https://hostthetoast.com/" rel="nofollow" target="_blank">https://hostthetoast.com/</a></li>
+        <li><a href="https://101cookbooks.com/" rel="nofollow" target="_blank">https://101cookbooks.com/</a></li>
+        <li><a href="https://receitas.ig.com.br" rel="nofollow" target="_blank">https://receitas.ig.com.br/</a></li>
+        <li><a href="https://inspiralized.com" rel="nofollow" target="_blank">https://inspiralized.com/</a></li>
+        <li><a href="https://jamieoliver.com" rel="nofollow" target="_blank">https://jamieoliver.com/</a></li>
+        <li><a href="https://justbento.com" rel="nofollow" target="_blank">https://justbento.com/</a></li>
+        <li><a href="https://kennymcgovern.com" rel="nofollow" target="_blank">https://kennymcgovern.com/</a></li>
+        <li><a href="https://kochbar.de" rel="nofollow" target="_blank">https://kochbar.de/</a></li>
+        <li><a href="https://lovingitvegan.com/" rel="nofollow" target="_blank">https://lovingitvegan.com/</a></li>
+        <li><a href="https://lecremedelacrumb.com/" rel="nofollow" target="_blank">https://lecremedelacrumb.com/</a>
+        </li>
+        <li><a href="https://marmiton.org/" rel="nofollow" target="_blank">https://marmiton.org/</a></li>
+        <li><a href="https://matprat.no/" rel="nofollow" target="_blank">https://matprat.no/</a></li>
+        <li><a href="http://mindmegette.hu/" rel="nofollow" target="_blank">http://mindmegette.hu/</a></li>
+        <li><a href="https://minimalistbaker.com/" rel="nofollow" target="_blank">https://minimalistbaker.com/</a></li>
+        <li><a href="https://misya.info" rel="nofollow" target="_blank">https://misya.info/</a></li>
+        <li><a href="https://momswithcrockpots.com" rel="nofollow" target="_blank">https://momswithcrockpots.com/</a>
+        </li>
+        <li><a href="http://motherthyme.com/" rel="nofollow" target="_blank">http://motherthyme.com/</a></li>
+        <li><a href="https://mybakingaddiction.com" rel="nofollow" target="_blank">https://mybakingaddiction.com/</a>
+        </li>
+        <li><a href="https://myrecipes.com" rel="nofollow" target="_blank">https://myrecipes.com/</a></li>
+        <li><a href="https://healthyeating.nhlbi.nih.gov" rel="nofollow"
+            target="_blank">https://healthyeating.nhlbi.nih.gov/</a></li>
+        <li><a href="https://cooking.nytimes.com" rel="nofollow" target="_blank">https://cooking.nytimes.com/</a></li>
+        <li><a href="https://ohsheglows.com" rel="nofollow" target="_blank">https://ohsheglows.com/</a></li>
+        <li><a href="https://www.panelinha.com.br" rel="nofollow" target="_blank">https://www.panelinha.com.br/</a></li>
+        <li><a href="https://paninihappy.com" rel="nofollow" target="_blank">https://paninihappy.com/</a></li>
+        <li><a href="https://przepisy.pl" rel="nofollow" target="_blank">https://przepisy.pl/</a></li>
+        <li><a href="https://www.realsimple.com" rel="nofollow" target="_blank">https://realsimple.com/</a></li>
+        <li><a href="https://seriouseats.com" rel="nofollow" target="_blank">https://seriouseats.com/</a></li>
+        <li><a href="https://simplyquinoa.com" rel="nofollow" target="_blank">https://simplyquinoa.com/</a></li>
+        <li><a href="https://simplyrecipes.co" rel="nofollow" target="_blank">https://simplyrecipes.com/</a></li>
+        <li><a href="https://www.skinnytaste.com" rel="nofollow" target="_blank">https://skinnytaste.com/</a></li>
+        <li><a href="https://southernliving.com/" rel="nofollow" target="_blank">https://southernliving.com/</a></li>
+        <li><a href="https://spendwithpennies.com/" rel="nofollow" target="_blank">https://spendwithpennies.com/</a>
+        </li>
+        <li><a href="https://steamykitchen.com" rel="nofollow" target="_blank">https://steamykitchen.com/</a></li>
+        <li><a href="https://tastesoflizzyt.com" rel="nofollow" target="_blank">https://tastesoflizzyt.com</a></li>
+        <li><a href="https://tasteofhome.com" rel="nofollow" target="_blank">https://tasteofhome.com</a></li>
+        <li><a href="https://tasty.co" rel="nofollow" target="_blank">https://tasty.co</a></li>
+        <li><a href="https://tastykitchen.com" rel="nofollow" target="_blank">https://tastykitchen.com/</a></li>
+        <li><a href="https://thehappyfoodie.co.uk" rel="nofollow" target="_blank">https://thehappyfoodie.co.uk/</a></li>
+        <li><a href="https://thekitchn.com/" rel="nofollow" target="_blank">https://thekitchn.com/</a></li>
+        <li><a href="https://thepioneerwoman.com" rel="nofollow" target="_blank">https://thepioneerwoman.com/</a></li>
+        <li><a href="https://thespruceeats.com/" rel="nofollow" target="_blank">https://thespruceeats.com/</a></li>
+        <li><a href="https://thevintagemixer.com" rel="nofollow" target="_blank">https://thevintagemixer.com/</a></li>
+        <li><a href="https://thewoksoflife.com/" rel="nofollow" target="_blank">https://thewoksoflife.com/</a></li>
+        <li><a href="https://tine.no" rel="nofollow" target="_blank">https://tine.no/</a></li>
+        <li><a href="https://www.tudogostoso.com.br/" rel="nofollow" target="_blank">https://tudogostoso.com.br/</a>
+        </li>
+        <li><a href="http://twopeasandtheirpod.com" rel="nofollow" target="_blank">https://twopeasandtheirpod.com/</a>
+        </li>
+        <li><a href="https://vegolosi.it" rel="nofollow" target="_blank">https://vegolosi.it/</a></li>
+        <li><a href="https://watchwhatueat.com/" rel="nofollow" target="_blank">https://watchwhatueat.com/</a></li>
+        <li><a href="https://whatsgabycooking.com" rel="nofollow" target="_blank">https://whatsgabycooking.com/</a></li>
+        <li><a href="https://en.wikibooks.org" rel="nofollow" target="_blank">https://en.wikibooks.org/</a></li>
+        <li><a href="https://yummly.com" rel="nofollow" target="_blank">https://yummly.com/</a></li>
+      </ul>
+    </div>
 
 
+
+  </div>
 </div>
-
 {% endblock %}
 
 {% block footer %}
