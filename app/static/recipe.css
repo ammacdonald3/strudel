@@ -186,7 +186,8 @@ dt {
 }
 
 .big-checkbox {
-	zoom: 1.5;
+	/* zoom: 1.5; */
+	transform: scale(1.5);
 }
 
 .vertical-center {
