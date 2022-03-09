@@ -378,3 +378,8 @@ dt {
 	height: 0px;
 	margin-bottom: 0px;
 }
+
+.flickeringElementFix {
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+  }
