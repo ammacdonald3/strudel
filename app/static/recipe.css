@@ -382,4 +382,8 @@ dt {
 .flickeringElementFix {
 	-webkit-backface-visibility: hidden;
 	backface-visibility: hidden;
-  }
+}
+
+.checkboxes label{
+	margin: 0px 30px 0px 7px;
+}
