@@ -17,11 +17,11 @@ active
     <div class="container">
         <div class="btn-group btn-group-toggle btn-block" data-toggle="buttons">
 
-            <a href="{{ url_for('recipe_list_favorites') }}" class="btn btn-outline-success active">
+            <a href="{{ url_for('recipe_list_favorites') }}" class="btn btn-outline-success">
                 <input type="radio" name="recipe_source" value="fav" id="fav" autocomplete="off"> Favorites
             </a>
 
-            <a href="{{ url_for('recipe_list_yours') }} " class="btn btn-outline-success active">
+            <a href="{{ url_for('recipe_list_yours') }} " class="btn btn-outline-success">
                 <input type="radio" name="recipe_source" value="you" id="you" autocomplete="off"> Uploaded by
                 You
             </a>
@@ -30,7 +30,7 @@ active
                 <input type="radio" name="recipe_source" value="editor" id="editor" autocomplete="off" checked> Editor's Picks
             </a>
 
-            <a href="{{ url_for('recipe_list_others') }} " class="btn btn-outline-success active">
+            <a href="{{ url_for('recipe_list_others') }} " class="btn btn-outline-success">
                 <input type="radio" name="recipe_source" value="all" id="all" autocomplete="off"> Uploaded by Others
             </a>
 

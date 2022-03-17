@@ -21,16 +21,16 @@ active
                 <input type="radio" name="recipe_source" value="fav" id="fav" autocomplete="off" checked> Favorites
             </a>
 
-            <a href="{{ url_for('recipe_list_yours') }} " class="btn btn-outline-success active">
+            <a href="{{ url_for('recipe_list_yours') }} " class="btn btn-outline-success">
                 <input type="radio" name="recipe_source" value="you" id="you" autocomplete="off"> Uploaded by
                 You
             </a>
 
-            <a href="{{ url_for('recipe_list_editor') }} " class="btn btn-outline-success active">
+            <a href="{{ url_for('recipe_list_editor') }} " class="btn btn-outline-success">
                 <input type="radio" name="recipe_source" value="editor" id="editor" autocomplete="off"> Editor's Picks
             </a>
 
-            <a href="{{ url_for('recipe_list_others') }} " class="btn btn-outline-success active">
+            <a href="{{ url_for('recipe_list_others') }} " class="btn btn-outline-success">
                 <input type="radio" name="recipe_source" value="all" id="all" autocomplete="off"> Uploaded by Others
             </a>
 
