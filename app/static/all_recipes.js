@@ -1,4 +1,8 @@
-$(document).ready(function(){
+$(document).ready(function () {
+    // Dispay the number of recipes displayed
+    var recipeLength = $('.recipe-item:visible').length
+    $('.recipe-length span').text(recipeLength);
+
     // Toggle "favorite" button color depending on whether the recipe is one of the user's favorites
     $('.favorite-button').click(function () {
         var $this = $(this);
@@ -10,10 +14,13 @@ $(document).ready(function(){
             $.ajax({
                 url: '/_favorite',
                 type: 'POST',
-                data: { recipe_id:$(this).attr("name"), status:"checked" },
-                success: function(result) {
+                data: {
+                    recipe_id: $(this).attr("name"),
+                    status: "checked"
+                },
+                success: function (result) {
                     // console.log(result);
-                    $( "#favorites-card" ).load(window.location.href + " #favorites-card" );
+                    $("#favorites-card").load(window.location.href + " #favorites-card");
                 }
             });
         } else {
@@ -23,9 +30,12 @@ $(document).ready(function(){
             $.ajax({
                 url: '/_favorite',
                 type: 'POST',
-                data: { recipe_id:$(this).attr("name"), status:"unchecked" },
-                success: function(result) {
-                    $( "#favorites-card" ).load(window.location.href + " #favorites-card" );
+                data: {
+                    recipe_id: $(this).attr("name"),
+                    status: "unchecked"
+                },
+                success: function (result) {
+                    $("#favorites-card").load(window.location.href + " #favorites-card");
                 }
             });
         }
@@ -75,19 +85,19 @@ $(document).ready(function(){
                 $(mealId).text("Add to Meal Plan")
 
                 // Change button data target so that it renders the Breakfast/Lunch/Dinner modal if clicked again
-                    // "Favorites" section
+                // "Favorites" section
                 if ($this.hasClass("fav-meal-button")) {
                     $(mealId).attr("data-target", "#mealtime-modal-fav-".concat(baseMealId))
                 }
-                    // "Your Recipes" section
+                // "Your Recipes" section
                 if ($this.hasClass("your-meal-button")) {
                     $(mealId).attr("data-target", "#mealtime-modal-your-".concat(baseMealId))
                 }
-                    // "Editor's Picks" section
+                // "Editor's Picks" section
                 if ($this.hasClass("editor-meal-button")) {
                     $(mealId).attr("data-target", "#mealtime-modal-editor-".concat(baseMealId))
                 }
-                    // "Uploaded by Others" section
+                // "Uploaded by Others" section
                 if ($this.hasClass("other-meal-button")) {
                     $(mealId).attr("data-target", "#mealtime-modal-other-".concat(baseMealId))
                 }
@@ -96,7 +106,10 @@ $(document).ready(function(){
                 $.ajax({
                     url: '/_meal_plan',
                     type: 'POST',
-                    data: { recipe_id:baseMealId, status:"unchecked" }
+                    data: {
+                        recipe_id: baseMealId,
+                        status: "unchecked"
+                    }
                 });
                 console.log(baseMealId)
             })
@@ -109,25 +122,25 @@ $(document).ready(function(){
         var $this = $(this);
         var baseMealId = $(this).attr("name")
         var mealId = ".meal-".concat($(this).attr("name"));
-        
+
         // Update color of Meal Plan button
         $(mealId).removeClass("btn-success")
         $(mealId).addClass("btn-danger")
 
         // Change button data target so that it renders the Delete Confirm modal if clicked again
-            // "Favorites" section
+        // "Favorites" section
         if ($this.hasClass("meal-breakfast-fav")) {
             $(mealId).attr("data-target", "#mealtime-modal-fav-confirm-delete-".concat(baseMealId))
         }
-            // "Your Recipes" section
+        // "Your Recipes" section
         if ($this.hasClass("meal-breakfast-your")) {
             $(mealId).attr("data-target", "#mealtime-modal-your-confirm-delete-".concat(baseMealId))
         }
-            // "Editor's Picks" section
+        // "Editor's Picks" section
         if ($this.hasClass("meal-breakfast-editor")) {
             $(mealId).attr("data-target", "#mealtime-modal-editor-confirm-delete-".concat(baseMealId))
         }
-            // "Uploaded by Others" section
+        // "Uploaded by Others" section
         if ($this.hasClass("meal-breakfast-other")) {
             $(mealId).attr("data-target", "#mealtime-modal-other-confirm-delete-".concat(baseMealId))
         }
@@ -142,23 +155,26 @@ $(document).ready(function(){
         $.ajax({
             url: '/_meal_breakfast',
             type: 'POST',
-            data: { recipe_id:$(this).attr("name"), status:"checked" }
+            data: {
+                recipe_id: $(this).attr("name"),
+                status: "checked"
+            }
         });
 
         // Render the "success" modal displaying that the recipe was added to the breakfast meal plan
-            // "Favorites" section
+        // "Favorites" section
         if ($this.hasClass("meal-breakfast-fav")) {
             var successModalId = "#mealtime-modal-fav-success-".concat($(this).attr("name"));
         }
-            // "Your Recipes" section
+        // "Your Recipes" section
         if ($this.hasClass("meal-breakfast-your")) {
             var successModalId = "#mealtime-modal-your-success-".concat($(this).attr("name"));
         }
-            // "Editor's Picks" section
+        // "Editor's Picks" section
         if ($this.hasClass("meal-breakfast-editor")) {
             var successModalId = "#mealtime-modal-editor-success-".concat($(this).attr("name"));
         }
-            // "Uploaded by Others" section
+        // "Uploaded by Others" section
         if ($this.hasClass("meal-breakfast-other")) {
             var successModalId = "#mealtime-modal-other-success-".concat($(this).attr("name"));
         }
@@ -171,25 +187,25 @@ $(document).ready(function(){
         var $this = $(this);
         var baseMealId = $(this).attr("name")
         var mealId = ".meal-".concat($(this).attr("name"));
-        
+
         // Update color of Meal Plan button
         $(mealId).removeClass("btn-success")
         $(mealId).addClass("btn-danger")
 
         // Change button data target so that it renders the Delete Confirm modal if clicked again
-            // "Favorites" section
+        // "Favorites" section
         if ($this.hasClass("meal-lunch-fav")) {
             $(mealId).attr("data-target", "#mealtime-modal-fav-confirm-delete-".concat(baseMealId))
         }
-            // "Your Recipes" section
+        // "Your Recipes" section
         if ($this.hasClass("meal-lunch-your")) {
             $(mealId).attr("data-target", "#mealtime-modal-your-confirm-delete-".concat(baseMealId))
         }
-            // "Editor's Picks" section
+        // "Editor's Picks" section
         if ($this.hasClass("meal-lunch-editor")) {
             $(mealId).attr("data-target", "#mealtime-modal-editor-confirm-delete-".concat(baseMealId))
         }
-            // "Uploaded by Others" section
+        // "Uploaded by Others" section
         if ($this.hasClass("meal-lunch-other")) {
             $(mealId).attr("data-target", "#mealtime-modal-other-confirm-delete-".concat(baseMealId))
         }
@@ -204,23 +220,26 @@ $(document).ready(function(){
         $.ajax({
             url: '/_meal_lunch',
             type: 'POST',
-            data: { recipe_id:$(this).attr("name"), status:"checked" }
+            data: {
+                recipe_id: $(this).attr("name"),
+                status: "checked"
+            }
         });
 
         // Render the "success" modal displaying that the recipe was added to the lunch meal plan
-            // "Favorites" section
+        // "Favorites" section
         if ($this.hasClass("meal-lunch-fav")) {
             var successModalId = "#mealtime-modal-fav-success-".concat($(this).attr("name"));
         }
-                // "Your Recipes" section
+        // "Your Recipes" section
         if ($this.hasClass("meal-lunch-your")) {
             var successModalId = "#mealtime-modal-your-success-".concat($(this).attr("name"));
         }
-                // "Editor's Picks" section
+        // "Editor's Picks" section
         if ($this.hasClass("meal-lunch-editor")) {
             var successModalId = "#mealtime-modal-editor-success-".concat($(this).attr("name"));
         }
-                // "Uploaded by Others" section
+        // "Uploaded by Others" section
         if ($this.hasClass("meal-lunch-other")) {
             var successModalId = "#mealtime-modal-other-success-".concat($(this).attr("name"));
         }
@@ -233,25 +252,25 @@ $(document).ready(function(){
         var $this = $(this);
         var baseMealId = $(this).attr("name")
         var mealId = ".meal-".concat($(this).attr("name"));
-        
+
         // Update color of Meal Plan button
         $(mealId).removeClass("btn-success")
         $(mealId).addClass("btn-danger")
 
         // Change button data target so that it renders the Delete Confirm modal if clicked again
-            // "Favorites" section
+        // "Favorites" section
         if ($this.hasClass("meal-dinner-fav")) {
             $(mealId).attr("data-target", "#mealtime-modal-fav-confirm-delete-".concat(baseMealId))
         }
-            // "Your Recipes" section
+        // "Your Recipes" section
         if ($this.hasClass("meal-dinner-your")) {
             $(mealId).attr("data-target", "#mealtime-modal-your-confirm-delete-".concat(baseMealId))
         }
-            // "Editor's Picks" section
+        // "Editor's Picks" section
         if ($this.hasClass("meal-dinner-editor")) {
             $(mealId).attr("data-target", "#mealtime-modal-editor-confirm-delete-".concat(baseMealId))
         }
-            // "Uploaded by Others" section
+        // "Uploaded by Others" section
         if ($this.hasClass("meal-dinner-other")) {
             $(mealId).attr("data-target", "#mealtime-modal-other-confirm-delete-".concat(baseMealId))
         }
@@ -266,30 +285,32 @@ $(document).ready(function(){
         $.ajax({
             url: '/_meal_dinner',
             type: 'POST',
-            data: { recipe_id:$(this).attr("name"), status:"checked" }
+            data: {
+                recipe_id: $(this).attr("name"),
+                status: "checked"
+            }
         });
 
         // Render the "success" modal displaying that the recipe was added to the dinner meal plan
-            // "Favorites" section
+        // "Favorites" section
         if ($this.hasClass("meal-dinner-fav")) {
             var successModalId = "#mealtime-modal-fav-success-".concat($(this).attr("name"));
         }
-            // "Your Recipes" section
+        // "Your Recipes" section
         if ($this.hasClass("meal-dinner-your")) {
             var successModalId = "#mealtime-modal-your-success-".concat($(this).attr("name"));
         }
-            // "Editor's Picks" section
+        // "Editor's Picks" section
         if ($this.hasClass("meal-dinner-editor")) {
             var successModalId = "#mealtime-modal-editor-success-".concat($(this).attr("name"));
         }
-            // "Uploaded by Others" section
+        // "Uploaded by Others" section
         if ($this.hasClass("meal-dinner-other")) {
             var successModalId = "#mealtime-modal-other-success-".concat($(this).attr("name"));
         }
         $(successModalId).modal('show')
 
     });
-});
 
 
     // meal filters function
