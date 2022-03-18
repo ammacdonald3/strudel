@@ -292,3 +292,280 @@ $(document).ready(function(){
 });
 
 
+    // meal filters function
+    $.fn.mealFilters = function(){ 
+        if($('.meal-uncategorized-check').is(":checked"))
+            $('.meal-uncategorized').show()
+        else
+            $('.meal-uncategorized').hide()
+
+        if($('.breakfast-check').is(":checked") && $('.lunch-check').is(":checked") && $('.dinner-check').is(":checked"))
+            $('.breakfast').show(),
+            $('.lunch').show(),
+            $('.dinner').show(),
+            $('.breakfast-lunch').show(),
+            $('.breakfast-dinner').show(),
+            $('.lunch-dinner').show(),
+            $('.breakfast-lunch-dinner').show();
+        else if(!$('.breakfast-check').is(":checked") && !$('.lunch-check').is(":checked") && !$('.dinner-check').is(":checked"))
+            $('.breakfast').hide(),
+            $('.lunch').hide(),
+            $('.dinner').hide(),
+            $('.breakfast-lunch').hide(),
+            $('.breakfast-dinner').hide(),
+            $('.lunch-dinner').hide(),
+            $('.breakfast-lunch-dinner').hide();
+        else if($('.breakfast-check').is(":checked") && !$('.lunch-check').is(":checked") && !$('.dinner-check').is(":checked"))
+            $('.breakfast').show(),
+            $('.lunch').hide(),
+            $('.dinner').hide(),
+            $('.breakfast-lunch').show(),
+            $('.breakfast-dinner').show(),
+            $('.lunch-dinner').hide(),
+            $('.breakfast-lunch-dinner').show();
+        else if(!$('.breakfast-check').is(":checked") && $('.lunch-check').is(":checked") && !$('.dinner-check').is(":checked"))
+            $('.breakfast').hide(),
+            $('.lunch').show(),
+            $('.dinner').hide(),
+            $('.breakfast-lunch').show(),
+            $('.breakfast-dinner').hide(),
+            $('.lunch-dinner').show(),
+            $('.breakfast-lunch-dinner').show();
+        else if(!$('.breakfast-check').is(":checked") && !$('.lunch-check').is(":checked") && $('.dinner-check').is(":checked"))
+            $('.breakfast').hide(),
+            $('.lunch').hide(),
+            $('.dinner').show(),
+            $('.breakfast-lunch').hide(),
+            $('.breakfast-dinner').show(),
+            $('.lunch-dinner').hide(),
+            $('.breakfast-lunch-dinner').show();
+        else if($('.breakfast-check').is(":checked") && $('.lunch-check').is(":checked") && !$('.dinner-check').is(":checked"))
+            $('.breakfast').show(),
+            $('.lunch').show(),
+            $('.dinner').hide(),
+            $('.breakfast-lunch').show(),
+            $('.breakfast-dinner').show(),
+            $('.lunch-dinner').show(),
+            $('.breakfast-lunch-dinner').show();
+        else if($('.breakfast-check').is(":checked") && !$('.lunch-check').is(":checked") && $('.dinner-check').is(":checked"))
+            $('.breakfast').show(),
+            $('.lunch').hide(),
+            $('.dinner').show(),
+            $('.breakfast-lunch').show(),
+            $('.breakfast-dinner').show(),
+            $('.lunch-dinner').show(),
+            $('.breakfast-lunch-dinner').show();
+        else if(!$('.breakfast-check').is(":checked") && $('.lunch-check').is(":checked") && $('.dinner-check').is(":checked"))
+            $('.breakfast').hide(),
+            $('.lunch').show(),
+            $('.dinner').show(),
+            $('.breakfast-lunch').show(),
+            $('.breakfast-dinner').show(),
+            $('.lunch-dinner').show(),
+            $('.breakfast-lunch-dinner').show();
+        var recipeLength = $('.recipe-item:visible').length
+        $('.recipe-length span').text(recipeLength);
+    }
+
+
+    // Show or hide meal elements based on meal type user-filtering
+    $('.breakfast-check').click(function () {
+        $.fn.mealFilters();
+    })
+
+    $('.lunch-check').click(function () {
+        $.fn.mealFilters();
+    })
+
+    $('.dinner-check').click(function () {
+        $.fn.mealFilters();
+    })
+
+    $('.meal-uncategorized-check').click(function () {
+        $.fn.mealFilters();
+    })
+
+
+    // dietary restrictions function
+    $.fn.dietaryFilters = function(){ 
+        if($('.no-diet-check').is(":checked"))
+            $('.no-diet').show()
+        else
+            $('.no-diet').hide()
+
+        if($('.vegan-check').is(":checked") && $('.vegetarian-check').is(":checked") && $('.gluten-check').is(":checked"))
+            $('.vegan').show(),
+            $('.vegetarian').show(),
+            $('.gluten').show(),
+            $('.vegan-vegetarian').show(),
+            $('.vegan-gluten').show(),
+            $('.vegetarian-gluten').show(),
+            $('.vegan-vegetarian-gluten').show();
+        else if(!$('.vegan-check').is(":checked") && !$('.vegetarian-check').is(":checked") && !$('.gluten-check').is(":checked"))
+            $('.vegan').hide(),
+            $('.vegetarian').hide(),
+            $('.gluten').hide(),
+            $('.vegan-vegetarian').hide(),
+            $('.vegan-gluten').hide(),
+            $('.vegetarian-gluten').hide(),
+            $('.vegan-vegetarian-gluten').hide();
+        else if($('.vegan-check').is(":checked") && !$('.vegetarian-check').is(":checked") && !$('.gluten-check').is(":checked"))
+            $('.vegan').show(),
+            $('.vegetarian').hide(),
+            $('.gluten').hide(),
+            $('.vegan-vegetarian').show(),
+            $('.vegan-gluten').show(),
+            $('.vegetarian-gluten').hide(),
+            $('.vegan-vegetarian-gluten').show();
+        else if(!$('.vegan-check').is(":checked") && $('.vegetarian-check').is(":checked") && !$('.gluten-check').is(":checked"))
+            $('.vegan').hide(),
+            $('.vegetarian').show(),
+            $('.gluten').hide(),
+            $('.vegan-vegetarian').show(),
+            $('.vegan-gluten').hide(),
+            $('.vegetarian-gluten').show(),
+            $('.vegan-vegetarian-gluten').show();
+        else if(!$('.vegan-check').is(":checked") && !$('.vegetarian-check').is(":checked") && $('.gluten-check').is(":checked"))
+            $('.vegan').hide(),
+            $('.vegetarian').hide(),
+            $('.gluten').show(),
+            $('.vegan-vegetarian').hide(),
+            $('.vegan-gluten').show(),
+            $('.vegetarian-gluten').hide(),
+            $('.vegan-vegetarian-gluten').show();
+        else if($('.vegan-check').is(":checked") && $('.vegetarian-check').is(":checked") && !$('.gluten-check').is(":checked"))
+            $('.vegan').show(),
+            $('.vegetarian').show(),
+            $('.gluten').hide(),
+            $('.vegan-vegetarian').show(),
+            $('.vegan-gluten').show(),
+            $('.vegetarian-gluten').show(),
+            $('.vegan-vegetarian-gluten').show();
+        else if($('.vegan-check').is(":checked") && !$('.vegetarian-check').is(":checked") && $('.gluten-check').is(":checked"))
+            $('.vegan').show(),
+            $('.vegetarian').hide(),
+            $('.gluten').show(),
+            $('.vegan-vegetarian').show(),
+            $('.vegan-gluten').show(),
+            $('.vegetarian-gluten').show(),
+            $('.vegan-vegetarian-gluten').show();
+        else if(!$('.vegan-check').is(":checked") && $('.vegetarian-check').is(":checked") && $('.gluten-check').is(":checked"))
+            $('.vegan').hide(),
+            $('.vegetarian').show(),
+            $('.gluten').show(),
+            $('.vegan-vegetarian').show(),
+            $('.vegan-gluten').show(),
+            $('.vegetarian-gluten').show(),
+            $('.vegan-vegetarian-gluten').show();
+        var recipeLength = $('.recipe-item:visible').length
+        $('.recipe-length span').text(recipeLength);
+    }
+
+    // Show or hide diet elements based on user-filtering
+    $('.vegan-check').click(function () {
+        $.fn.dietaryFilters();
+    })
+
+    $('.vegetarian-check').click(function () {
+        $.fn.dietaryFilters();
+    })
+
+    $('.gluten-check').click(function () {
+        $.fn.dietaryFilters();
+    })
+
+    $('.no-diet-check').click(function () {
+        $.fn.dietaryFilters();
+    })
+
+
+    
+    
+    // Show or hide cook time elements based on user-filtering
+    $('.total-time-30-check').click(function () {
+        if($('.total-time-30-check').is(":checked"))   
+            $('.total-time-30').show();
+        else
+            $('.total-time-30').hide();
+        var recipeLength = $('.recipe-item:visible').length
+        $('.recipe-length span').text(recipeLength);
+    })
+
+    $('.total-time-60-check').click(function () {
+        if($('.total-time-60-check').is(":checked"))   
+            $('.total-time-60').show();
+        else
+            $('.total-time-60').hide();
+        var recipeLength = $('.recipe-item:visible').length
+        $('.recipe-length span').text(recipeLength);
+    })
+
+    $('.total-time-90-check').click(function () {
+        if($('.total-time-90-check').is(":checked"))   
+            $('.total-time-90').show();
+        else
+            $('.total-time-90').hide();
+        var recipeLength = $('.recipe-item:visible').length
+        $('.recipe-length span').text(recipeLength);
+    })
+
+    $('.total-time-over-90-check').click(function () {
+        if($('.total-time-over-90-check').is(":checked"))   
+            $('.total-time-over-90').show();
+        else
+            $('.total-time-over-90').hide();
+        var recipeLength = $('.recipe-item:visible').length
+        $('.recipe-length span').text(recipeLength);
+    })
+
+    $('.favorite-check').click(function () {
+        if($('.favorite-check').is(":checked"))   
+            $('.not-favorite').hide();
+        else
+             $('.not-favorite').show();
+        var recipeLength = $('.recipe-item:visible').length
+        $('.recipe-length span').text(recipeLength);
+    })
+
+    $('.user-recipe-check').click(function () {
+        if($('.user-recipe-check').is(":checked"))   
+            //$('.user-recipe').show(),
+            $('.not-user-recipe').hide();
+        else
+            //$('.user-recipe').show(),
+            $('.not-user-recipe').show();
+        var recipeLength = $('.recipe-item:visible').length
+        $('.recipe-length span').text(recipeLength);
+        // else
+        //     $('.user-recipe').hide();
+    })
+    
+
+});
+
+
+//Get the button
+let mybutton = document.getElementById("btn-back-to-top");
+
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function () {
+  scrollFunction();
+};
+
+function scrollFunction() {
+  if (
+    document.body.scrollTop > 20 ||
+    document.documentElement.scrollTop > 20
+  ) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+// When the user clicks on the button, scroll to the top of the document
+mybutton.addEventListener("click", backToTop);
+
+function backToTop() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}

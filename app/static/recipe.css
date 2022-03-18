@@ -300,7 +300,8 @@ dt {
 
 
 .fa-trash {
-	zoom: 1.5;
+	/* zoom: 1.5; */
+	transform: scale(1.5);
 }
 
 
@@ -317,6 +318,16 @@ dt {
 .navbar-false {
 	display:none;
 }
+
+#btn-back-to-top {
+	position: fixed;
+	bottom: 20px;
+	right: 25px;
+	display: none;
+	border: 2px solid #f0f0f0;
+	z-index: 500;
+}
+
 
 @media (max-width: 500px) {
 	.fixed-top {
@@ -348,6 +359,9 @@ dt {
 		padding-bottom: 130px;
 		padding-top: 30px;
 	}
+	#btn-back-to-top {
+		bottom: 90px;
+	}
 }
 
 
@@ -358,6 +372,9 @@ dt {
 	}
 	.navbar-true {
 		margin-bottom: 40px;
+	}
+	#btn-back-to-top {
+		bottom: 130px;
 	}
 }
 
