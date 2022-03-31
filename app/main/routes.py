@@ -83,7 +83,9 @@ def validate_image(stream):
 # Define route for landing page
 @bp.route('/')
 def index():
-    return render_template('index.html')
+    google_login_uri = current_app.config['GOOGLE_LOGIN_URI']
+    google_client_id = current_app.config['GOOGLE_CLIENT_ID']
+    return render_template('index.html', google_login_uri=google_login_uri, google_client_id=google_client_id)
 
 
 # Define route for meal selector page

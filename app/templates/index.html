@@ -15,8 +15,8 @@ active
         {% if current_user.is_anonymous %}
         
         <!-- Below code is for Google One Tap -->
-        <div id="g_id_onload" data-client_id="367667722208-rrlvvlknoerth6mvmdsodcvrclvjut7v.apps.googleusercontent.com"
-            data-context="signin" data-login_uri="http://localhost:5000/register" data-auto_select="true">
+        <div id="g_id_onload" data-client_id={{ google_client_id }}
+            data-context="signin" data-login_uri={{ google_login_uri }} data-auto_select="true">
         </div>
 
         <div class="btn-group-lg">

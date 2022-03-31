@@ -31,6 +31,7 @@ from app.auth.send_email import send_password_reset_email
 def login():
     error = None
     google_login_uri = current_app.config['GOOGLE_LOGIN_URI']
+    google_client_id = current_app.config['GOOGLE_CLIENT_ID']
 
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
@@ -54,7 +55,7 @@ def login():
             token = request.form['credential']
 
             # Specify the CLIENT_ID of the app that accesses the backend:
-            idinfo = id_token.verify_oauth2_token(token, requests.Request(), current_app.config['GOOGLE_CLIENT_ID'])
+            idinfo = id_token.verify_oauth2_token(token, requests.Request(), google_client_id)
 
             # ID token is valid. Get the user's Google Account information from the decoded token.
             user_id = idinfo['sub']
@@ -98,7 +99,7 @@ def login():
             # Invalid token
             pass
 
-    return render_template('auth/login.html', title='Sign In', form=form, google_login_uri=google_login_uri)
+    return render_template('auth/login.html', title='Sign In', form=form, google_login_uri=google_login_uri, google_client_id=google_client_id)
 
 
 # Define route for logout functionality
@@ -112,6 +113,7 @@ def logout():
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     google_login_uri = current_app.config['GOOGLE_LOGIN_URI']
+    google_client_id = current_app.config['GOOGLE_CLIENT_ID']
 
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
@@ -141,7 +143,7 @@ def register():
             token = request.form['credential']
 
             # Specify the CLIENT_ID of the app that accesses the backend:
-            idinfo = id_token.verify_oauth2_token(token, requests.Request(), current_app.config['GOOGLE_CLIENT_ID'])
+            idinfo = id_token.verify_oauth2_token(token, requests.Request(), google_client_id)
 
             # ID token is valid. Get the user's Google Account information from the decoded token.
             user_id = idinfo['sub']
@@ -187,7 +189,7 @@ def register():
             pass
 
     
-    return render_template('auth/register.html', title='Register', form=form, google_login_uri=google_login_uri)
+    return render_template('auth/register.html', title='Register', form=form, google_login_uri=google_login_uri, google_client_id=google_client_id)
 
 
 # Define route for password reset page
