@@ -18,12 +18,12 @@ active
 
         <!-- Display button so that user can navigate to All Recipes page -->
         <div class="form-group col-sm">
-          <a href="{{ url_for('all_recipes') }}" class="btn btn-primary btn-block">Choose Recipes</a>
+          <a href="{{ url_for('main.all_recipes') }}" class="btn btn-primary btn-block">Choose Recipes</a>
         </div>
 
         <!-- Display button so that user can navigate to Meal Selector page -->
         <div class="form-group col-sm">
-          <a href="{{ url_for('meal_selector') }}" class="btn btn-primary btn-block">Automatically Generate Recipes</a>
+          <a href="{{ url_for('main.meal_selector') }}" class="btn btn-primary btn-block">Automatically Generate Recipes</a>
         </div>
 
         <!-- Display button so that user can delete all recipes from their current meal plan -->
@@ -102,7 +102,7 @@ active
 
               <!-- Recipe Name -->
               <li id="bfast-li-{{ recipe.Recipe.recipe_id }}">
-                <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                <a href="{{ url_for('main.recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
                   class="text-decoration-none">
                   <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
                   <!-- Recipe Prep/Cook Time -->
@@ -126,7 +126,7 @@ active
                   <!-- Display button so that user can view recipe's page -->
                   <div class="row" style="padding-top: 20px;">
                     <div class="form-group col-sm">
-                      <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                      <a href="{{ url_for('main.recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
                         class="btn btn-primary btn-block">View Recipe</a>
                     </div>
 
@@ -219,7 +219,7 @@ active
 
               <!-- Recipe Name -->
               <li id="lunch-li-{{ recipe.Recipe.recipe_id }}">
-                <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                <a href="{{ url_for('main.recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
                   class="text-decoration-none">
                   <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
                   <!-- Recipe Prep/Cook Time -->
@@ -243,7 +243,7 @@ active
                   <!-- Display button so that user can view recipe's page -->
                   <div class="row" style="padding-top: 20px;">
                     <div class="form-group col-sm">
-                      <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                      <a href="{{ url_for('main.recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
                         class="btn btn-primary btn-block">View Recipe</a>
                     </div>
 
@@ -335,7 +335,7 @@ active
 
               <!-- Recipe Name -->
               <li id="dinner-li-{{ recipe.Recipe.recipe_id }}">
-                <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                <a href="{{ url_for('main.recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
                   class="text-decoration-none">
                   <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
                   <!-- Recipe Prep/Cook Time -->
@@ -359,7 +359,7 @@ active
                   <!-- Display button so that user can view recipe's page -->
                   <div class="row" style="padding-top: 20px;">
                     <div class="form-group col-sm">
-                      <a href="{{ url_for('recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                      <a href="{{ url_for('main.recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
                         class="btn btn-primary btn-block">View Recipe</a>
                     </div>
 

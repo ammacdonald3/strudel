@@ -51,7 +51,7 @@
 
 <body id="{% block bodyid %}{% endblock %}">
   <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark navbar-true">
-    <a class="navbar-brand title-name" href="{{ url_for('index') }}">Strudel</a>
+    <a class="navbar-brand title-name" href="{{ url_for('main.index') }}">Strudel</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -68,9 +68,9 @@
             Add New Recipes
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item {% block nav_auto_import %}{% endblock %}" href="{{ url_for('auto_import') }}">Auto
+            <a class="dropdown-item {% block nav_auto_import %}{% endblock %}" href="{{ url_for('main.auto_import') }}">Auto
               Import</a>
-            <a class="dropdown-item {% block nav_add %}{% endblock %}" href="{{ url_for('add_recipe') }}">Manual
+            <a class="dropdown-item {% block nav_add %}{% endblock %}" href="{{ url_for('main.add_recipe') }}">Manual
               Entry</a>
           </div>
         </li>
@@ -82,25 +82,25 @@
             View Recipes
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item {% block nav_search %}{% endblock %}" href="{{ url_for('search') }}">Search</a>
+            <a class="dropdown-item {% block nav_search %}{% endblock %}" href="{{ url_for('main.search') }}">Search</a>
             <a class="dropdown-item {% block nav_recipes %}{% endblock %}"
-              href="{{ url_for('recipe_list_favorites') }}">View All Recipes</a>
+              href="{{ url_for('main.recipe_list_favorites') }}">View All Recipes</a>
           </div>
         </li>
 
 
 
         <li class="nav-item {% block nav_meal_selector %}{% endblock %}">
-          <a class="nav-link" href="{{ url_for('meal_selector') }}">Meal Selector</a>
+          <a class="nav-link" href="{{ url_for('main.meal_selector') }}">Meal Selector</a>
         </li>
 
         <li class="nav-item {% block nav_meal_plan %}{% endblock %}">
-          <a class="nav-link" href="{{ url_for('meal_plan') }}">Meal
+          <a class="nav-link" href="{{ url_for('main.meal_plan') }}">Meal
             Plan</a>
         </li>
 
         <li class="nav-item {% block nav_shopping_list %}{% endblock %}">
-          <a class="nav-link" href="{{ url_for('shopping_list') }}">Shopping List</a>
+          <a class="nav-link" href="{{ url_for('main.shopping_list') }}">Shopping List</a>
         </li>
 
 
@@ -110,9 +110,10 @@
       <ul class="navbar-nav">
         <li class="nav-item">
           {% if current_user.is_anonymous %}
-          <a class="nav-link active" href="{{ url_for('login') }}">Login</a>
+          <a class="nav-link active" href="{{ url_for('auth.login') }}">Login</a>
           {% else %}
-          <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+          <!-- Below class stops Google One Tap from auto logging in the user after they intentionally log out -->
+          <a class="nav-link g_id_signout" href="{{ url_for('auth.logout') }}">Logout</a>
           {% endif %}
         </li>
       </ul>

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, abort, send_from_directory
+from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, abort, send_from_directory, current_app
 import flask_sqlalchemy
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from werkzeug.utils import secure_filename
@@ -13,13 +13,19 @@ import os
 import imghdr
 import json
 import boto3
+from google.oauth2 import id_token
+from google.auth.transport import requests
 
-from app import app, db
+#from app import app, db
+from flask import current_app as app
 
+from app import db
 
-from app.models import Recipe, Ingredient, Recipe_Step, App_User, LoginForm, RegistrationForm, Current_Meal, User_Recipe, Favorite_Recipe, Shopping_List, App_Error, ResetPasswordRequestForm, ResetPasswordForm
+from app.models import Recipe, Ingredient, Recipe_Step, App_User, Current_Meal, User_Recipe, Favorite_Recipe, Shopping_List, App_Error
 
-from app.email import send_password_reset_email
+# from app.send_email import send_password_reset_email
+
+from app.main import bp
 
 
 # Function to upload a file to an S3 bucket
@@ -74,27 +80,14 @@ def validate_image(stream):
     return '.' + (format if format != 'jpeg' else 'jpg')
 
 
-# Define error handler route for 413
-@app.errorhandler(413)
-def too_large(e):
-    return render_template("error.html", e=e), 413
-
-
-
 # Define route for landing page
-@app.route('/')
+@bp.route('/')
 def index():
     return render_template('index.html')
 
 
-# Define route for errors
-@app.route('/error')
-def error():
-    return render_template('error.html')
-
-
 # Define route for meal selector page
-@app.route('/meal_selector', methods=['GET', 'POST'])
+@bp.route('/meal_selector', methods=['GET', 'POST'])
 @login_required
 def meal_selector():
     output = []
@@ -391,7 +384,7 @@ def meal_selector():
 
 
 # Define route for meal plan page
-@app.route('/meal_plan', methods=['GET', 'POST'])
+@bp.route('/meal_plan', methods=['GET', 'POST'])
 @login_required
 def meal_plan():
 
@@ -440,7 +433,7 @@ def meal_plan():
     
 
 # Define route for shopping list page
-@app.route('/shopping_list', methods=['GET', 'POST'])
+@bp.route('/shopping_list', methods=['GET', 'POST'])
 @login_required
 def shopping_list():
     output = []
@@ -671,7 +664,7 @@ def shopping_list():
 
 
 # Define route for checking off shopping list items with ajax
-@app.route('/_shopping_list_items', methods=['GET', 'POST'])
+@bp.route('/_shopping_list_items', methods=['GET', 'POST'])
 @login_required
 def _shopping_list_items():
     status = request.form.get('status')
@@ -702,7 +695,7 @@ def _shopping_list_items():
 
 
 # Define route for manually adding recipe to meal plan
-@app.route('/_meal_plan', methods=['GET', 'POST'])
+@bp.route('/_meal_plan', methods=['GET', 'POST'])
 @login_required
 def _meal_plan():
     status = request.form.get('status')
@@ -778,7 +771,7 @@ def _meal_plan():
 
 
 # Define route for clearing all items from meal plan
-@app.route('/_clear_meal_plan', methods=['GET','POST'])
+@bp.route('/_clear_meal_plan', methods=['GET','POST'])
 @login_required
 def _clear_meal_plan():
     
@@ -811,7 +804,7 @@ def _clear_meal_plan():
 
 
 # Define route for manually adding BREAKFAST recipe to meal plan
-@app.route('/_meal_breakfast', methods=['GET', 'POST'])
+@bp.route('/_meal_breakfast', methods=['GET', 'POST'])
 @login_required
 def _meal_breakfast():
     status = request.form.get('status')
@@ -848,7 +841,7 @@ def _meal_breakfast():
 
 
 # Define route for manually adding LUNCH recipe to meal plan
-@app.route('/_meal_lunch', methods=['GET', 'POST'])
+@bp.route('/_meal_lunch', methods=['GET', 'POST'])
 @login_required
 def _meal_lunch():
     status = request.form.get('status')
@@ -885,7 +878,7 @@ def _meal_lunch():
 
 
 # Define route for manually adding DINNER recipe to meal plan
-@app.route('/_meal_dinner', methods=['GET', 'POST'])
+@bp.route('/_meal_dinner', methods=['GET', 'POST'])
 @login_required
 def _meal_dinner():
     status = request.form.get('status')
@@ -922,7 +915,7 @@ def _meal_dinner():
 
 
 # Define route for manually removing BREAKFAST recipe from meal plan
-@app.route('/_remove_bfast_meal_plan', methods=['GET', 'POST'])
+@bp.route('/_remove_bfast_meal_plan', methods=['GET', 'POST'])
 @login_required
 def _remove_bfast_meal_plan():
     recipe_id = request.form.get('recipe_id')
@@ -936,7 +929,7 @@ def _remove_bfast_meal_plan():
 
 
 # Define route for manually removing LUNCH recipe from meal plan
-@app.route('/_remove_lunch_meal_plan', methods=['GET', 'POST'])
+@bp.route('/_remove_lunch_meal_plan', methods=['GET', 'POST'])
 @login_required
 def _remove_lunch_meal_plan():
     recipe_id = request.form.get('recipe_id')
@@ -950,7 +943,7 @@ def _remove_lunch_meal_plan():
 
 
 # Define route for manually removing DINNER recipe from meal plan
-@app.route('/_remove_dinner_meal_plan', methods=['GET', 'POST'])
+@bp.route('/_remove_dinner_meal_plan', methods=['GET', 'POST'])
 @login_required
 def _remove_dinner_meal_plan():
     recipe_id = request.form.get('recipe_id')
@@ -964,7 +957,7 @@ def _remove_dinner_meal_plan():
 
 
 # Define route for manually adding recipe to favorites
-@app.route('/_favorite', methods=['GET', 'POST'])
+@bp.route('/_favorite', methods=['GET', 'POST'])
 @login_required
 def _favorite():
     status = request.form.get('status')
@@ -1013,7 +1006,7 @@ def _favorite():
 
 
 # Define route for deleting shopping list items
-@app.route('/_del_shopping_list_items', methods=['GET', 'POST'])
+@bp.route('/_del_shopping_list_items', methods=['GET', 'POST'])
 @login_required
 def _del_shopping_list_items():
     s_list_id = request.form.get('s_list_id')
@@ -1039,7 +1032,7 @@ def _del_shopping_list_items():
 
 
 # Define route for page to manually add recipes
-@app.route('/add', methods=['GET', 'POST'])
+@bp.route('/add', methods=['GET', 'POST'])
 @login_required
 def add_recipe():
     output = []
@@ -1184,7 +1177,7 @@ def add_recipe():
 
 
 # Define route for page to upload images to existing recipes
-@app.route('/upload_image/<recipe_id>', methods=['GET', 'POST'])
+@bp.route('/upload_image/<recipe_id>', methods=['GET', 'POST'])
 @login_required
 def upload_image(recipe_id):
     output = []
@@ -1208,11 +1201,11 @@ def upload_image(recipe_id):
                 else:
                     file_ext = file_ext_base
 
-                if file_ext in app.config['UPLOAD_EXTENSIONS'] and \
+                if file_ext in current_app.config['UPLOAD_EXTENSIONS'] and \
                         file_ext == validate_image(uploaded_file.stream):
                         # Generate unique file name
                         filename = str(uuid4()) + file_ext
-                        uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
+                        uploaded_file.save(os.path.join(current_app.config['UPLOAD_PATH'], filename))
                         image_url = upload_file(f"uploads/{filename}", BUCKET)
 
                         db.session.query(Recipe).filter_by(recipe_id=recipe_id).update(dict(recipe_image_url=image_url))
@@ -1243,7 +1236,7 @@ def upload_image(recipe_id):
 
 
 # Define route for page to modify existing recipes
-@app.route('/edit/<recipe_id>', methods=['GET', 'POST'])
+@bp.route('/edit/<recipe_id>', methods=['GET', 'POST'])
 @login_required
 def edit_recipe(recipe_id):
     output = []
@@ -1424,7 +1417,7 @@ def edit_recipe(recipe_id):
 
 
 # Define route to auto import / scrape recipe from external website
-@app.route('/auto_import', methods=['GET', 'POST'])
+@bp.route('/auto_import', methods=['GET', 'POST'])
 @login_required
 def auto_import():
     output = []
@@ -1657,7 +1650,7 @@ def auto_import():
 
 
 # Define route for page to view all recipes
-@app.route('/all_recipes', methods=['GET', 'POST'])
+@bp.route('/all_recipes', methods=['GET', 'POST'])
 @login_required
 def all_recipes():
     # Your favorite recipes (created both by you and others)
@@ -1826,7 +1819,7 @@ def all_recipes():
 
 
 # Define route for page to view your favorite recipes
-@app.route('/recipe_list_favorites', methods=['GET', 'POST'])
+@bp.route('/recipe_list_favorites', methods=['GET', 'POST'])
 @login_required
 def recipe_list_favorites():
     # Your favorite recipes (created both by you and others)
@@ -1937,7 +1930,7 @@ def recipe_list_favorites():
 
 
 # Define route for page to view your uploaded recipes
-@app.route('/recipe_list_yours', methods=['GET', 'POST'])
+@bp.route('/recipe_list_yours', methods=['GET', 'POST'])
 @login_required
 def recipe_list_yours():
 
@@ -2052,7 +2045,7 @@ def recipe_list_yours():
 
 
 # Define route for page to view editor's picks recipes
-@app.route('/recipe_list_editor', methods=['GET', 'POST'])
+@bp.route('/recipe_list_editor', methods=['GET', 'POST'])
 @login_required
 def recipe_list_editor():
     # Editor's Picks recipes (recipes favorited by Admin)
@@ -2165,7 +2158,7 @@ def recipe_list_editor():
 
 
 # Define route for page to view recipes uploaded by others
-@app.route('/recipe_list_others', methods=['GET', 'POST'])
+@bp.route('/recipe_list_others', methods=['GET', 'POST'])
 @login_required
 def recipe_list_others():
     
@@ -2281,7 +2274,7 @@ def recipe_list_others():
 
 
 # Define route for page to view all recipes
-""" @app.route('/all_recipes', methods=['GET', 'POST'])
+""" @bp.route('/all_recipes', methods=['GET', 'POST'])
 @login_required
 def all_recipes():
     # All recipes list (created both by you and others)
@@ -2392,7 +2385,7 @@ def all_recipes():
  """
 
 # Define route for recipe search
-@app.route('/search', methods=['GET', 'POST'])
+@bp.route('/search', methods=['GET', 'POST'])
 @login_required
 def search():
 
@@ -2447,7 +2440,7 @@ def search():
 
 
 # Define route for page to view detailed info about one recipe
-@app.route('/recipe/<recipe_id>', methods=['GET', 'POST'])
+@bp.route('/recipe/<recipe_id>', methods=['GET', 'POST'])
 @login_required
 def recipe_detail(recipe_id):
 
@@ -2649,101 +2642,3 @@ def recipe_detail(recipe_id):
     
     
 
-# Define route for login page
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    error = None
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-
-    form = LoginForm()
-
-    if form.validate_on_submit():
-        app_user = App_User.query.filter_by(app_username=form.app_username.data).first()
-        if app_user is None or not app_user.check_password(form.password.data):
-            # flash('Invalid username or password')
-            error = 'Invalid username or password'
-            # return redirect(url_for('login'))
-            return render_template('login.html', title='Sign In', form=form, error=error)
-        login_user(app_user, remember=form.remember_me.data)
-        return redirect(url_for('index'))
-
-    if form.validate_on_submit():
-        app_user = App_User.query.filter_by(app_username=form.app_username.data).first()
-        if app_user is None or not app_user.check_password(form.password.data):
-            # flash('Invalid username or password')
-            error = 'Invalid username or password'
-            # return redirect(url_for('login'))
-            return render_template('login.html', title='Sign In', form=form, error=error)
-        login_user(app_user, remember=form.remember_me.data)
-        next_page = request.args.get('next')
-        if not next_page:
-            next_page = url_for('index')
-        return redirect(next_page)
-
-    return render_template('login.html', title='Sign In', form=form)
-
-
-# Define route for logout functionality
-@app.route('/logout')
-def logout():
-    logout_user()
-    return redirect(url_for('index'))
-
-
-# Define route for registration page
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        app_user = App_User(
-            first_name=form.first_name.data,
-            last_name=form.last_name.data,
-            app_username=form.app_username.data,
-            app_email=form.app_email.data,
-            insert_datetime=datetime.now()
-            )
-        app_user.set_password(form.password.data)
-        db.session.add(app_user)
-        db.session.commit()
-        flash('Congratulations, you are now a registered user!')
-        login_user(app_user)
-        next_page = url_for('index')
-        return redirect(next_page)
-        #return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)
-
-
-# Define route for password reset page
-@app.route('/reset_password_request', methods=['GET', 'POST'])
-def reset_password_request():
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-    form = ResetPasswordRequestForm()
-    if form.validate_on_submit():
-        user = App_User.query.filter_by(app_email=form.email.data).first()
-        if user:
-            send_password_reset_email(user)
-        flash('Check your email for the instructions to reset your password')
-        return redirect(url_for('login'))
-    return render_template('reset_password_request.html',
-                           title='Reset Password', form=form)
-
-
-# Define route for password reset form
-@app.route('/reset_password/<token>', methods=['GET', 'POST'])
-def reset_password(token):
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-    user = App_User.verify_reset_password_token(token)
-    if not user:
-        return redirect(url_for('index'))
-    form = ResetPasswordForm()
-    if form.validate_on_submit():
-        user.set_password(form.password.data)
-        db.session.commit()
-        flash('Your password has been reset.')
-        return redirect(url_for('login'))
-    return render_template('reset_password.html', form=form)

@@ -21,21 +21,23 @@
         * ```export FLASK_APP="strudel.py"```
         * ```export APP_SETTINGS="config.DevelopmentConfig"```
         * ```export DATABASE_URL="postgresql:///recipe-dev"```
+        * ```export GOOGLE_LOGIN_URI="http://localhost:5000/auth/register"```
+        * ```export GOOGLE_CLIENT_ID="<populate from Google>```
     * WINDOWS
         * ```$env:FLASK_APP="strudel.py"```
         * ```$env:APP_SETTINGS="config.DevelopmentConfig"```
         * ```$env:DATABASE_URL="postgresql:///recipe-dev"```
 8. Navigate to root directory of project
 9. Create data model in database
-    * ```python manage.py db init```
-    * ```python manage.py db migrate```
-    * ```python manage.py db upgrade```
+    * ```flask db init```
+    * ```flask db migrate -m "Initial migration."```
+    * ```flask db upgrade```
 10. Run flask app
-    * MAC OS: ```flask run```
+    * MAC OS: ```flask run --host=0.0.0.0```
     * WINDOWS: ```python -m flask run```
 11. Update Heroku database
-    * ``` heroku run python manage.py db upgrade --app recipe-stage ```
-    * ``` heroku run python manage.py db upgrade --app recipe-prod ```
+    * ``` heroku run flask db upgrade --app recipe-stage ```
+    * ``` heroku run flask db upgrade --app recipe-prod ```
 12. After each update
     * Commit changes in local git
     * Push committed changes to remote STAGE git branch

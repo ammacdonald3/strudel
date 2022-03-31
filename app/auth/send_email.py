@@ -1,7 +1,7 @@
 from flask_mail import Message
 from app import mail
-from flask import render_template
-from app import app
+from flask import render_template, current_app
+#from app import app
 from threading import Thread
 
 def send_async_email(app, msg):
@@ -19,11 +19,11 @@ def send_email(subject, sender, recipients, text_body, html_body):
 def send_password_reset_email(app_user):
     token = app_user.get_reset_password_token()
     send_email('[Strudel] Reset Your Password',
-               sender=app.config['ADMINS'][0],
+               sender=current_app.config['ADMINS'][0],
                recipients=[app_user.app_email],
-               text_body=render_template('email/reset_password.txt',
+               text_body=render_template('email_templates/reset_password.txt',
                                          app_user=app_user, token=token),
-               html_body=render_template('email/reset_password.html',
+               html_body=render_template('email_templates/reset_password.html',
                                          app_user=app_user, token=token))
 
 

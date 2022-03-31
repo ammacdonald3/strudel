@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+{% block nav_login %}
+active
+{% endblock %}
+
+
+{% block body %}
+<div class="container feature-page">
+
+    <div class="container" id="title">
+        <h2>Sign In</h2>
+    </div>
+
+    <div class="container">
+        <div class="error">{{ error }}</div>
+        <br>
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+
+            <!-- Google Sign-in Button -->
+            <div class="row">
+                <div class="form-group col-md-8 center-button">
+                    <div id="g_id_onload"
+                        data-client_id="367667722208-rrlvvlknoerth6mvmdsodcvrclvjut7v.apps.googleusercontent.com"
+                        data-context="signin" data-ux_mode="redirect" data-login_uri={{ google_login_uri }}
+                        data-auto_select="true">
+                    </div>
+
+                    <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-text="signin_with"
+                        data-size="large" data-logo_alignment="left" data-theme="outline" data_width="1000">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-8">
+                    <h4 class="inline-text"> OR </h4>
+                </div>
+            </div>
+
+            <!-- Native Login Form -->
+            <div class="row">
+                <div class="form-group col-sm-8">
+                    {{ form.app_email.label }}<br>
+                    {{ form.app_email(size=32, class="form-control col-sm-12", placeholder="Enter email") }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-8">
+                    {{ form.password.label }}<br>
+                    {{ form.password(size=32, class="form-control col-sm-12", placeholder="Enter password") }}
+                </div>
+            </div>
+            <p class="checkboxes">{{ form.remember_me(class="big-checkbox") }} {{ form.remember_me.label }}</p>
+            <div class="form-group">
+                <div class="row" style="padding-top: 20px;">
+                    <div class="form-group col-sm-8">
+                        {{ form.submit(class="btn btn-primary btn-block", id="sign-in-button") }}
+
+                    </div>
+                    <div class="form-group col-sm-8" id="hidden-button"><button type="button"
+                            class="btn invisible btn-block">Primary</button></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <!-- Forgot Password Button -->
+                        <a class="btn btn-warning btn-block" href="{{ url_for('auth.reset_password_request') }}">
+                            Forgot Password
+                        </a>
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <!-- Register Button -->
+                        <a class="btn btn-success btn-block" href="{{ url_for('auth.register') }}">
+                            Register
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+{% endblock %}

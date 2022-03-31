@@ -13,11 +13,17 @@ active
         <hr>
 
         {% if current_user.is_anonymous %}
+        
+        <!-- Below code is for Google One Tap -->
+        <div id="g_id_onload" data-client_id="367667722208-rrlvvlknoerth6mvmdsodcvrclvjut7v.apps.googleusercontent.com"
+            data-context="signin" data-login_uri="http://localhost:5000/register" data-auto_select="true">
+        </div>
+
         <div class="btn-group-lg">
-            <a class="btn btn-primary btn-index" href="{{ url_for('register') }}">
+            <a class="btn btn-primary btn-index btn-border" href="{{ url_for('auth.register') }}">
                 Register
             </a>
-            <a class="btn btn-success btn-index" href="{{ url_for('login') }}">
+            <a class="btn btn-success btn-index btn-border" href="{{ url_for('auth.login') }}">
                 Login
             </a>
         </div>
@@ -27,17 +33,17 @@ active
     <div class="form-group">
         <div class="row" style="padding-top: 20px;">
             <div class="form-group col-sm-4">
-                <a href="{{ url_for('recipe_list_favorites') }}" class="btn btn-info btn-block rounded-pill">
+                <a href="{{ url_for('main.recipe_list_favorites') }}" class="btn btn-info btn-block rounded-pill btn-border">
                     All Recipes
                 </a>
             </div>
             <div class="form-group col-sm-4">
-                <a href="{{ url_for('meal_plan') }}" class="btn btn-info btn-block rounded-pill">
+                <a href="{{ url_for('main.meal_plan') }}" class="btn btn-info btn-block rounded-pill btn-border">
                     Meal Plan
                 </a>
             </div>
             <div class="form-group col-sm-4">
-                <a href="{{ url_for('shopping_list') }}" class="btn btn-info btn-block rounded-pill">
+                <a href="{{ url_for('main.shopping_list') }}" class="btn btn-info btn-block rounded-pill btn-border">
                     Shopping List
                 </a>
 

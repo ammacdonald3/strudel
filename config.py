@@ -27,6 +27,10 @@ class Config(object):
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     ADMINS = ['strudelapp@gmail.com']
 
+    # Below config for Google Sign-in
+    GOOGLE_LOGIN_URI = os.environ.get('GOOGLE_LOGIN_URI')
+    GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
+
 
 class ProductionConfig(Config):
     DEBUG = False

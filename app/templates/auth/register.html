@@ -13,17 +13,37 @@ active
     <div class="container">
         <form action="" method="post">
             {{ form.hidden_tag() }}
+
+            <!-- Google Sign-up Button -->
             <div class="row">
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-8 center-button">
+                    <div id="g_id_onload"
+                        data-client_id="367667722208-rrlvvlknoerth6mvmdsodcvrclvjut7v.apps.googleusercontent.com"
+                        data-context="signup" data-ux_mode="redirect" data-login_uri={{ google_login_uri }}
+                        data-auto_select="true">
+                    </div>
+
+                    <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-text="signup_with"
+                        data-size="large" data-logo_alignment="left" data-theme="outline" data_width="1000">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-8">
+                        <h4 class="inline-text"> OR </h4>
+                </div>
+            </div>
+
+            <!-- Native Registration Form -->
+            <div class="row">
+                <div class="form-group col-md-4">
                     {{ form.first_name.label }}<br>
                     {{ form.first_name(size=32, class="form-control", placeholder="Enter first name") }}<br>
                     {% for error in form.first_name.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
                 </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     {{ form.last_name.label }}<br>
                     {{ form.last_name(size=32, class="form-control", placeholder="Enter last name") }}<br>
                     {% for error in form.last_name.errors %}
@@ -32,16 +52,7 @@ active
                 </div>
             </div>
             <div class="row">
-                <div class="form-group col-md-6">
-                    {{ form.app_username.label }}<br>
-                    {{ form.app_username(size=32, class="form-control", placeholder="Enter username", autocapitalize="none") }}<br>
-                    {% for error in form.app_username.errors %}
-                    <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-8">
                     {{ form.app_email.label }}<br>
                     {{ form.app_email(size=64, class="form-control", placeholder="Enter email") }}<br>
                     {% for error in form.app_email.errors %}
@@ -50,16 +61,14 @@ active
                 </div>
             </div>
             <div class="row">
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     {{ form.password.label }}<br>
                     {{ form.password(size=32, class="form-control", placeholder="Enter password") }}<br>
                     {% for error in form.password.errors %}
                     <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
                 </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     {{ form.password2.label }}<br>
                     {{ form.password2(size=32, class="form-control", placeholder="Confirm password") }}<br>
                     {% for error in form.password2.errors %}
@@ -67,7 +76,7 @@ active
                     {% endfor %}
                 </div>
             </div>
-            <p>{{ form.submit(class="btn btn-primary col-md-6") }}</p>
+            <p>{{ form.submit(class="btn btn-primary col-md-8") }}</p>
         </form>
     </div>
 </div>
