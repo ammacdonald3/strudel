@@ -32,6 +32,10 @@ def login():
     error = None
     google_login_uri = current_app.config['GOOGLE_LOGIN_URI']
     google_client_id = current_app.config['GOOGLE_CLIENT_ID']
+    print("REQUEST.FORM")
+    print(request.form)
+    print("REQUEST.DATA")
+    print(request.data)
 
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
@@ -114,6 +118,10 @@ def logout():
 def register():
     google_login_uri = current_app.config['GOOGLE_LOGIN_URI']
     google_client_id = current_app.config['GOOGLE_CLIENT_ID']
+    print("REQUEST.FORM")
+    print(request.form)
+    print("REQUEST.DATA")
+    print(request.data)
 
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
