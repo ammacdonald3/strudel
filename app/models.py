@@ -1,3 +1,4 @@
+from flask import current_app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import JSON
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -8,7 +9,6 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from app import db, login
 from time import time
 import jwt
-#from app import app
 
 class App_User(UserMixin, db.Model):
     __tablename__ = 'app_user'
