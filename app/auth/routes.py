@@ -58,8 +58,16 @@ def login():
         try:
             token = request.form['credential']
 
+            print("LOGIN PAGE")
+
             print("TOKEN HERE")
             print(token)
+
+            print("REQUESTS.REQUEST")
+            print(requests.Request())
+
+            print("GOOGLE CLIENT ID")
+            print(google_client_id)
 
             # Specify the CLIENT_ID of the app that accesses the backend:
             idinfo = id_token.verify_oauth2_token(token, requests.Request(), google_client_id)
@@ -159,8 +167,16 @@ def register():
         try:
             token = request.form['credential']
 
+            print("REGISTRATION PAGE")
+
             print("TOKEN HERE")
             print(token)
+
+            print("REQUESTS.REQUEST")
+            print(requests.Request())
+
+            print("GOOGLE CLIENT ID")
+            print(google_client_id)
 
             # Specify the CLIENT_ID of the app that accesses the backend:
             idinfo = id_token.verify_oauth2_token(token, requests.Request(), google_client_id)
