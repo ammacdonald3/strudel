@@ -1,18 +1,6 @@
-from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, abort, send_from_directory, current_app
-import flask_sqlalchemy
-from flask_login import LoginManager, current_user, login_user, logout_user, login_required
-from werkzeug.utils import secure_filename
-from recipe_scrapers import scrape_me
+from flask import Flask, render_template, request, flash, redirect, url_for, abort, current_app
+from flask_login import current_user, login_user, logout_user, login_required
 from datetime import datetime
-from uuid import uuid4
-from sqlalchemy import or_, func
-import re
-import random
-import sys
-import os
-import imghdr
-import json
-import boto3
 from google.oauth2 import id_token
 from google.auth.transport import requests
 
@@ -32,10 +20,6 @@ def login():
     error = None
     google_login_uri = current_app.config['GOOGLE_LOGIN_URI']
     google_client_id = current_app.config['GOOGLE_CLIENT_ID']
-    print("REQUEST.FORM")
-    print(request.form)
-    print("REQUEST.DATA")
-    print(request.data)
 
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
@@ -58,38 +42,20 @@ def login():
         try:
             token = request.form['credential']
 
-            print("LOGIN PAGE")
+            # Specify the CLIENT_ID of the app that accesses the backend:
+            idinfo = id_token.verify_oauth2_token(token, requests.Request(), google_client_id)
 
-            print("TOKEN HERE")
-            print(token)
+            print("ID-INFO")
+            print(idinfo)
 
-            print("REQUESTS.REQUEST")
-            print(requests.Request())
-
-            print("GOOGLE CLIENT ID")
-            print(google_client_id)
-
-            try:
-                # Specify the CLIENT_ID of the app that accesses the backend:
-                idinfo = id_token.verify_oauth2_token(token, requests.Request(), google_client_id)
-
-                print("ID-INFO")
-                print(idinfo)
-
-                # ID token is valid. Get the user's Google Account information from the decoded token.
-                user_id = idinfo['sub']
-                given_name = idinfo['given_name']
-                family_name = idinfo['family_name']
-                user_full_name = idinfo['name']
-                user_email = idinfo['email']
-                user_pic = idinfo['picture']
-                email_ver = idinfo['email_verified']
-
-            except Exception as e:
-                print(e)
-
-            print("USER_EMAIL")
-            print(user_email)
+            # ID token is valid. Get the user's Google Account information from the decoded token.
+            user_id = idinfo['sub']
+            given_name = idinfo['given_name']
+            family_name = idinfo['family_name']
+            user_full_name = idinfo['name']
+            user_email = idinfo['email']
+            user_pic = idinfo['picture']
+            email_ver = idinfo['email_verified']
 
             # Check to see if user's Google email address is already a registered user
             existing_user = (db.session.query(App_User).filter_by(app_email=user_email).first())
@@ -139,10 +105,6 @@ def logout():
 def register():
     google_login_uri = current_app.config['GOOGLE_LOGIN_URI']
     google_client_id = current_app.config['GOOGLE_CLIENT_ID']
-    print("REQUEST.FORM")
-    print(request.form)
-    print("REQUEST.DATA")
-    print(request.data)
 
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
@@ -170,39 +132,18 @@ def register():
     elif 'credential' in request.form:
         try:
             token = request.form['credential']
-
-            print("REGISTRATION PAGE")
-
-            print("TOKEN HERE")
-            print(token)
-
-            print("REQUESTS.REQUEST")
-            print(requests.Request())
-
-            print("GOOGLE CLIENT ID")
-            print(google_client_id)
             
-            try:
             # Specify the CLIENT_ID of the app that accesses the backend:
-                idinfo = id_token.verify_oauth2_token(token, requests.Request(), google_client_id)
+            idinfo = id_token.verify_oauth2_token(token, requests.Request(), google_client_id)
 
-                print("ID-INFO")
-                print(idinfo)
-
-                # ID token is valid. Get the user's Google Account information from the decoded token.
-                user_id = idinfo['sub']
-                given_name = idinfo['given_name']
-                family_name = idinfo['family_name']
-                user_full_name = idinfo['name']
-                user_email = idinfo['email']
-                user_pic = idinfo['picture']
-                email_ver = idinfo['email_verified']
-
-                print("USER_EMAIL")
-                print(user_email)
-
-            except Exception as e:
-                print(e)
+            # ID token is valid. Get the user's Google Account information from the decoded token.
+            user_id = idinfo['sub']
+            given_name = idinfo['given_name']
+            family_name = idinfo['family_name']
+            user_full_name = idinfo['name']
+            user_email = idinfo['email']
+            user_pic = idinfo['picture']
+            email_ver = idinfo['email_verified']
             
             # Check to see if user's Google email address is already a registered user
             existing_user = (db.session.query(App_User).filter_by(app_email=user_email).first())
