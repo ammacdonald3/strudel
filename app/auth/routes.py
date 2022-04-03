@@ -58,8 +58,14 @@ def login():
         try:
             token = request.form['credential']
 
+            print("TOKEN HERE")
+            print(token)
+
             # Specify the CLIENT_ID of the app that accesses the backend:
             idinfo = id_token.verify_oauth2_token(token, requests.Request(), google_client_id)
+
+            print("ID-INFO")
+            print(idinfo)
 
             # ID token is valid. Get the user's Google Account information from the decoded token.
             user_id = idinfo['sub']
@@ -69,6 +75,9 @@ def login():
             user_email = idinfo['email']
             user_pic = idinfo['picture']
             email_ver = idinfo['email_verified']
+
+            print("USER_EMAIL")
+            print(user_email)
 
             # Check to see if user's Google email address is already a registered user
             existing_user = (db.session.query(App_User).filter_by(app_email=user_email).first())
@@ -150,8 +159,14 @@ def register():
         try:
             token = request.form['credential']
 
+            print("TOKEN HERE")
+            print(token)
+
             # Specify the CLIENT_ID of the app that accesses the backend:
             idinfo = id_token.verify_oauth2_token(token, requests.Request(), google_client_id)
+
+            print("ID-INFO")
+            print(idinfo)
 
             # ID token is valid. Get the user's Google Account information from the decoded token.
             user_id = idinfo['sub']
@@ -161,6 +176,9 @@ def register():
             user_email = idinfo['email']
             user_pic = idinfo['picture']
             email_ver = idinfo['email_verified']
+
+            print("USER_EMAIL")
+            print(user_email)
             
             # Check to see if user's Google email address is already a registered user
             existing_user = (db.session.query(App_User).filter_by(app_email=user_email).first())
