@@ -69,20 +69,24 @@ def login():
             print("GOOGLE CLIENT ID")
             print(google_client_id)
 
-            # Specify the CLIENT_ID of the app that accesses the backend:
-            idinfo = id_token.verify_oauth2_token(token, requests.Request(), google_client_id)
+            try:
+                # Specify the CLIENT_ID of the app that accesses the backend:
+                idinfo = id_token.verify_oauth2_token(token, requests.Request(), google_client_id)
 
-            print("ID-INFO")
-            print(idinfo)
+                print("ID-INFO")
+                print(idinfo)
 
-            # ID token is valid. Get the user's Google Account information from the decoded token.
-            user_id = idinfo['sub']
-            given_name = idinfo['given_name']
-            family_name = idinfo['family_name']
-            user_full_name = idinfo['name']
-            user_email = idinfo['email']
-            user_pic = idinfo['picture']
-            email_ver = idinfo['email_verified']
+                # ID token is valid. Get the user's Google Account information from the decoded token.
+                user_id = idinfo['sub']
+                given_name = idinfo['given_name']
+                family_name = idinfo['family_name']
+                user_full_name = idinfo['name']
+                user_email = idinfo['email']
+                user_pic = idinfo['picture']
+                email_ver = idinfo['email_verified']
+
+            except Exception as e:
+                print(e)
 
             print("USER_EMAIL")
             print(user_email)
@@ -177,24 +181,28 @@ def register():
 
             print("GOOGLE CLIENT ID")
             print(google_client_id)
-
+            
+            try:
             # Specify the CLIENT_ID of the app that accesses the backend:
-            idinfo = id_token.verify_oauth2_token(token, requests.Request(), google_client_id)
+                idinfo = id_token.verify_oauth2_token(token, requests.Request(), google_client_id)
 
-            print("ID-INFO")
-            print(idinfo)
+                print("ID-INFO")
+                print(idinfo)
 
-            # ID token is valid. Get the user's Google Account information from the decoded token.
-            user_id = idinfo['sub']
-            given_name = idinfo['given_name']
-            family_name = idinfo['family_name']
-            user_full_name = idinfo['name']
-            user_email = idinfo['email']
-            user_pic = idinfo['picture']
-            email_ver = idinfo['email_verified']
+                # ID token is valid. Get the user's Google Account information from the decoded token.
+                user_id = idinfo['sub']
+                given_name = idinfo['given_name']
+                family_name = idinfo['family_name']
+                user_full_name = idinfo['name']
+                user_email = idinfo['email']
+                user_pic = idinfo['picture']
+                email_ver = idinfo['email_verified']
 
-            print("USER_EMAIL")
-            print(user_email)
+                print("USER_EMAIL")
+                print(user_email)
+
+            except Exception as e:
+                print(e)
             
             # Check to see if user's Google email address is already a registered user
             existing_user = (db.session.query(App_User).filter_by(app_email=user_email).first())
