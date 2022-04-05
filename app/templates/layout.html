@@ -51,8 +51,8 @@
 
 <body id="{% block bodyid %}{% endblock %}">
   <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark navbar-true">
-    <a class="navbar-brand title-name" href="{{ url_for('main.index') }}">Strudel</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    <a id="navbar-brand" class="navbar-brand title-name" href="{{ url_for('main.index') }}">Strudel</a>
+    <button id="navbar-toggler" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -118,8 +118,9 @@
         </li>
       </ul>
     </div>
-  </nav>
-  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark navbar-false">
+
+    
+
   </nav>
 
   {% block body %}
@@ -136,8 +137,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.1/bootbox.js"
     integrity="sha512-1oBRa/4SUiqjkyl0940/yFwzpGByv7v1hdyX4dHPi1PoKmCLswjbRE7j2Rtq2f2hvSrxu6HEGPOL12TRACy+kg=="
     crossorigin="anonymous"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='layout.js') }}?v=1.01"></script>
 
   {% block footer %}
+  
   {% endblock %}
 
 </body>
