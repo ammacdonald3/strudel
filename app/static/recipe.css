@@ -273,6 +273,9 @@ dt {
 	.dark-link {
 		color: #0080FF;
 	}
+	body {
+		background-color: #181a1b;
+	}
 }
 
 
@@ -440,4 +443,9 @@ margin-right: 10px
 
 .inline-text:after {
 margin-left: 10px
+}
+
+
+iframe {
+	border-radius: 5px;
 }
