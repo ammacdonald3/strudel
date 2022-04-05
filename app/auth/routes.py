@@ -11,7 +11,7 @@ from app.models import App_User
 
 from app.auth.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm
 
-from app.auth.send_email import send_password_reset_email
+from app.auth.password_reset import send_password_reset_email
 
 
 # Define route for login page

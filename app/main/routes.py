@@ -23,8 +23,6 @@ from app import db
 
 from app.models import Recipe, Ingredient, Recipe_Step, App_User, Current_Meal, User_Recipe, Favorite_Recipe, Shopping_List, App_Error
 
-# from app.send_email import send_password_reset_email
-
 from app.main import bp
 
 
