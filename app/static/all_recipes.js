@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    // On page load, determine whether to apply mobile or desktop-specific layout
+    mobileView()
+
     // Dispay the number of recipes displayed
     var recipeLength = $('.recipe-item:visible').length
     $('.recipe-length span').text(recipeLength);
@@ -590,4 +593,21 @@ mybutton.addEventListener("click", backToTop);
 function backToTop() {
   document.body.scrollTop = 0;
   document.documentElement.scrollTop = 0;
+}
+
+// When screen is resized, apply mobile or desktop-specific changes
+$(window).on('resize', function() {
+    mobileView()
+});
+
+
+function mobileView() {
+    // For mobile screen size, change the button group to vertical
+    if($(window).width() <= 500) {
+        $('#btn-group-filter').addClass('btn-group-vertical');
+    }
+    // For desktop screen size, change the button group to horizontal
+    if($(window).width() > 500) {
+        $('#btn-group-filter').removeClass('btn-group-vertical');
+    }
 }
