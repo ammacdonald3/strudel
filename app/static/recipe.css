@@ -449,3 +449,13 @@ margin-left: 10px
 iframe {
 	border-radius: 5px;
 }
+
+
+.ar-btn-group {
+	padding: 10px;
+	margin-left: 0px !important;
+}
+
+.fa-exclamation-triangle {
+	padding-right: 8px;
+}

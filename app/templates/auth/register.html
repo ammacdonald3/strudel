@@ -17,10 +17,8 @@ active
             <!-- Google Sign-up Button -->
             <div class="row">
                 <div class="form-group col-md-8 center-button">
-                    <div id="g_id_onload"
-                        data-client_id={{ google_client_id }}
-                        data-context="signup" data-ux_mode="redirect" data-login_uri={{ google_login_uri }}
-                        data-auto_select="true">
+                    <div id="g_id_onload" data-client_id={{ google_client_id }} data-context="signup"
+                        data-ux_mode="redirect" data-login_uri={{ google_login_uri }} data-auto_select="true">
                     </div>
 
                     <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-text="signup_with"
@@ -30,7 +28,7 @@ active
             </div>
             <div class="row">
                 <div class="form-group col-md-8">
-                        <h4 class="inline-text"> OR </h4>
+                    <h4 class="inline-text"> OR </h4>
                 </div>
             </div>
 
@@ -79,5 +77,40 @@ active
             <p>{{ form.submit(class="btn btn-primary col-md-8") }}</p>
         </form>
     </div>
-</div>
-{% endblock %}
+
+    <!-- Modal that displays error message -->
+    {% if show_error_modal %}
+    <div class="modal fade error-modal" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="error-modal-title"
+        aria-hidden="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title error" id="error-modal-title"><i
+                            class="fas fa-exclamation-triangle"></i>Error</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <strong>{{ error }}</strong>
+                </div>
+                <div class="modal-footer">
+
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-success center">Login</a>
+                    <a href="{{ url_for('auth.reset_password_request') }}" class="btn btn-warning center">Forgot
+                        Password</a>
+
+                    <button type="button" class="btn btn-primary center" data-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+    {% endblock %}
+    {% block footer %}
+    <script type="text/javascript" src="{{ url_for('static', filename='auth/register.js') }}?v=1.01"></script>
+
+    {% endblock %}

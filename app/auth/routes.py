@@ -111,25 +111,8 @@ def register():
 
     form = RegistrationForm()
 
-    # Native registration
-    if form.validate_on_submit():
-        app_user = App_User(
-            first_name=form.first_name.data,
-            last_name=form.last_name.data,
-            app_email=form.app_email.data,
-            insert_datetime=datetime.now(),
-            native_authenticated=True
-            )
-        app_user.set_password(form.password.data)
-        db.session.add(app_user)
-        db.session.commit()
-        flash('Congratulations, you are now a registered user!')
-        login_user(app_user)
-        next_page = url_for('main.index')
-        return redirect(next_page)
-
     # Google account registration
-    elif 'credential' in request.form:
+    if 'credential' in request.form:
         try:
             token = request.form['credential']
             
@@ -179,8 +162,39 @@ def register():
             # Invalid token
             pass
 
+    # Native registration
+    elif form.validate_on_submit():
+        app_email=form.app_email.data
+
+        # Check to see if user is already registered
+        existing_user = (db.session.query(App_User).filter_by(app_email=app_email).first())
+
+        if existing_user is None:
+            app_user = App_User(
+                first_name=form.first_name.data,
+                last_name=form.last_name.data,
+                app_email=form.app_email.data,
+                insert_datetime=datetime.now(),
+                native_authenticated=True
+            )
+
+            app_user.set_password(form.password.data)
+            db.session.add(app_user)
+            db.session.commit()
+            flash('Congratulations, you are now a registered user!')
+            login_user(app_user)
+            next_page = url_for('main.index')
+            return redirect(next_page)
+
+        else:
+            # Return an error modal if the user's email is already registered
+            error = "Your email has already been registered. Please login or reset your password."
+            print(error)
+
+            return render_template('auth/register.html', title='Register', form=form, error=error, google_login_uri=google_login_uri, google_client_id=google_client_id, show_error_modal=True)
+
     
-    return render_template('auth/register.html', title='Register', form=form, google_login_uri=google_login_uri, google_client_id=google_client_id)
+    return render_template('auth/register.html', title='Register', form=form, google_login_uri=google_login_uri, google_client_id=google_client_id, show_error_modal=False)
 
 
 # Define route for password reset page

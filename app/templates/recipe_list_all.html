@@ -38,12 +38,12 @@ active
                 You
             </a>
 
-            <a href="{{ url_for('main.recipe_list_others') }} " class="btn btn-outline-success ar-btn-group active">
-                <input type="radio" name="recipe_source" value="all" id="all" autocomplete="off" checked> Uploaded by Others
+            <a href="{{ url_for('main.recipe_list_others') }} " class="btn btn-outline-success ar-btn-group">
+                <input type="radio" name="recipe_source" value="all" id="all" autocomplete="off"> Uploaded by Others
             </a>
 
-            <a href="{{ url_for('main.recipe_list_all') }} " class="btn btn-outline-success ar-btn-group">
-                <input type="radio" name="recipe_source" value="all" id="all" autocomplete="off"> All Recipes
+            <a href="{{ url_for('main.recipe_list_all') }} " class="btn btn-outline-success ar-btn-group active">
+                <input type="radio" name="recipe_source" value="all" id="all" autocomplete="off" checked> All Recipes
             </a>
 
         </div>
@@ -52,13 +52,13 @@ active
     <br>
 
     <div class="card-body">
-        <h4 class="text-center">{{ other_length }} Recipes Returned</h4>
+        <h4 class="text-center">{{ all_length }} Recipes Returned</h4>
         <hr class="recipe-list-hr" />
 
-        {% if other_exists == True %}
+        {% if all_exists == True %}
 
         <ul class="list-unstyled">
-            {% for recipe in other_recipe_list %}
+            {% for recipe in all_recipe_list %}
 
             <!-- Recipe Name -->
             <li>
@@ -258,7 +258,7 @@ active
 
         <!-- If user doesn't have any recipes, display placeholder message -->
         {% else %}
-        <h5 class="text-center">Other users haven't uploaded any recipes yet!</h5>
+        <h5 class="text-center">No one has uploaded any recipes yet!</h5>
         {% endif %}
     </div>
 

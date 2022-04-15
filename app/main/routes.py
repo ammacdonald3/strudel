@@ -1844,7 +1844,7 @@ def recipe_list_favorites():
         try:
     
             # User selects button to add respective meal to their current meal plan
-            if ("fav_meal_plan_submit" in request.form) or ("your_meal_plan_submit" in request.form) or ("other_meal_plan_submit" in request.form):
+            if ("fav_meal_plan_submit" in request.form) or ("editor_meal_plan_submit" in request.form) or ("your_meal_plan_submit" in request.form) or ("other_meal_plan_submit" in request.form) or ("all_meal_plan_submit" in request.form):
 
                 recipe_id = request.form['recipe_id']
 
@@ -1959,7 +1959,7 @@ def recipe_list_yours():
         try:
     
             # User selects button to add respective meal to their current meal plan
-            if ("fav_meal_plan_submit" in request.form) or ("your_meal_plan_submit" in request.form) or ("other_meal_plan_submit" in request.form):
+            if ("fav_meal_plan_submit" in request.form) or ("editor_meal_plan_submit" in request.form) or ("your_meal_plan_submit" in request.form) or ("other_meal_plan_submit" in request.form) or ("all_meal_plan_submit" in request.form):
 
                 recipe_id = request.form['recipe_id']
 
@@ -2072,7 +2072,7 @@ def recipe_list_editor():
         try:
     
             # User selects button to add respective meal to their current meal plan
-            if ("fav_meal_plan_submit" in request.form) or ("your_meal_plan_submit" in request.form) or ("other_meal_plan_submit" in request.form):
+            if ("fav_meal_plan_submit" in request.form) or ("editor_meal_plan_submit" in request.form) or ("your_meal_plan_submit" in request.form) or ("other_meal_plan_submit" in request.form) or ("all_meal_plan_submit" in request.form):
 
                 recipe_id = request.form['recipe_id']
 
@@ -2187,7 +2187,7 @@ def recipe_list_others():
         try:
     
             # User selects button to add respective meal to their current meal plan
-            if ("fav_meal_plan_submit" in request.form) or ("your_meal_plan_submit" in request.form) or ("other_meal_plan_submit" in request.form):
+            if ("fav_meal_plan_submit" in request.form) or ("editor_meal_plan_submit" in request.form) or ("your_meal_plan_submit" in request.form) or ("other_meal_plan_submit" in request.form) or ("all_meal_plan_submit" in request.form):
 
                 recipe_id = request.form['recipe_id']
 
@@ -2271,6 +2271,116 @@ def recipe_list_others():
     # Render the recipe_list_others.html template (main page for this route)
     return render_template("recipe_list_others.html", other_recipe_list=other_recipe_list, other_exists=other_exists, other_length=other_length)
 
+
+# Define route for page to view all recipes
+@bp.route('/recipe_list_all', methods=['GET', 'POST'])
+@login_required
+def recipe_list_all():
+    # All recipes (created both by you and others)
+    all_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.app_user_id, Current_Meal.active_ind) \
+        .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None), isouter=True) \
+        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None), isouter=True) \
+        .filter(Recipe.recipe_deleted==None)) \
+        .order_by(Recipe.recipe_name) \
+        .all()
+
+    all_length = len(all_recipe_list)
+
+    if all_length != 0:
+        all_exists = True
+    else:
+        all_exists = False 
+
+
+    if request.method == "POST":
+        error = ""
+        output = []
+        try:
+    
+            # User selects button to add respective meal to their current meal plan
+            if ("fav_meal_plan_submit" in request.form) or ("editor_meal_plan_submit" in request.form) or ("your_meal_plan_submit" in request.form) or ("other_meal_plan_submit" in request.form) or ("all_meal_plan_submit" in request.form):
+
+                recipe_id = request.form['recipe_id']
+
+
+                # If recipe is categorized as a breakfast recipe, add to Meal Plan as a breakfast meal
+                if (db.session.query(Recipe.meal_breakfast).filter(Recipe.recipe_id==recipe_id)).scalar() == True:
+
+                    breakfast_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).filter_by(meal='breakfast').first()
+
+                    if breakfast_exists is None:
+
+                        current_meal = Current_Meal(
+                            recipe_id=recipe_id,
+                            app_user_id=current_user.id,
+                            day_number=0,
+                            meal='breakfast',
+                            active_ind=True,
+                            insert_datetime=datetime.now()
+                        )
+                        db.session.add(current_meal)
+                        db.session.flush()
+                        db.session.commit()
+
+                # If recipe is categorized as a lunch recipe, add to Meal Plan as a lunch meal
+                if (db.session.query(Recipe.meal_lunch).filter(Recipe.recipe_id==recipe_id)).scalar() == True:
+
+                    lunch_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).filter_by(meal='lunch').first()
+
+                    if lunch_exists is None:
+
+                        current_meal = Current_Meal(
+                            recipe_id=recipe_id,
+                            app_user_id=current_user.id,
+                            day_number=0,
+                            meal='lunch',
+                            active_ind=True,
+                            insert_datetime=datetime.now()
+                        )
+                        db.session.add(current_meal)
+                        db.session.flush()
+                        db.session.commit()
+
+                # If recipe is categorized as a dinner recipe, add to Meal Plan as a dinner meal
+                if (db.session.query(Recipe.meal_dinner).filter(Recipe.recipe_id==recipe_id)).scalar() == True:
+
+                    dinner_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).filter_by(meal='dinner').first()
+
+                    if dinner_exists is None:
+
+                        current_meal = Current_Meal(
+                            recipe_id=recipe_id,
+                            app_user_id=current_user.id,
+                            day_number=0,
+                            meal='dinner',
+                            active_ind=True,
+                            insert_datetime=datetime.now()
+                        )
+                        db.session.add(current_meal)
+                        db.session.flush()
+                        db.session.commit()
+
+
+    
+        except Exception as e:
+            db.session.rollback()
+            output.append("Application encountered an error, and the recipe didn't write to the database. Better luck in the future!")
+            output.append(str(e))
+            print(output)
+
+            # Write errors to APP_ERROR table
+            app_error = App_Error(
+                app_user_id=current_user.id,
+                insert_datetime=datetime.now(),
+                error_val=str(e)
+            )
+            db.session.add(app_error)
+            db.session.flush()
+            db.session.commit()
+
+
+    # Render the recipe_list_all.html template (main page for this route)
+    return render_template("recipe_list_all.html", all_recipe_list=all_recipe_list, all_exists=all_exists, all_length=all_length)
 
 
 # Define route for page to view all recipes
