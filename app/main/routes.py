@@ -417,8 +417,18 @@ def meal_plan():
     if dinner_length != 0:
         dinner_exists = True
     else:
-        dinner_exists = False 
+        dinner_exists = False
 
+
+    # Determine which card to render expanded by default
+    if dinner_exists is True:
+        priority_meal = "Dinner"
+    elif lunch_exists is True:
+        priority_meal = "Lunch"
+    elif bfast_exists is True:
+        priority_meal = "Breakfast"
+    else:
+        priority_meal = None
 
 
     return render_template('meal_plan.html', selected_bfast_meals_list=selected_bfast_meals_list, selected_lunch_meals_list=selected_lunch_meals_list, selected_dinner_meals_list=selected_dinner_meals_list,
@@ -427,7 +437,8 @@ def meal_plan():
     dinner_exists=dinner_exists,
     bfast_length=bfast_length,
     lunch_length=lunch_length,
-    dinner_length=dinner_length
+    dinner_length=dinner_length,
+    priority_meal=priority_meal
     )
 
     
@@ -506,9 +517,40 @@ def shopping_list():
                 db.session.commit()
 
 
-        # Path for deleting auto-generated items from shopping list:
+        # Path for deleting all items from shopping list:
         # This code block is placed here intentionally to allow user to delete auto-generated items in the same workflow as generating new items
-        if ("del_auto_submit" in request.form) or ("gen_with_delete_submit" in request.form):
+        if "del_all_submit" in request.form or ("gen_with_delete_submit" in request.form):
+            try:
+
+                # Delete existing shopping list
+                Shopping_List.query.filter_by(app_user_id=current_user.id).delete()
+
+                db.session.flush()
+                db.session.commit()
+
+
+            except Exception as e:
+                db.session.rollback()
+                output.append("Application encountered an error, and your shopping list was not deleted. Better luck in the future!")
+                output.append(str(e))
+                print(output)
+
+                # Write errors to APP_ERROR table
+                app_error = App_Error(
+                    app_user_id=current_user.id,
+                    insert_datetime=datetime.now(),
+                    error_val=str(e)
+                )
+                db.session.add(app_error)
+                db.session.flush()
+                db.session.commit()
+
+
+        # Path for deleting auto-generated items from shopping list:
+        if ("del_auto_submit" in request.form):
+            print("-------------------------------------------------")
+            print("DELETING ITEMS NOW")
+            print("-------------------------------------------------")
             try:
 
                 # Delete existing shopping list
@@ -534,8 +576,39 @@ def shopping_list():
                 db.session.commit()
 
 
+        # Path for deleting custom-added items from shopping list:
+        if "del_custom_submit" in request.form:
+            try:
+
+                # Delete existing shopping list
+                Shopping_List.query.filter_by(app_user_id=current_user.id).filter_by(recipe_id=None).delete()
+
+                db.session.flush()
+                db.session.commit()
+
+
+            except Exception as e:
+                db.session.rollback()
+                output.append("Application encountered an error, and your shopping list was not deleted. Better luck in the future!")
+                output.append(str(e))
+                print(output)
+
+                # Write errors to APP_ERROR table
+                app_error = App_Error(
+                    app_user_id=current_user.id,
+                    insert_datetime=datetime.now(),
+                    error_val=str(e)
+                )
+                db.session.add(app_error)
+                db.session.flush()
+                db.session.commit()
+
+
         # Path for auto-generating shopping list from meal plan
-        if ("gen_without_delete_submit" in request.form) or ("gen_with_delete_submit" in request.form):
+        if ("gen_without_delete_submit" in request.form) or ("gen_with_delete_submit" in request.form) or ("gen_no_existing_items_submit" in request.form):
+            print("-------------------------------------------------")
+            print("BUTTON CLICKED")
+            print("-------------------------------------------------")
             try:
 
                 # Retrieve list of current shopping list ingredient IDs
@@ -591,63 +664,6 @@ def shopping_list():
                 db.session.commit()
 
 
-        # Path for deleting custom-added items from shopping list:
-        if "del_custom_submit" in request.form:
-            try:
-
-                # Delete existing shopping list
-                Shopping_List.query.filter_by(app_user_id=current_user.id).filter_by(recipe_id=None).delete()
-
-                db.session.flush()
-                db.session.commit()
-
-
-            except Exception as e:
-                db.session.rollback()
-                output.append("Application encountered an error, and your shopping list was not deleted. Better luck in the future!")
-                output.append(str(e))
-                print(output)
-
-                # Write errors to APP_ERROR table
-                app_error = App_Error(
-                    app_user_id=current_user.id,
-                    insert_datetime=datetime.now(),
-                    error_val=str(e)
-                )
-                db.session.add(app_error)
-                db.session.flush()
-                db.session.commit()
-
-
-        
-
-
-        # Path for deleting all items from shopping list:
-        if "del_all_submit" in request.form:
-            try:
-
-                # Delete existing shopping list
-                Shopping_List.query.filter_by(app_user_id=current_user.id).delete()
-
-                db.session.flush()
-                db.session.commit()
-
-
-            except Exception as e:
-                db.session.rollback()
-                output.append("Application encountered an error, and your shopping list was not deleted. Better luck in the future!")
-                output.append(str(e))
-                print(output)
-
-                # Write errors to APP_ERROR table
-                app_error = App_Error(
-                    app_user_id=current_user.id,
-                    insert_datetime=datetime.now(),
-                    error_val=str(e)
-                )
-                db.session.add(app_error)
-                db.session.flush()
-                db.session.commit()
         
 
     # Query for shopping list items
@@ -659,6 +675,11 @@ def shopping_list():
     ).filter(
         Shopping_List.app_user_id==current_user.id
     ).order_by(Shopping_List.checked_status).order_by(Shopping_List.insert_datetime.desc()).all())
+
+    # if shop_list:
+    #     shop_list_delete_modal = True
+    # else:
+    #     shop_list_delete_modal = False
     
     return render_template('shopping_list.html', shop_list=shop_list)
 

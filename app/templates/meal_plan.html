@@ -30,17 +30,6 @@ active
         <div class="form-group col-sm">
           <button class="btn btn-danger btn-block" id="clear-meal-plan-submit" name="clear-meal-plan-submit"
             data-toggle="modal" data-target="#clear-mealplan-modal-confirm-delete">Clear Current Meal Plan</button>
-          <!-- <form role="form" method='POST' id="all-meal-plan-form" name="all-meal-plan-form"> -->
-          <!-- <button type="submit" class="btn btn-danger btn-block" id="all_meal_plan_submit" name="all_meal_plan_submit"
-            onclick="return confirm('Are you sure that you want to delete all items from your current meal plan?');">Clear
-            Current Meal Plan</button> -->
-
-
-
-
-
-
-          <!-- </form> -->
         </div>
 
         <!-- Modal prompting whether to clear their entire meal plan -->
@@ -93,7 +82,7 @@ active
           </h4>
         </div>
 
-        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+        <div id="collapseOne" {% if priority_meal != "Breakfast" %} class="collapse" {% endif %} aria-labelledby="headingOne" data-parent="#accordion">
           <div class="card-body">
             {% if bfast_exists == True %}
 
@@ -210,7 +199,7 @@ active
             <span class="sr-only">lunch recipes</span>
           </h4>
         </div>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+        <div id="collapseTwo" {% if priority_meal != "Lunch" %} class="collapse" {% endif %} aria-labelledby="headingTwo" data-parent="#accordion">
           <div class="card-body">
             {% if lunch_exists == True %}
 
@@ -326,7 +315,7 @@ active
             <span class="sr-only">dinner recipes</span>
           </h4>
         </div>
-        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+        <div id="collapseThree" {% if priority_meal != "Dinner" %} class="collapse" {% endif %} aria-labelledby="headingThree" data-parent="#accordion">
           <div class="card-body">
             {% if dinner_exists == True %}
 

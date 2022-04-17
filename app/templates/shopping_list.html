@@ -21,8 +21,8 @@ active
             <form role="form" method='POST' id="generate_form" name="generate_form">
 
 
-                <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
-                    data-target="#generate-confirm">
+                <button class="btn btn-primary btn-block" {% if shop_list %} type="button" data-toggle="modal"
+                    data-target="#generate-confirm" {% else %} type="submit" id="gen_no_existing_items_submit" name="gen_no_existing_items_submit" {% endif %}>
                     Generate Shopping List
                 </button>
 
