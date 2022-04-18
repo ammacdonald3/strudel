@@ -15,6 +15,20 @@ function navbarTogglePin() {
 
 $(document).ready(function(){
     navbarTogglePin()
+
+    // Page-loading spinner animation
+    $(window).on('pageshow', function() {
+        // $('#spinner-img').hide();
+        $('.overlay').hide();
+      });
+  
+    // Only display spinning animation if used as PWA, not in browser
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        $(window).on('beforeunload', function() {
+            // $('#spinner-img').show();
+            $('.overlay').show();
+        });
+    }
 });
 
 $(window).on('resize', function() {

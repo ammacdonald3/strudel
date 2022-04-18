@@ -459,3 +459,24 @@ iframe {
 .fa-exclamation-triangle {
 	padding-right: 8px;
 }
+
+/* Below code used for loading spinner overlay */
+.overlay {
+    background: #1f1e1c;  
+    display: none;        
+    position: absolute;  
+    top: 0;                  
+    right: 0;                
+    bottom: 0;
+    left: 0;
+    opacity: 0.9;
+	z-index: 1000;
+}
+
+.spinner-border {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+}
+
+/* Above code used for loading spinner overlay */

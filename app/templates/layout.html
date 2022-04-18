@@ -50,6 +50,15 @@
 </head>
 
 <body id="{% block bodyid %}{% endblock %}">
+
+  <!-- Below code block adds loading spinner when naviating between pages on PWA -->
+  <!-- Includes corresponding JS and CSS code -->
+  <div class="overlay">
+    <div class="spinner-border text-light" role="status" id="spinner-img">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+
   <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark navbar-true">
     <a id="navbar-brand" class="navbar-brand title-name" href="{{ url_for('main.index') }}">Strudel</a>
     <button id="navbar-toggler" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
