@@ -77,9 +77,9 @@
             Add New Recipes
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item {% block nav_auto_import %}{% endblock %}" href="{{ url_for('main.auto_import') }}">Auto
+            <a class="dropdown-item {% block nav_auto_import %}{% endblock %}" href="{{ url_for('add_recipes.auto_import') }}">Auto
               Import</a>
-            <a class="dropdown-item {% block nav_add %}{% endblock %}" href="{{ url_for('main.add_recipe') }}">Manual
+            <a class="dropdown-item {% block nav_add %}{% endblock %}" href="{{ url_for('add_recipes.add_recipe') }}">Manual
               Entry</a>
           </div>
         </li>
@@ -91,25 +91,25 @@
             View Recipes
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item {% block nav_search %}{% endblock %}" href="{{ url_for('main.search') }}">Search</a>
+            <a class="dropdown-item {% block nav_search %}{% endblock %}" href="{{ url_for('view_recipes.search') }}">Search</a>
             <a class="dropdown-item {% block nav_recipes %}{% endblock %}"
-              href="{{ url_for('main.recipe_list_favorites') }}">View All Recipes</a>
+              href="{{ url_for('view_recipes.recipe_list_favorites') }}">View All Recipes</a>
           </div>
         </li>
 
 
 
         <li class="nav-item {% block nav_meal_selector %}{% endblock %}">
-          <a class="nav-link" href="{{ url_for('main.meal_selector') }}">Meal Selector</a>
+          <a class="nav-link" href="{{ url_for('meal_planning.meal_selector') }}">Meal Selector</a>
         </li>
 
         <li class="nav-item {% block nav_meal_plan %}{% endblock %}">
-          <a class="nav-link" href="{{ url_for('main.meal_plan') }}">Meal
+          <a class="nav-link" href="{{ url_for('meal_planning.meal_plan') }}">Meal
             Plan</a>
         </li>
 
         <li class="nav-item {% block nav_shopping_list %}{% endblock %}">
-          <a class="nav-link" href="{{ url_for('main.shopping_list') }}">Shopping List</a>
+          <a class="nav-link" href="{{ url_for('meal_planning.shopping_list') }}">Shopping List</a>
         </li>
 
 
@@ -147,7 +147,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.1/bootbox.js"
     integrity="sha512-1oBRa/4SUiqjkyl0940/yFwzpGByv7v1hdyX4dHPi1PoKmCLswjbRE7j2Rtq2f2hvSrxu6HEGPOL12TRACy+kg=="
     crossorigin="anonymous"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='layout.js') }}?v=1.01"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='main/layout.js') }}?v=1.01"></script>
 
   {% block footer %}
   

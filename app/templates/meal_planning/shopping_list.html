@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "main/layout.html" %}
 {% block nav_shopping_list %}
 active
 {% endblock %}
@@ -281,7 +281,7 @@ active
 
 
 {% block footer %}
-<script type="text/javascript" src="{{ url_for('static', filename='shopping_list.js') }}?v=1.01"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='meal_planning/shopping_list.js') }}?v=1.01"></script>
 
 <!-- jQuery UI -->
 <!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"

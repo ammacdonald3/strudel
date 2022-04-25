@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "main/layout.html" %}
 {% block nav_view_menu %}
 active
 {% endblock %}
@@ -25,24 +25,24 @@ active
     <div class="container">
         <div id="btn-group-filter" class="btn-group btn-group-vertical btn-group-toggle btn-block" data-toggle="buttons">
             
-            <a href="{{ url_for('main.recipe_list_favorites') }}" class="btn btn-outline-success ar-btn-group active">
-                <input type="radio" name="recipe_source" value="fav" id="fav" autocomplete="off" checked> Favorites
+            <a href="{{ url_for('view_recipes.recipe_list_favorites') }}" class="btn btn-outline-success ar-btn-group">
+                <input type="radio" name="recipe_source" value="fav" id="fav" autocomplete="off"> Favorites
             </a>
 
-            <a href="{{ url_for('main.recipe_list_editor') }} " class="btn btn-outline-success ar-btn-group">
+            <a href="{{ url_for('view_recipes.recipe_list_editor') }} " class="btn btn-outline-success ar-btn-group">
                 <input type="radio" name="recipe_source" value="editor" id="editor" autocomplete="off"> Editor's Picks
             </a>
 
-            <a href="{{ url_for('main.recipe_list_yours') }} " class="btn btn-outline-success ar-btn-group">
-                <input type="radio" name="recipe_source" value="you" id="you" autocomplete="off"> Uploaded by
+            <a href="{{ url_for('view_recipes.recipe_list_yours') }} " class="btn btn-outline-success ar-btn-group active">
+                <input type="radio" name="recipe_source" value="you" id="you" autocomplete="off" checked> Uploaded by
                 You
             </a>
 
-            <a href="{{ url_for('main.recipe_list_others') }} " class="btn btn-outline-success ar-btn-group">
+            <a href="{{ url_for('view_recipes.recipe_list_others') }} " class="btn btn-outline-success ar-btn-group">
                 <input type="radio" name="recipe_source" value="all" id="all" autocomplete="off"> Uploaded by Others
             </a>
 
-            <a href="{{ url_for('main.recipe_list_all') }} " class="btn btn-outline-success ar-btn-group">
+            <a href="{{ url_for('view_recipes.recipe_list_all') }} " class="btn btn-outline-success ar-btn-group">
                 <input type="radio" name="recipe_source" value="all" id="all" autocomplete="off"> All Recipes
             </a>
 
@@ -52,17 +52,17 @@ active
     <br>
 
     <div class="card-body">
-        <h4 class="text-center">{{ fav_length }} Recipes Returned</h4>
+        <h4 class="text-center">{{ your_length }} Recipes Returned</h4>
         <hr class="recipe-list-hr" />
 
-        {% if fav_exists == True %}
+        {% if your_exists == True %}
 
         <ul class="list-unstyled">
-            {% for recipe in favorite_recipe_list %}
+            {% for recipe in your_recipe_list %}
 
             <!-- Recipe Name -->
             <li>
-                <a href="{{ url_for('main.recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                <a href="{{ url_for('view_recipes.recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
                     class="text-decoration-none">
                     <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
                     <!-- Recipe Prep/Cook Time -->
@@ -98,7 +98,7 @@ active
                     <div class="row" style="padding-top: 20px;">
                         <!-- Display button so that user can view recipe's page -->
                         <div class="form-group col-sm">
-                            <a href="{{ url_for('main.recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                            <a href="{{ url_for('view_recipes.recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
                                 class="btn btn-primary btn-block">View Recipe</a>
                         </div>
 
@@ -189,7 +189,7 @@ active
                                             plan!
                                         </div>
                                         <div class="modal-footer">
-                                            <a href="{{ url_for('main.meal_plan') }}" class="btn btn-primary center">Go to
+                                            <a href="{{ url_for('meal_planning.meal_plan') }}" class="btn btn-primary center">Go to
                                                 Meal Plan</a>
                                             <button type="button" class="btn btn-secondary center" data-dismiss="modal">
                                                 Close
@@ -258,7 +258,7 @@ active
 
         <!-- If user doesn't have any recipes, display placeholder message -->
         {% else %}
-        <h5 class="text-center">You haven't favorited any recipes yet. Try adding one!</h5>
+        <h5 class="text-center">You haven't uploaded any recipes yet. Try adding one!</h5>
         {% endif %}
     </div>
 
@@ -271,5 +271,5 @@ active
 {% endblock %}
 
 {% block footer %}
-<script type="text/javascript" src="{{ url_for('static', filename='all_recipes.js') }}?v=1.08" async defer></script>
+<script type="text/javascript" src="{{ url_for('static', filename='view_recipes/all_recipes.js') }}?v=1.08" async defer></script>
 {% endblock %}

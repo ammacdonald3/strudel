@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "main/layout.html" %}
 {% block nav_add_menu %}
 active
 {% endblock %}
@@ -6,17 +6,33 @@ active
 active
 {% endblock %}
 
+
+
 {% block body %}
 <div class="container feature-page">
 
   <div class="container" id="title">
-    <h2>Add New Recipe</h2>
+    <h2>Edit Recipe</h2>
   </div>
 
   <div class="container">
+
     <form role="form" method='POST' action="" enctype="multipart/form-data">
+
+      <!-- Display recipe image -->
+      <div class="image-container center">
+        {% if recipe.recipe_image_url != None %}
+        <img id="preview" src="{{ recipe.recipe_image_url}}" class="center rounded img-fluid" alt="Responsive image" />
+        {% else %}
+        <img id="preview" src="/static/placeholder-recipe-image.jpg" class="center rounded img-fluid"
+          alt="Responsive image" />
+        {% endif %}
+      </div>
+      <br>
+      <br>
+
       <!-- User selects an image to upload -->
-      <!-- <p>Select an image for this recipe</p>
+      <!-- <p>Select a new image for this recipe</p>
     <div class="custom-file">
       <input type="file" class="custom-file-input" id="file_input" name="file">
       <label class="custom-file-label" for="file_input">Image location</label>
@@ -30,7 +46,7 @@ active
         <div class="form-group col-lg">
           <label for="recipe_name_box">Recipe</label>
           <input type="text" name="recipe_name" class="form-control" id="recipe_name_box"
-            placeholder="Enter recipe name" autofocus required>
+            placeholder="Enter recipe name" value="{{ recipe.recipe_name }}" autofocus required>
         </div>
       </div>
 
@@ -39,7 +55,7 @@ active
         <div class="form-group col-lg">
           <label for="recipe_desc_box">Description</label>
           <textarea name="recipe_desc" class="form-control" id="recipe_desc_box" placeholder="Enter recipe description"
-            rows="3" autofocus required></textarea>
+            rows="3" autofocus required>{{ recipe.recipe_desc }}</textarea>
           <!-- <input type="text" name="recipe_desc" class="form-control" id="recipe_desc_box"
           placeholder="Enter recipe description" style="max-width: 500px;" autofocus required> -->
         </div>
@@ -50,22 +66,25 @@ active
         <!-- Recipe Prep Time input -->
         <div class="form-group col-sm">
           <label for="recipe_prep_box">Prep Time</label>
-          <input type="number" name="recipe_prep_time" class="form-control" id="recipe_prep_box"
-            placeholder="Enter recipe prep time" aria-describedby="prep_help" autofocus required>
+          <input type="text" name="recipe_prep_time" class="form-control" id="recipe_prep_box"
+            placeholder="Enter recipe prep time" value="{{ recipe.recipe_prep_time }}" style="max-width: 300px;"
+            aria-describedby="prep_help" autofocus required>
           <small id="prep_help" class="form-text text-muted">Enter prep time in minutes.</small>
         </div>
         <!-- Recipe Cook Time input -->
         <div class="form-group col-sm">
           <label for="recipe_cook_box">Cook Time</label>
-          <input type="number" name="recipe_cook_time" class="form-control" id="recipe_cook_box"
-            placeholder="Enter recipe cook time" aria-describedby="cook_help" autofocus required>
+          <input type="text" name="recipe_cook_time" class="form-control" id="recipe_cook_box"
+            placeholder="Enter recipe cook time" value="{{ recipe.recipe_cook_time }}" style="max-width: 300px;"
+            aria-describedby="cook_help" autofocus required>
           <small id="cook_help" class="form-text text-muted">Enter cook time in minutes.</small>
         </div>
         <!-- Recipe Serving Size input -->
         <div class="form-group col-sm">
           <label for="serving_size_box">Serving Size</label>
-          <input type="number" name="serving_size" class="form-control" id="serving_size_box"
-            placeholder="Enter serving size" aria-describedby="size_help" autofocus required>
+          <input type="text" name="serving_size" class="form-control" id="serving_size_box"
+            placeholder="Enter serving size" value="{{ recipe.serving_size }}" style="max-width: 300px;"
+            aria-describedby="size_help" autofocus required>
           <small id="size_help" class="form-text text-muted">Enter number of servings.</small>
         </div>
       </div>
@@ -75,7 +94,7 @@ active
         <div class="form-group col-lg">
           <label for="recipe_url_box">URL</label>
           <input type="text" name="recipe_url" class="form-control" id="recipe_url_box" placeholder="Enter recipe URL"
-            style="max-width: 1000px;" autofocus required>
+            value="{{ recipe.recipe_url }}" style="max-width: 1000px;" autofocus required>
         </div>
       </div>
 
@@ -90,17 +109,23 @@ active
         <div class="form-group col-md">
           <h3>Dietary Restrictions</h3>
           <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
-            <label class="btn btn-outline-success active btn-block">
-              <input type="checkbox" name="diet_vegan" id="diet_vegan" autocomplete="off" />Vegan
+            <label class="btn btn-outline-success active btn-block {% if recipe.diet_vegan == True %} active
+          {% endif %}">
+              <input type="checkbox" name="diet_vegan" id="diet_vegan" autocomplete="off"
+                {% if recipe.diet_vegan == True %} checked {% endif %}>Vegan
             </label>
           </div>
           <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
-            <label class="btn btn-outline-success active btn-block">
-              <input type="checkbox" name="diet_vegetarian" id="diet_vegetarian" autocomplete="off" />Vegetarian</label>
+            <label class="btn btn-outline-success active btn-block {% if recipe.diet_vegetarian == True %} active
+          {% endif %}">
+              <input type="checkbox" name="diet_vegetarian" id="diet_vegetarian" autocomplete="off"
+                {% if recipe.diet_vegetarian == True %} checked {% endif %}>Vegetarian</label>
           </div>
           <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
-            <label class="btn btn-outline-success active btn-block">
-              <input type="checkbox" name="diet_gluten" id="diet_gluten" autocomplete="off">Gluten-free</label>
+            <label class="btn btn-outline-success active btn-block {% if recipe.diet_gluten == True %} active
+          {% endif %}">
+              <input type="checkbox" name="diet_gluten" id="diet_gluten" autocomplete="off"
+                {% if recipe.diet_gluten == True %} checked {% endif %}>Gluten-free</label>
           </div>
         </div>
 
@@ -110,17 +135,23 @@ active
         <div class="form-group col-md">
           <h3>Meal Time</h3>
           <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
-            <label class="btn btn-outline-success active btn-block">
-              <input type="checkbox" name="meal_breakfast" id="meal_breakfast" autocomplete="off">Breakfast
+            <label class="btn btn-outline-success active btn-block {% if recipe.meal_breakfast == True %} active
+          {% endif %}">
+              <input type="checkbox" name="meal_breakfast" id="meal_breakfast" autocomplete="off"
+                {% if recipe.meal_breakfast == True %} checked {% endif %}>Breakfast
             </label>
           </div>
           <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
-            <label class="btn btn-outline-success active btn-block">
-              <input type="checkbox" name="meal_lunch" id="meal_lunch" autocomplete="off">Lunch</label>
+            <label class="btn btn-outline-success active btn-block {% if recipe.meal_lunch == True %} active
+          {% endif %}">
+              <input type="checkbox" name="meal_lunch" id="meal_lunch" autocomplete="off"
+                {% if recipe.meal_lunch == True %} checked {% endif %}>Lunch</label>
           </div>
           <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
-            <label class="btn btn-outline-success active btn-block">
-              <input type="checkbox" name="meal_dinner" id="meal_dinner" autocomplete="off">Dinner</label>
+            <label class="btn btn-outline-success active btn-block {% if recipe.meal_dinner == True %} active
+          {% endif %}">
+              <input type="checkbox" name="meal_dinner" id="meal_dinner" autocomplete="off"
+                {% if recipe.meal_dinner == True %} checked {% endif %}>Dinner</label>
           </div>
         </div>
 
@@ -133,17 +164,22 @@ active
       <div>
         <h3>Ingredients</h3>
         <p>Add your ingredients.</p>
+
+        {% for ingredient in ingredient_list %}
         <div class="form-group">
           <div class="row">
-            <div class="form-group col-lg-2">Ingredient 1</div>
+            <div class="form-group col-lg-2">Ingredient {{ loop.index }}</div>
             <div class="form-group col-lg-7">
-              <input name="ingredient_desc1" class="form-control col" placeholder="Ingredient 1">
+              <input name="ingredient_desc{{ loop.index }}" class="form-control col"
+                placeholder="Ingredient {{ loop.index }}" value="{{ ingredient.ingredient_desc }}">
             </div>
             <div class="form-group col-lg-3">
               <button class="removeclass btn btn-danger col">Delete</button>
             </div>
           </div>
         </div>
+        {% endfor %}
+
         <div id="IngredientInputsWrapper"></div>
         <br>
 
@@ -158,17 +194,22 @@ active
       <div>
         <h3>Recipe Steps</h3>
         <p>Add the recipe method.</p>
+
+        {% for step in step_list %}
         <div class="form-group">
           <div class="row">
-            <div class="form-group col-lg-1">Step 1</div>
+            <div class="form-group col-lg-1">Step {{ loop.index }}</div>
             <div class="form-group col-lg-8">
-              <input name="recipe_step1" class="form-control col" placeholder="Step 1">
+              <input name="recipe_step{{ loop.index }}" class="form-control col" placeholder="Step {{ loop.index }}"
+                value="{{ step.step_desc }}">
             </div>
             <div class="form-group col-lg-3">
               <button class="removeclass btn btn-danger col">Delete</button>
             </div>
           </div>
         </div>
+        {% endfor %}
+
         <div id="StepInputsWrapper"></div>
         <br />
 
@@ -196,5 +237,14 @@ active
 
 
 {% block footer %}
-<script type="text/javascript" src="{{ url_for('static', filename='ingredients.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='add_recipes/ingredients.js') }}"></script>
+<!-- <script type="text/javascript" src="{{ url_for('static', filename='upload.js') }}"></script> -->
+
+<script type="application/javascript">
+  $('input[type="file"]').change(function (e) {
+    var fileName = e.target.files[0].name;
+    $('.custom-file-label').html(fileName);
+  });
+</script>
+
 {% endblock %}

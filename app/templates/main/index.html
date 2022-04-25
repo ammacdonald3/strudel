@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "main/layout.html" %}
 {% block nav_home %}
 active
 {% endblock %}
@@ -33,17 +33,17 @@ active
     <div class="form-group">
         <div class="row" style="padding-top: 20px;">
             <div class="form-group col-sm-4">
-                <a href="{{ url_for('main.recipe_list_favorites') }}" class="btn btn-info btn-block rounded-pill btn-border">
+                <a href="{{ url_for('view_recipes.recipe_list_favorites') }}" class="btn btn-info btn-block rounded-pill btn-border">
                     All Recipes
                 </a>
             </div>
             <div class="form-group col-sm-4">
-                <a href="{{ url_for('main.meal_plan') }}" class="btn btn-info btn-block rounded-pill btn-border">
+                <a href="{{ url_for('meal_planning.meal_plan') }}" class="btn btn-info btn-block rounded-pill btn-border">
                     Meal Plan
                 </a>
             </div>
             <div class="form-group col-sm-4">
-                <a href="{{ url_for('main.shopping_list') }}" class="btn btn-info btn-block rounded-pill btn-border">
+                <a href="{{ url_for('meal_planning.shopping_list') }}" class="btn btn-info btn-block rounded-pill btn-border">
                     Shopping List
                 </a>
 

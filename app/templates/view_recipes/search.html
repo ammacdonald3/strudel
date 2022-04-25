@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "main/layout.html" %}
 {% block nav_view_menu %}
 active
 {% endblock %}
@@ -90,7 +90,7 @@ active
 
                         <!-- Recipe Name -->
                         <li>
-                            <a href="{{ url_for('main.recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                            <a href="{{ url_for('view_recipes.recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
                                 class="text-decoration-none">
                                 <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
                                 <!-- Recipe Prep/Cook Time -->
@@ -125,7 +125,7 @@ active
                                 <div class="row" style="padding-top: 20px;">
                                     <!-- Display button so that user can view recipe's page -->
                                     <div class="form-group col-sm">
-                                        <a href="{{ url_for('main.recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
+                                        <a href="{{ url_for('view_recipes.recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
                                             class="btn btn-primary btn-block">View Recipe</a>
                                     </div>
 
@@ -226,7 +226,7 @@ active
                                                         meal plan!
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <a href="{{ url_for('main.meal_plan') }}"
+                                                        <a href="{{ url_for('meal_planning.meal_plan') }}"
                                                             class="btn btn-primary center">Go to Meal Plan</a>
                                                         <button type="button" class="btn btn-secondary center"
                                                             data-dismiss="modal">
@@ -320,5 +320,5 @@ active
 
 
 {% block footer %}
-<script type="text/javascript" src="{{ url_for('static', filename='search.js') }}?v=1.01"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='view_recipes/search.js') }}?v=1.01"></script>
 {% endblock %}

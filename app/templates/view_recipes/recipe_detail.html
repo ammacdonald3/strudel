@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "main/layout.html" %}
 {% block nav_recipes %}
 active
 {% endblock %}
@@ -111,7 +111,7 @@ active
                     meal plan!
                   </div>
                   <div class="modal-footer">
-                    <a href="{{ url_for('main.meal_plan') }}" class="btn btn-primary center">Go to Meal Plan</a>
+                    <a href="{{ url_for('meal_planning.meal_plan') }}" class="btn btn-primary center">Go to Meal Plan</a>
                     <button type="button" class="btn btn-secondary center" data-dismiss="modal">
                       Close
                     </button>
@@ -319,7 +319,7 @@ active
       {% if owner_ind == True %}
       <div class="row" style="padding-top: 20px;">
         <div class="form-group col-sm">
-          <a href="{{ url_for('main.edit_recipe', recipe_id=recipe.recipe_id) }}" class="btn btn-warning btn-block">Edit
+          <a href="{{ url_for('add_recipes.edit_recipe', recipe_id=recipe.recipe_id) }}" class="btn btn-warning btn-block">Edit
             Recipe</a>
         </div>
         {% endif %}
@@ -327,7 +327,7 @@ active
         <!-- Display button so that user can upload an image if they're the owner -->
         {% if owner_ind == True %}
         <div class="form-group col-sm">
-          <a href="{{ url_for('main.upload_image', recipe_id=recipe.recipe_id) }}" class="btn btn-warning btn-block">Upload
+          <a href="{{ url_for('add_recipes.upload_image', recipe_id=recipe.recipe_id) }}" class="btn btn-warning btn-block">Upload
             Recipe Image</a>
         </div>
         {% endif %}
@@ -354,5 +354,5 @@ active
 {% endblock %}
 
 {% block footer %}
-<script type="text/javascript" src="{{ url_for('static', filename='recipe_detail.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='view_recipes/recipe_detail.js') }}"></script>
 {% endblock %}
