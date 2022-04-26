@@ -134,7 +134,7 @@ button {
 		rgba(0, 0, 0, 0.5), 
 		rgba(0, 0, 0, 0.5)
 		),
-		url("title_image.jpg");
+		url("title-image-min.jpeg");
 	background-size: cover;
 	font-family: 'Lato', sans-serif;
 	color: white;

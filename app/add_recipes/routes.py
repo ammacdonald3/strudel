@@ -428,16 +428,15 @@ def upload_image(recipe_id):
                     file_ext = file_ext_base
 
                 if file_ext in current_app.config['UPLOAD_EXTENSIONS'] and \
-                        file_ext == validate_image(uploaded_file.stream):
+                    file_ext == validate_image(uploaded_file.stream):
+
                         # Generate unique file name
                         filename = str(uuid4()) + file_ext
-                        print("FILENAME")
-                        print(filename)
-                        uploaded_file.save(os.path.join(current_app.config['UPLOAD_PATH'], filename))
-                        image_url = upload_file(f"uploads/{filename}", current_app.config['BUCKET'])
-                        print("IMAGE URL")
-                        print(image_url)
 
+                        # Call the upload_image.upload_file function to physically upload the image to AWS
+                        image_url = upload_file(uploaded_file, current_app.config['BUCKET'], filename)
+
+                        # Update database table with AWS URL for the image
                         db.session.query(Recipe).filter_by(recipe_id=recipe_id).update(dict(recipe_image_url=image_url))
 
                         db.session.flush()
