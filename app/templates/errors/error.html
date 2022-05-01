@@ -1,0 +1,33 @@
+{% extends "main/layout.html" %}
+{% block nav_add_menu %}
+
+{% endblock %}
+
+{% block heading %}
+
+{% endblock %}
+
+{% block body %}
+<div class="container feature-page">
+    <h5 class="center-text">You hit an error...</h5>
+
+    <div class="image-container center">
+        <img id="preview" src="/static/errors/error-image.jpg" class="center rounded img-fluid" alt="Responsive image" />
+    </div>
+
+    <div class="error center-text">{{ error }}</div>
+
+</div>
+
+
+<!-- Uncomment below lines for debugging -->
+<!-- {% for item in output %}
+<h4>{{ item }}</h4>
+{% endfor %} -->
+
+
+{% endblock %}
+
+
+{% block footer %}
+{% endblock %}

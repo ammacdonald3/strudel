@@ -1,0 +1,116 @@
+{% extends "main/layout.html" %}
+{% block nav_login %}
+active
+{% endblock %}
+
+{% block body %}
+<div class="container feature-page">
+
+    <div class="container" id="title">
+        <h2>Register</h2>
+    </div>
+    <br>
+    <div class="container">
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+
+            <!-- Google Sign-up Button -->
+            <div class="row">
+                <div class="form-group col-md-8 center-button">
+                    <div id="g_id_onload" data-client_id={{ google_client_id }} data-context="signup"
+                        data-ux_mode="redirect" data-login_uri={{ google_login_uri }} data-auto_select="true">
+                    </div>
+
+                    <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-text="signup_with"
+                        data-size="large" data-logo_alignment="left" data-theme="outline" data_width="1000">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-8">
+                    <h4 class="inline-text"> OR </h4>
+                </div>
+            </div>
+
+            <!-- Native Registration Form -->
+            <div class="row">
+                <div class="form-group col-md-4">
+                    {{ form.first_name.label }}<br>
+                    {{ form.first_name(size=32, class="form-control", placeholder="Enter first name") }}<br>
+                    {% for error in form.first_name.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
+                <div class="form-group col-md-4">
+                    {{ form.last_name.label }}<br>
+                    {{ form.last_name(size=32, class="form-control", placeholder="Enter last name") }}<br>
+                    {% for error in form.last_name.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-8">
+                    {{ form.app_email.label }}<br>
+                    {{ form.app_email(size=64, class="form-control", placeholder="Enter email") }}<br>
+                    {% for error in form.app_email.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    {{ form.password.label }}<br>
+                    {{ form.password(size=32, class="form-control", placeholder="Enter password") }}<br>
+                    {% for error in form.password.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
+                <div class="form-group col-md-4">
+                    {{ form.password2.label }}<br>
+                    {{ form.password2(size=32, class="form-control", placeholder="Confirm password") }}<br>
+                    {% for error in form.password2.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
+            </div>
+            <p>{{ form.submit(class="btn btn-primary col-md-8") }}</p>
+        </form>
+    </div>
+
+    <!-- Modal that displays error message -->
+    {% if show_error_modal %}
+    <div class="modal fade error-modal" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="error-modal-title"
+        aria-hidden="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title error" id="error-modal-title"><i
+                            class="fas fa-exclamation-triangle"></i>Error</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <strong>{{ error }}</strong>
+                </div>
+                <div class="modal-footer">
+
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-success center">Login</a>
+                    <a href="{{ url_for('auth.reset_password_request') }}" class="btn btn-warning center">Forgot
+                        Password</a>
+
+                    <button type="button" class="btn btn-primary center" data-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+    {% endblock %}
+    {% block footer %}
+    <script type="text/javascript" src="{{ url_for('static', filename='auth/register.js') }}?v=1.01"></script>
+
+    {% endblock %}

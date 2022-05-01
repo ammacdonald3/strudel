@@ -1,0 +1,71 @@
+{% extends "main/layout.html" %}
+{% block nav_home %}
+active
+{% endblock %}
+
+{% block bodyid %}index{% endblock %}
+
+{% block body %}
+<div class="container vertical-center-index">
+    <div id="content">
+        <h1 class="title-name">Strudel</h1>
+        <h3>An App to Store and Select Recipes</h3>
+        <hr>
+
+        {% if current_user.is_anonymous %}
+        
+        <!-- Below code is for Google One Tap -->
+        <div id="g_id_onload" data-client_id={{ google_client_id }}
+            data-context="signin" data-login_uri={{ google_login_uri }} data-auto_select="true">
+        </div>
+
+        <div class="btn-group-lg">
+            <a class="btn btn-primary btn-index btn-border" href="{{ url_for('auth.register') }}">
+                Register
+            </a>
+            <a class="btn btn-success btn-index btn-border" href="{{ url_for('auth.login') }}">
+                Login
+            </a>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="form-group">
+        <div class="row" style="padding-top: 20px;">
+            <div class="form-group col-sm-4">
+                <a href="{{ url_for('view_recipes.recipe_list_favorites') }}" class="btn btn-info btn-block rounded-pill btn-border">
+                    All Recipes
+                </a>
+            </div>
+            <div class="form-group col-sm-4">
+                <a href="{{ url_for('meal_planning.meal_plan') }}" class="btn btn-info btn-block rounded-pill btn-border">
+                    Meal Plan
+                </a>
+            </div>
+            <div class="form-group col-sm-4">
+                <a href="{{ url_for('meal_planning.shopping_list') }}" class="btn btn-info btn-block rounded-pill btn-border">
+                    Shopping List
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    {% if current_user_admin %}
+
+    <div class="form-group">
+        <div class="row" style="padding-top: 20px;">
+            <div class="form-group col-xl-12">
+                <a href="{{ url_for('admin.admin') }}" class="btn btn-info btn-block rounded-pill btn-border">
+                    Administration
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+
+    {% endif %}
+</div>
+{% endblock %}

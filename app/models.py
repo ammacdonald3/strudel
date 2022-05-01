@@ -1,3 +1,4 @@
+from flask import current_app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import JSON
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -7,8 +8,8 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from app import db, login
 from time import time
+from datetime import datetime
 import jwt
-from app import app
 
 class App_User(UserMixin, db.Model):
     __tablename__ = 'app_user'
@@ -20,15 +21,20 @@ class App_User(UserMixin, db.Model):
     first_name = db.Column(db.String)
     last_name = db.Column(db.String)
     insert_datetime = db.Column(db.DateTime())
-    user_recipe = db.relationship('User_Recipe', backref='user_recipe2', lazy=True)
     admin = db.Column(db.Boolean())
+    google_id = db.Column(db.String)
+    native_authenticated = db.Column(db.Boolean())
+    google_authenticated = db.Column(db.Boolean())
+    last_seen = db.Column(db.DateTime, default=datetime.now)
+
+    user_recipe = db.relationship('User_Recipe', backref='user_recipe2', lazy=True)
     current_meal = db.relationship('Current_Meal', backref='current_meal2', lazy=True)
     favorite_recipe = db.relationship('Favorite_Recipe', backref='favorite_recipe2', lazy=True)
     recipe = db.relationship('Recipe', backref='recipe', lazy=True)
     shopping_list = db.relationship('Shopping_List', backref="shopping_list3", lazy=True)
 
     def __repr__(self):
-        return '<User {}>'.format(self.app_username)
+        return '<User {}>'.format(self.app_email)
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -39,12 +45,12 @@ class App_User(UserMixin, db.Model):
     def get_reset_password_token(self, expires_in=600):
         return jwt.encode(
             {'reset_password': self.id, 'exp': time() + expires_in},
-            app.config['SECRET_KEY'], algorithm='HS256')
+            current_app.config['SECRET_KEY'], algorithm='HS256')
 
     @staticmethod
     def verify_reset_password_token(token):
         try:
-            id = jwt.decode(token, app.config['SECRET_KEY'],
+            id = jwt.decode(token, current_app.config['SECRET_KEY'],
                             algorithms=['HS256'])['reset_password']
         except:
             return
@@ -182,7 +188,6 @@ class Favorite_Recipe(db.Model):
         return '<id {}>'.format(self.favorite_recipe_id)
 
 
-
 class Current_Meal(db.Model):
     __tablename__ = 'current_meal'
 
@@ -232,45 +237,7 @@ class Shopping_List(db.Model):
 
 
 
-class LoginForm(FlaskForm):
-    app_username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember_me = BooleanField('Stay logged in')
-    submit = SubmitField('Sign In')
 
-
-
-class RegistrationForm(FlaskForm):
-    first_name = StringField('First Name', validators=[DataRequired()])
-    last_name = StringField('Last Name', validators=[DataRequired()])
-    app_username = StringField('Username', validators=[DataRequired()])
-    app_email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    password2 = PasswordField(
-        'Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Register')
-
-    def validate_username(self, app_username):
-        app_user = App_User.query.filter_by(app_username=app_username.data).first()
-        if app_user is not None:
-            raise ValidationError('Please use a different username.')
-
-    def validate_email(self, app_email):
-        app_user = App_User.query.filter_by(app_email=app_email.data).first()
-        if app_user is not None:
-            raise ValidationError('Please use a different email address.')
-
-
-class ResetPasswordRequestForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    submit = SubmitField('Request Password Reset')
-
-
-class ResetPasswordForm(FlaskForm):
-    password = PasswordField('Password', validators=[DataRequired()])
-    password2 = PasswordField(
-        'Repeat Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Request Password Reset')
 
 
 class App_Error(db.Model):

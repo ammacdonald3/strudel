@@ -1,0 +1,70 @@
+{% extends "main/layout.html" %}
+<!-- {% block nav_recipes %}
+active
+{% endblock %} -->
+
+
+{% block body %}
+<div class="container feature-page">
+
+    <div class="container" id="title">
+        <h2>Admin</h2>
+    </div>
+
+    {% if current_user_admin %}
+
+    <div class="container" id="admin-table-container">
+        <table class="table table-bordered" id="admin-table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Administrator</th>
+                    <th>Native Authenticated</th>
+                    <th>Google Authenticated</th>
+                    <th>Insert Datetime</th>
+                    <th>Last Seen</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in user_list %}
+                <tr>
+                    <th>{{ user.app_username }}</th>
+                    <th>{{ user.app_email }}</th>
+                    <th>{{ user.first_name }}</th>
+                    <th>{{ user.last_name }}</th>
+                    <th>{{ user.admin }}</th>
+                    <th>{{ user.native_authenticated }}</th>
+                    <th>{{ user.google_authenticated }}</th>
+                    <th>{{ user.insert_datetime }}</th>
+                    <th>{{ user.last_seen }}</th>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="container">
+        Hey, you're not supposed to be here...
+    </div>
+
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block footer %}
+<!-- DataTables CSS -->
+<!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"> -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
+
+<script type="text/javascript" src="{{ url_for('static', filename='admin/admin.js') }}"></script>
+
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+
+{% endblock %}

@@ -1,0 +1,191 @@
+{% extends "main/layout.html" %}
+{% block nav_add_menu %}
+active
+{% endblock %}
+{% block nav_add %}
+active
+{% endblock %}
+
+{% block body %}
+<div class="container feature-page">
+
+  <div class="container" id="title">
+    <h2>Add New Recipe</h2>
+  </div>
+
+  <div class="container">
+    <form role="form" method='POST' action="" enctype="multipart/form-data">
+
+      <div class="row">
+        <!-- Recipe Name input -->
+        <div class="form-group col-lg">
+          <label for="recipe_name_box">Recipe</label>
+          <input type="text" name="recipe_name" class="form-control" id="recipe_name_box"
+            placeholder="Enter recipe name" autofocus required>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Recipe Description input -->
+        <div class="form-group col-lg">
+          <label for="recipe_desc_box">Description</label>
+          <textarea name="recipe_desc" class="form-control" id="recipe_desc_box" placeholder="Enter recipe description"
+            rows="3" autofocus required></textarea>
+          <!-- <input type="text" name="recipe_desc" class="form-control" id="recipe_desc_box"
+          placeholder="Enter recipe description" style="max-width: 500px;" autofocus required> -->
+        </div>
+      </div>
+
+
+      <div class="row">
+        <!-- Recipe Prep Time input -->
+        <div class="form-group col-sm">
+          <label for="recipe_prep_box">Prep Time</label>
+          <input type="number" name="recipe_prep_time" class="form-control" id="recipe_prep_box"
+            placeholder="Enter recipe prep time" aria-describedby="prep_help" autofocus required>
+          <small id="prep_help" class="form-text text-muted">Enter prep time in minutes.</small>
+        </div>
+        <!-- Recipe Cook Time input -->
+        <div class="form-group col-sm">
+          <label for="recipe_cook_box">Cook Time</label>
+          <input type="number" name="recipe_cook_time" class="form-control" id="recipe_cook_box"
+            placeholder="Enter recipe cook time" aria-describedby="cook_help" autofocus required>
+          <small id="cook_help" class="form-text text-muted">Enter cook time in minutes.</small>
+        </div>
+        <!-- Recipe Serving Size input -->
+        <div class="form-group col-sm">
+          <label for="serving_size_box">Serving Size</label>
+          <input type="number" name="serving_size" class="form-control" id="serving_size_box"
+            placeholder="Enter serving size" aria-describedby="size_help" autofocus required>
+          <small id="size_help" class="form-text text-muted">Enter number of servings.</small>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Recipe URL input -->
+        <div class="form-group col-lg">
+          <label for="recipe_url_box">URL</label>
+          <input type="text" name="recipe_url" class="form-control" id="recipe_url_box" placeholder="Enter recipe URL"
+            style="max-width: 1000px;" autofocus required>
+        </div>
+      </div>
+
+
+
+      <br>
+      <br>
+
+
+      <div class="row">
+
+        <div class="form-group col-md">
+          <h3>Dietary Restrictions</h3>
+          <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
+            <label class="btn btn-outline-success active btn-block">
+              <input type="checkbox" name="diet_vegan" id="diet_vegan" autocomplete="off" />Vegan
+            </label>
+          </div>
+          <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
+            <label class="btn btn-outline-success active btn-block">
+              <input type="checkbox" name="diet_vegetarian" id="diet_vegetarian" autocomplete="off" />Vegetarian</label>
+          </div>
+          <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
+            <label class="btn btn-outline-success active btn-block">
+              <input type="checkbox" name="diet_gluten" id="diet_gluten" autocomplete="off">Gluten-free</label>
+          </div>
+        </div>
+
+
+        <br>
+
+        <div class="form-group col-md">
+          <h3>Meal Time</h3>
+          <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
+            <label class="btn btn-outline-success active btn-block">
+              <input type="checkbox" name="meal_breakfast" id="meal_breakfast" autocomplete="off">Breakfast
+            </label>
+          </div>
+          <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
+            <label class="btn btn-outline-success active btn-block">
+              <input type="checkbox" name="meal_lunch" id="meal_lunch" autocomplete="off">Lunch</label>
+          </div>
+          <div class="btn-group-toggle" data-toggle="buttons" style="margin-top: 10px;">
+            <label class="btn btn-outline-success active btn-block">
+              <input type="checkbox" name="meal_dinner" id="meal_dinner" autocomplete="off">Dinner</label>
+          </div>
+        </div>
+
+      </div>
+
+      <br>
+      <br>
+
+
+      <div>
+        <h3>Ingredients</h3>
+        <p>Add your ingredients.</p>
+        <div class="form-group">
+          <div class="row">
+            <div class="form-group col-lg-2">Ingredient 1</div>
+            <div class="form-group col-lg-7">
+              <input name="ingredient_desc1" class="form-control col" placeholder="Ingredient 1">
+            </div>
+            <div class="form-group col-lg-3">
+              <button class="removeclass btn btn-danger col">Delete</button>
+            </div>
+          </div>
+        </div>
+        <div id="IngredientInputsWrapper"></div>
+        <br>
+
+        <button type="button" id="addingredientfield" class="btn btn-success btn-block">Add ingredient</button>
+
+      </div>
+
+      <br>
+      <br>
+      <br>
+
+      <div>
+        <h3>Recipe Steps</h3>
+        <p>Add the recipe method.</p>
+        <div class="form-group">
+          <div class="row">
+            <div class="form-group col-lg-1">Step 1</div>
+            <div class="form-group col-lg-8">
+              <input name="recipe_step1" class="form-control col" placeholder="Step 1">
+            </div>
+            <div class="form-group col-lg-3">
+              <button class="removeclass btn btn-danger col">Delete</button>
+            </div>
+          </div>
+        </div>
+        <div id="StepInputsWrapper"></div>
+        <br />
+
+        <button type="button" id="addstepfield" class="btn btn-success btn-block">Add step</button>
+
+      </div>
+
+      <br>
+      <br>
+      <br>
+
+      <button type="submit" class="btn btn-primary btn-block">Submit</button>
+    </form> <br>
+    <br>
+  </div>
+
+  <!--
+{% for item in output %}
+<h4>{{ item }}</h4>
+{% endfor %}
+-->
+
+</div>
+{% endblock %}
+
+
+{% block footer %}
+<script type="text/javascript" src="{{ url_for('static', filename='add_recipes/ingredients.js') }}"></script>
+{% endblock %}
