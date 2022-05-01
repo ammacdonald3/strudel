@@ -134,7 +134,7 @@ button {
 		rgba(0, 0, 0, 0.5), 
 		rgba(0, 0, 0, 0.5)
 		),
-		url("title-image-min.jpeg");
+		url("main/title-image-min.jpeg");
 	background-size: cover;
 	font-family: 'Lato', sans-serif;
 	color: white;
@@ -480,3 +480,8 @@ iframe {
 }
 
 /* Above code used for loading spinner overlay */
+
+
+#admin-table-container {
+	overflow: auto;
+}

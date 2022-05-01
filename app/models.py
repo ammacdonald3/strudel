@@ -8,6 +8,7 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from app import db, login
 from time import time
+from datetime import datetime
 import jwt
 
 class App_User(UserMixin, db.Model):
@@ -24,6 +25,7 @@ class App_User(UserMixin, db.Model):
     google_id = db.Column(db.String)
     native_authenticated = db.Column(db.Boolean())
     google_authenticated = db.Column(db.Boolean())
+    last_seen = db.Column(db.DateTime, default=datetime.now)
 
     user_recipe = db.relationship('User_Recipe', backref='user_recipe2', lazy=True)
     current_meal = db.relationship('Current_Meal', backref='current_meal2', lazy=True)

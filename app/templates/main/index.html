@@ -50,6 +50,22 @@ active
             </div>
         </div>
     </div>
+
+    {% if current_user_admin %}
+
+    <div class="form-group">
+        <div class="row" style="padding-top: 20px;">
+            <div class="form-group col-xl-12">
+                <a href="{{ url_for('admin.admin') }}" class="btn btn-info btn-block rounded-pill btn-border">
+                    Administration
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+
     {% endif %}
 </div>
 {% endblock %}

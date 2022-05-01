@@ -4,12 +4,12 @@
     "description": "Store and select recipes",
     "icons": [
       {
-        "src": "/static/pancakes192.png",
+        "src": "/static/main/pancakes192.png",
         "type": "image/png",
         "sizes": "192x192"
       },
       {
-        "src": "/static/pancakes512.png",
+        "src": "/static/main/pancakes512.png",
         "type": "image/png",
         "sizes": "512x512"
       }
