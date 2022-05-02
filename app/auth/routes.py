@@ -39,6 +39,10 @@ def login():
 
     # Google account login
     elif 'credential' in request.form:
+        print("-------------------")
+        print("Credential in form")
+        print("-------------------")
+
         try:
             token = request.form['credential']
 
@@ -86,9 +90,14 @@ def login():
                 db.session.commit()
                 return redirect(next_page)
 
-        except ValueError:
+        except ValueError as val-error:
             # Invalid token
-            pass
+            print(str(val-error))
+
+    else:
+        print("------------------------")
+        print("Login completely failed")
+        print("------------------------")
 
     return render_template('auth/login.html', title='Sign In', form=form, google_login_uri=google_login_uri, google_client_id=google_client_id)
 
