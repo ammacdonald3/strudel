@@ -90,9 +90,9 @@ def login():
                 db.session.commit()
                 return redirect(next_page)
 
-        except ValueError as val-error:
+        except ValueError as valerror:
             # Invalid token
-            print(str(val-error))
+            print(str(valerror))
 
     else:
         print("------------------------")
