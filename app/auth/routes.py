@@ -27,7 +27,8 @@ def login():
     # Native login
     form = LoginForm()
     if form.validate_on_submit():
-        app_user = App_User.query.filter_by(app_email=form.app_email.data).first()
+        app_email = form.app_email.data.lower()
+        app_user = App_User.query.filter_by(app_email=app_email).first()
         if app_user is None or not app_user.check_password(form.password.data):
             error = 'Invalid email or password'
             return render_template('auth/login.html', title='Sign In', form=form, error=error)
@@ -182,7 +183,7 @@ def register():
             app_user = App_User(
                 first_name=form.first_name.data,
                 last_name=form.last_name.data,
-                app_email=form.app_email.data,
+                app_email=form.app_email.data.lower(),
                 insert_datetime=datetime.now(),
                 native_authenticated=True
             )

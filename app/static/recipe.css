@@ -216,9 +216,6 @@ dt {
 	margin-right: 18px;
 }
 
-.navbar-brand {
-	margin-right: 30px;
-}
 
 .badge {
 	margin-left: 15px;
@@ -354,6 +351,10 @@ dt {
 	.navbar-brand {
 		font-size: 25px;
 	}
+	#navbar-brand {
+		margin-right: 0px;
+		margin-left: 3%;
+	}
 	.navbar-true {
 		border-top:2px solid #f0f0f0;
 		border-bottom:unset;
@@ -378,6 +379,12 @@ dt {
 	}
 	#btn-back-to-top {
 		bottom: 130px;
+	}
+}
+
+@media (min-width: 501px) {
+	#navbar-icon {
+		visibility: hidden;
 	}
 }
 
