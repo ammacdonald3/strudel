@@ -204,7 +204,7 @@ dt {
 
 .navbar-collapse {
 	text-align: center;
-	font-size: 20px;
+	/* font-size: 1.3em; */
 }
 
 .dropdown-item {
@@ -384,7 +384,10 @@ dt {
 
 @media (min-width: 501px) {
 	#navbar-icon {
-		visibility: hidden;
+		display: none;
+	}
+	#navbar-brand {
+		display: none;
 	}
 }
 
@@ -491,4 +494,9 @@ iframe {
 
 #admin-table-container {
 	overflow: auto;
+}
+
+/* Used to hide navbar objects until ordering classes can be applied */
+.hidden {
+	display: none;
 }
