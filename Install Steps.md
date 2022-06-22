@@ -23,6 +23,7 @@
         * ```export DATABASE_URL="postgresql:///recipe-dev"```
         * ```export GOOGLE_LOGIN_URI="http://localhost:5000/auth/register"```
         * ```export GOOGLE_CLIENT_ID="<populate from Google>```
+        * ```export SECRET_KEY="123"```
     * WINDOWS
         * ```$env:FLASK_APP="strudel.py"```
         * ```$env:APP_SETTINGS="config.DevelopmentConfig"```
@@ -50,4 +51,19 @@
     * Check out STAGE again for future development
         * ``` git checkout stage ```
 
+13. After each update (temp deployment directly to Heroku)
+    * Commit changes in local git
+    * Push committed changes to remote STAGE git branch
+    * Create remote for Stage app on Heroku
+        * ``` heroku git:remote -a recipe-stage ```
+    * Push changes to Heroku Stage
+        * ``` git push heroku stage:main ```
+    * Check out Master branch
+    * Merge changes from STAGE branch into MASTER
+    * Push changes to remote MASTER
+    * Create remote for Stage app on Heroku
+        * ``` heroku git:remote -a strudel-app ```
+    * Push changes to Heroku Stage
+        * ``` git push heroku master:main ```
+    * Check out STAGE again for future development
 

@@ -16,6 +16,11 @@ active
     <!-- IMPORTANT NOTE FOR REFERENCE: -->
     <!-- In the below query, the 'recipe.recipe.app_username' references the variable from the app.py DB query plus the name of the backref relationship in models.py! -->
     <p>Uploaded by {{ recipe.recipe.first_name }} {{ recipe.recipe.last_name }}</p>
+
+    {% if recipe.editor_certified %}
+    <p id="editor-cert"><i class="fa-solid fa-circle-check cert-icon"></i>Editor Certified</p>
+    {% endif %}
+
     <div class="container">
       <div class="form-group">
         <div class="row" style="padding-top: 20px;">
@@ -111,7 +116,8 @@ active
                     meal plan!
                   </div>
                   <div class="modal-footer">
-                    <a href="{{ url_for('meal_planning.meal_plan') }}" class="btn btn-primary center">Go to Meal Plan</a>
+                    <a href="{{ url_for('meal_planning.meal_plan') }}" class="btn btn-primary center">Go to Meal
+                      Plan</a>
                     <button type="button" class="btn btn-secondary center" data-dismiss="modal">
                       Close
                     </button>
@@ -162,9 +168,6 @@ active
     </div>
 
     <br>
-
-    <!-- <div class="center-cropped img-fluid center" style="background-image: url('{% if recipe.recipe_image_url != None %}{{ recipe.recipe_image_url}}{% else %}/static/view_recipes/placeholder-recipe-image.jpg{% endif %}');"> -->
-    <!-- https://images.unsplash.com/photo-1546548970-71785318a17b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2468&q=80');"> -->
 
 
     <div class="image-container center">
@@ -319,7 +322,8 @@ active
       {% if owner_ind == True %}
       <div class="row" style="padding-top: 20px;">
         <div class="form-group col-sm">
-          <a href="{{ url_for('add_recipes.edit_recipe', recipe_id=recipe.recipe_id) }}" class="btn btn-warning btn-block">Edit
+          <a href="{{ url_for('add_recipes.edit_recipe', recipe_id=recipe.recipe_id) }}"
+            class="btn btn-warning btn-block">Edit
             Recipe</a>
         </div>
         {% endif %}
@@ -327,7 +331,8 @@ active
         <!-- Display button so that user can upload an image if they're the owner -->
         {% if owner_ind == True %}
         <div class="form-group col-sm">
-          <a href="{{ url_for('add_recipes.upload_image', recipe_id=recipe.recipe_id) }}" class="btn btn-warning btn-block">Upload
+          <a href="{{ url_for('add_recipes.upload_image', recipe_id=recipe.recipe_id) }}"
+            class="btn btn-warning btn-block">Upload
             Recipe Image</a>
         </div>
         {% endif %}
@@ -343,11 +348,27 @@ active
         </div>
       </div>
       {% endif %}
-
-
-
-
     </div>
+
+    {% if admin_user %}
+    <div class="form-group">
+      <div class="row" style="padding-top: 20px;">
+    <div class="container">
+      <div class="form-group">
+        <form role="form" method="POST" id="cert_form" name="cert_form">
+          {% if recipe.editor_certified %}
+          <button type="submit" id="cert_submit" name="cert_submit" class="btn btn-block btn-danger">Decertify</button>
+          {% else %}
+          <button type="submit" id="cert_submit" name="cert_submit" class="btn btn-block btn-success">Certify</button>
+          {% endif %}
+        </form>
+      </div>
+    </div>
+    </div>
+    </div>
+    {% endif %}
+
+
   </div>
 </div>
 

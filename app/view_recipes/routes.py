@@ -645,6 +645,14 @@ def recipe_detail(recipe_id):
     # Get recipe details
     recipe = db.session.query(Recipe).filter_by(recipe_id=recipe_id).join(App_User).first()
 
+    # Identify admins
+    admins = (db.session.query(App_User).filter_by(admin=True).all())
+    admins_list = [r.id for r in admins]
+    if current_user.id in admins_list:
+        admin_user = True
+    else:
+        admin_user = False
+
     # Identify if recipe is on curent meal plan
     current = db.session.query(Current_Meal) \
         .filter_by(recipe_id=recipe_id) \
@@ -737,6 +745,21 @@ def recipe_detail(recipe_id):
                     db.session.flush()
                     db.session.commit()
 
+        if "cert_submit" in request.form and current_user.id in admins_list:
+
+            # If admin selects 'certify recipe' button, update the recipes table:
+            if recipe.editor_certified != True:
+                db.session.query(Recipe).filter_by(recipe_id=recipe_id).update(dict(editor_certified=True))
+
+            else:
+                db.session.query(Recipe).filter_by(recipe_id=recipe_id).update(dict(editor_certified=False))
+
+            db.session.flush()
+            db.session.commit()
+
+            return redirect(url_for('view_recipes.recipe_detail', recipe_id=recipe_id))
+
+                
 
         # Route for deleting recipe
         admins = (db.session.query(App_User).filter_by(admin=True).all())
@@ -777,5 +800,5 @@ def recipe_detail(recipe_id):
         owner_ind = False
 
     # Render the recipe_detail.html template (main page for this route)
-    return render_template('view_recipes/recipe_detail.html', recipe=recipe, current=current, ingredient_list=ingredient_list, step_list=step_list, favorite=favorite, owner_ind=owner_ind)
+    return render_template('view_recipes/recipe_detail.html', recipe=recipe, current=current, ingredient_list=ingredient_list, step_list=step_list, favorite=favorite, owner_ind=owner_ind, admin_user=admin_user)
  

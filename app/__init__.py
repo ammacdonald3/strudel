@@ -45,6 +45,9 @@ def create_app(config_class=Config):
     from app.admin import bp as admin_bp
     app.register_blueprint(admin_bp)
 
+    from app.food_journal import bp as food_journal_bp
+    app.register_blueprint(food_journal_bp)
+
     return app
 
 

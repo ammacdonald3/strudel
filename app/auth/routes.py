@@ -7,7 +7,7 @@ from google.auth.transport import requests
 from app import db
 from app.auth import bp
 
-from app.models import App_User
+from app.models import App_User, User_Link
 
 from app.auth.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm
 
@@ -153,6 +153,17 @@ def register():
                     )
                 db.session.add(app_user)
                 db.session.commit()
+
+                app_user_id = (db.session.query(App_User.id).filter_by(app_email=user_email).first())
+
+                user_link = User_Link(
+                    app_user_id=app_user_id,
+                    combined_user_id=app_user_id
+                )
+
+                db.session.add(user_link)
+                db.session.commit()
+
                 flash('Congratulations, you are now a registered user!')
                 login_user(app_user)
                 next_page = url_for('main.index')
@@ -191,6 +202,17 @@ def register():
             app_user.set_password(form.password.data)
             db.session.add(app_user)
             db.session.commit()
+
+            app_user_id = (db.session.query(App_User.id).filter_by(app_email=app_email).first())
+
+            user_link = User_Link(
+                app_user_id=app_user_id,
+                combined_user_id=app_user_id
+            )
+
+            db.session.add(user_link)
+            db.session.commit()
+
             flash('Congratulations, you are now a registered user!')
             login_user(app_user)
             next_page = url_for('main.index')

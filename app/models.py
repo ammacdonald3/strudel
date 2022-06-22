@@ -79,6 +79,7 @@ class Recipe(db.Model):
     created_by = db.Column(db.Integer(), db.ForeignKey('app_user.id'), nullable=False)
     insert_datetime = db.Column(db.DateTime())
     recipe_deleted = db.Column(db.Boolean())
+    editor_certified = db.Column(db.Boolean())
     ingredient = db.relationship('Ingredient', backref='ingredient', lazy=True)
     recipe_step = db.relationship('Recipe_Step', backref='recipe_step', lazy=True)
     user_recipe = db.relationship('User_Recipe', backref='user_recipe1', lazy=True)
@@ -87,7 +88,7 @@ class Recipe(db.Model):
     shopping_list = db.relationship('Shopping_List', backref="shopping_list1", lazy=True)
 
 
-    def __init__(self, recipe_name, recipe_desc, recipe_prep_time, recipe_cook_time, recipe_total_time, serving_size, diet_vegetarian, diet_vegan, diet_gluten, meal_breakfast, meal_lunch, meal_dinner, recipe_url, recipe_image_url, created_by, insert_datetime):
+    def __init__(self, recipe_name, recipe_desc, recipe_prep_time, recipe_cook_time, recipe_total_time, serving_size, diet_vegetarian, diet_vegan, diet_gluten, meal_breakfast, meal_lunch, meal_dinner, recipe_url, recipe_image_url, created_by, insert_datetime, recipe_deleted, editor_certified):
         self.recipe_name = recipe_name
         self.recipe_desc = recipe_desc
         self.recipe_prep_time = recipe_prep_time
@@ -104,6 +105,8 @@ class Recipe(db.Model):
         self.recipe_image_url = recipe_image_url
         self.created_by = created_by
         self.insert_datetime = insert_datetime
+        self.recipe_deleted = recipe_deleted
+        self.editor_certified = editor_certified
 
     def __repr__(self):
         return '<id {}>'.format(self.recipe_id)
@@ -127,6 +130,140 @@ class Ingredient(db.Model):
         return 'id {}>'.format(self.ingredient_id)
 
 
+class Journal_Meal(db.Model):
+    __tablename__ = 'journal_meal'
+
+    journal_meal_id = db.Column(db.Integer, primary_key=True)
+    app_user_id = db.Column(db.Integer(), db.ForeignKey('app_user.id'), nullable=False)
+    recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.recipe_id'), nullable=True)
+    journal_meal_desc = db.Column(db.String())
+    eaten_date = db.Column(db.Date())
+    eaten_time = db.Column(db.Time())
+    eaten_datetime = db.Column(db.DateTime())
+    insert_datetime = db.Column(db.DateTime())
+
+    def __init__(self, app_user_id, recipe_id, journal_meal_desc, eaten_date, eaten_time, eaten_datetime, insert_datetime):
+        self.app_user_id = app_user_id
+        self.recipe_id = recipe_id
+        self.journal_meal_desc = journal_meal_desc
+        self.eaten_date = eaten_date
+        self.eaten_time = eaten_time
+        self.eaten_datetime = eaten_datetime
+        self.insert_datetime = insert_datetime
+
+    def __repr__(self):
+        return 'id {}>'.format(self.journal_meal_id)
+
+
+class Journal_Ingredient(db.Model):
+    __tablename__ = 'journal_ingredient'
+
+    journal_ingredient_id = db.Column(db.Integer, primary_key=True)
+    app_user_id = db.Column(db.Integer(), db.ForeignKey('app_user.id'), nullable=False)
+    journal_meal_id = db.Column(db.Integer(), db.ForeignKey('journal_meal.journal_meal_id'), nullable=True)
+    ingredient_id = db.Column(db.Integer(), db.ForeignKey('ingredient.ingredient_id'), nullable=True)
+    journal_ingredient_desc = db.Column(db.String())
+    eaten_date = db.Column(db.Date())
+    eaten_time = db.Column(db.Time())
+    eaten_datetime = db.Column(db.DateTime())
+    insert_datetime = db.Column(db.DateTime())
+
+    def __init__(self, app_user_id, journal_meal_id, ingredient_id, journal_ingredient_desc, eaten_date, eaten_time, eaten_datetime, insert_datetime):
+        self.app_user_id = app_user_id
+        self.journal_meal_id = journal_meal_id
+        self.ingredient_id = ingredient_id
+        self.journal_ingredient_desc = journal_ingredient_desc
+        self.eaten_date = eaten_date
+        self.eaten_time = eaten_time
+        self.eaten_datetime = eaten_datetime
+        self.insert_datetime = insert_datetime
+
+    def __repr__(self):
+        return 'id {}>'.format(self.journal_meal_id)
+
+
+class Journal_Symptom(db.Model):
+    __tablename__ = 'journal_symptom'
+
+    journal_symptom_id = db.Column(db.Integer, primary_key=True)
+    journal_symptom_desc = db.Column(db.String())
+    insert_datetime = db.Column(db.DateTime())
+
+    def __init__(self, journal_symptom_desc, insert_datetime):
+        self.journal_symptom_desc = journal_symptom_desc
+        self.insert_datetime = insert_datetime
+
+    def __repr__(self):
+        return 'id {}>'.format(self.journal_symptom_id)
+
+
+class Journal_Symptom_Severity(db.Model):
+    __tablename__ = 'journal_symptom_severity'
+
+    journal_symptom_sev_id = db.Column(db.Integer, primary_key=True)
+    journal_symptom_sev_desc = db.Column(db.String())
+    insert_datetime = db.Column(db.DateTime())
+
+    def __init__(self, journal_symptom_sev_desc, insert_datetime):
+        self.journal_symptom_sev_desc = journal_symptom_sev_desc
+        self.insert_datetime = insert_datetime
+
+    def __repr__(self):
+        return 'id {}>'.format(self.journal_symptom_sev_id)
+
+
+class Bristol_Scale(db.Model):
+    __tablename__ = 'bristol_scale'
+
+    bristol_scale_id = db.Column(db.Integer, primary_key=True)
+    bristol_scale_desc = db.Column(db.String())
+    bristol_scale_number = db.Column(db.Integer())
+    insert_datetime = db.Column(db.DateTime())
+
+    def __init__(self, bristol_scale_desc, bristol_scale_number, insert_datetime):
+        self.bristol_scale_desc = bristol_scale_desc
+        self.bristol_scale_number = bristol_scale_number
+        self.insert_datetime = insert_datetime
+
+    def __repr__(self):
+        return 'id {}>'.format(self.bristol_scale_id)
+
+
+class User_Symptom(db.Model):
+    __tablename__ = 'user_symptom'
+
+    user_symptom_id = db.Column(db.Integer, primary_key=True)
+    app_user_id = db.Column(db.Integer(), db.ForeignKey('app_user.id'), nullable=False)
+    journal_symptom_id = db.Column(db.Integer(), db.ForeignKey('journal_symptom.journal_symptom_id'), nullable=False)
+    bristol_scale_id = db.Column(db.Integer(), db.ForeignKey('bristol_scale.bristol_scale_id'), nullable=True)
+    user_symptom_date = db.Column(db.Date())
+    user_symptom_time = db.Column(db.Time())
+    user_symptom_datetime = db.Column(db.DateTime())
+    user_symptom_notes = db.Column(db.String())
+    insert_datetime = db.Column(db.DateTime())
+
+    def __init__(self, journal_symptom_desc, insert_datetime):
+        self.journal_symptom_desc = journal_symptom_desc
+        self.insert_datetime = insert_datetime
+
+    def __repr__(self):
+        return 'id {}>'.format(self.user_symptom_id)
+
+
+class User_Link(db.Model):
+    __tablename__ = 'user_link'
+
+    user_link_id = db.Column(db.Integer, primary_key=True)
+    app_user_id = db.Column(db.Integer(), db.ForeignKey('app_user.id'), nullable=False)
+    combined_user_id = db.Column(db.String())
+
+    def __init__(self, app_user_id, combined_user_id):
+        self.app_user_id = app_user_id
+        self.combined_user_id = combined_user_id
+
+    def __repr__(self):
+        return 'id {}>'.format(self.user_link_id)
+    
 
 class Recipe_Step(db.Model):
     __tablename__ = 'recipe_step'
@@ -194,14 +331,16 @@ class Current_Meal(db.Model):
     current_meal_id = db.Column(db.Integer, primary_key=True)
     recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.recipe_id'), nullable=False)
     app_user_id = db.Column(db.Integer(), db.ForeignKey('app_user.id'), nullable=False)
+    combined_user_id = db.Column(db.String())
     day_number = db.Column(db.Integer())
     meal = db.Column(db.String())
     active_ind = db.Column(db.Boolean())
     insert_datetime = db.Column(db.DateTime())
 
-    def __init__(self, recipe_id, app_user_id, day_number, meal, active_ind, insert_datetime):
+    def __init__(self, recipe_id, app_user_id, combined_user_id, day_number, meal, active_ind, insert_datetime):
         self.recipe_id = recipe_id
         self.app_user_id = app_user_id
+        self.combined_user_id = combined_user_id
         self.day_number = day_number
         self.meal = meal
         self.active_ind = active_ind
@@ -219,25 +358,23 @@ class Shopping_List(db.Model):
     recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.recipe_id'), nullable=True)
     ingredient_id = db.Column(db.Integer(), nullable=True)
     app_user_id = db.Column(db.Integer(), db.ForeignKey('app_user.id'), nullable=False)
+    combined_user_id = db.Column(db.String())
     item_sort = db.Column(db.Integer)
     checked_status = db.Column(db.Boolean())
     insert_datetime = db.Column(db.DateTime())
 
-    def __init__(self, item_desc, recipe_id, ingredient_id, app_user_id, item_sort, checked_status, insert_datetime):
+    def __init__(self, item_desc, recipe_id, ingredient_id, app_user_id, combined_user_id, item_sort, checked_status, insert_datetime):
         self.item_desc = item_desc
         self.recipe_id = recipe_id
         self.ingredient_id = ingredient_id
         self.app_user_id = app_user_id
+        self.combined_user_id = combined_user_id
         self.item_sort = item_sort
         self.checked_status = checked_status
         self.insert_datetime = insert_datetime
 
     def __repr__(self):
         return '<id {}>'.format(self.shopping_list_id)
-
-
-
-
 
 
 class App_Error(db.Model):

@@ -1,0 +1,30 @@
+{% extends "main/layout.html" %}
+{% block nav_add_menu %}
+active
+{% endblock %}
+
+{% block body %}
+<div class="container feature-page">
+
+    <div class="container" id="title">
+        <h2>Food Journal</h2>
+    </div>
+
+    <div class="container">
+        This is your food journal
+    </div>
+</div>
+
+
+<!-- Uncomment below lines for debugging -->
+<!-- {% for item in output %}
+<h4>{{ item }}</h4>
+{% endfor %} -->
+
+
+{% endblock %}
+
+
+{% block footer %}
+<!-- <script type="text/javascript" src="{{ url_for('static', filename='add_recipes/ingredients.js') }}"></script> -->
+{% endblock %}

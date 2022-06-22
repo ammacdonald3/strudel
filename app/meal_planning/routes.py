@@ -10,7 +10,7 @@ from flask import current_app as app
 
 from app import db
 
-from app.models import Recipe, Ingredient, Recipe_Step, App_User, Current_Meal, User_Recipe, Favorite_Recipe, Shopping_List, App_Error
+from app.models import Recipe, Ingredient, Recipe_Step, App_User, Current_Meal, User_Recipe, Favorite_Recipe, Shopping_List, App_Error, User_Link
 
 from app.meal_planning import bp
 
@@ -21,10 +21,13 @@ from app.meal_planning import bp
 def meal_selector():
     output = []
     if request.method == "POST":
+
+        # Get combined_user_id
+        combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
         
         try:
             # Update user's current meal list to inactivate all meals
-            db.session.query(Current_Meal).filter(Current_Meal.app_user_id==current_user.id).update(dict(active_ind=False))
+            db.session.query(Current_Meal).filter(Current_Meal.combined_user_id==combined_user_id).update(dict(active_ind=False), synchronize_session=False)
 
             db.session.flush()
             db.session.commit()
@@ -194,7 +197,8 @@ def meal_selector():
                         day_number=day_counter,
                         meal='breakfast',
                         active_ind=True,
-                        insert_datetime=datetime.now()
+                        insert_datetime=datetime.now(),
+                        combined_user_id=combined_user_id
                     )
                     db.session.add(current_meal)
                     db.session.flush()
@@ -210,7 +214,8 @@ def meal_selector():
                         day_number=day_counter,
                         meal='lunch',
                         active_ind=True,
-                        insert_datetime=datetime.now()
+                        insert_datetime=datetime.now(),
+                        combined_user_id=combined_user_id
                     )
                     db.session.add(current_meal)
                     db.session.flush()
@@ -226,7 +231,8 @@ def meal_selector():
                         day_number=day_counter,
                         meal='dinner',
                         active_ind=True,
-                        insert_datetime=datetime.now()
+                        insert_datetime=datetime.now(),
+                        combined_user_id=combined_user_id
                     )
                     db.session.add(current_meal)
                     db.session.flush()
@@ -244,7 +250,8 @@ def meal_selector():
                         day_number=day_counter,
                         meal='breakfast',
                         active_ind=True,
-                        insert_datetime=datetime.now()
+                        insert_datetime=datetime.now(),
+                        combined_user_id=combined_user_id
                     )
                     db.session.add(current_meal)
                     db.session.flush()
@@ -260,7 +267,8 @@ def meal_selector():
                         day_number=day_counter,
                         meal='lunch',
                         active_ind=True,
-                        insert_datetime=datetime.now()
+                        insert_datetime=datetime.now(),
+                        combined_user_id=combined_user_id
                     )
                     db.session.add(current_meal)
                     db.session.flush()
@@ -276,7 +284,8 @@ def meal_selector():
                         day_number=day_counter,
                         meal='dinner',
                         active_ind=True,
-                        insert_datetime=datetime.now()
+                        insert_datetime=datetime.now(),
+                        combined_user_id=combined_user_id
                     )
                     db.session.add(current_meal)
                     db.session.flush()
@@ -317,8 +326,11 @@ def meal_selector():
 @login_required
 def meal_plan():
 
+    # Get combined_user_id
+    combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
+
     # Get list of user's selected breakfast meals
-    selected_bfast_meals_list = (db.session.query(Recipe, Current_Meal).join(Current_Meal, Recipe.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.app_user_id==current_user.id).filter(Current_Meal.active_ind==True).filter(Current_Meal.meal=='breakfast').order_by(Current_Meal.day_number)).all()
+    selected_bfast_meals_list = (db.session.query(Recipe, Current_Meal).join(Current_Meal, Recipe.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.combined_user_id==combined_user_id).filter(Current_Meal.active_ind==True).filter(Current_Meal.meal=='breakfast').order_by(Current_Meal.day_number)).all()
 
     bfast_length = len(selected_bfast_meals_list)
 
@@ -328,7 +340,7 @@ def meal_plan():
         bfast_exists = False 
 
     # Get list of user's selected lunch meals
-    selected_lunch_meals_list = (db.session.query(Recipe, Current_Meal).join(Current_Meal, Recipe.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.app_user_id==current_user.id).filter(Current_Meal.active_ind==True).filter(Current_Meal.meal=='lunch').order_by(Current_Meal.day_number)).all()
+    selected_lunch_meals_list = (db.session.query(Recipe, Current_Meal).join(Current_Meal, Recipe.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.combined_user_id==combined_user_id).filter(Current_Meal.active_ind==True).filter(Current_Meal.meal=='lunch').order_by(Current_Meal.day_number)).all()
 
     lunch_length = len(selected_lunch_meals_list)
 
@@ -339,7 +351,7 @@ def meal_plan():
 
 
     # Get list of user's selected dinner meals
-    selected_dinner_meals_list = (db.session.query(Recipe, Current_Meal).join(Current_Meal, Recipe.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.app_user_id==current_user.id).filter(Current_Meal.active_ind==True).filter(Current_Meal.meal=='dinner').order_by(Current_Meal.day_number)).all()
+    selected_dinner_meals_list = (db.session.query(Recipe, Current_Meal).join(Current_Meal, Recipe.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.combined_user_id==combined_user_id).filter(Current_Meal.active_ind==True).filter(Current_Meal.meal=='dinner').order_by(Current_Meal.day_number)).all()
 
     dinner_length = len(selected_dinner_meals_list)
 
@@ -378,6 +390,9 @@ def meal_plan():
 def shopping_list():
     output = []
 
+    # Get combined_user_id
+    combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
+
     if request.method == "POST":
 
         # Path for manually adding new shopping list items
@@ -389,12 +404,12 @@ def shopping_list():
                 shop_list = (db.session.query(
                     Shopping_List
                 ).filter(
-                    Shopping_List.app_user_id==current_user.id
+                    Shopping_List.combined_user_id==combined_user_id
                 ).order_by(Shopping_List.item_sort).all())
 
 
                 # Delete existing shopping list
-                Shopping_List.query.filter_by(app_user_id=current_user.id).delete()
+                Shopping_List.query.filter_by(combined_user_id=combined_user_id).delete(synchronize_session="fetch")
 
 
                 # Insert new item first
@@ -405,7 +420,8 @@ def shopping_list():
                     app_user_id=current_user.id,
                     item_sort=0,
                     checked_status=False,
-                    insert_datetime=datetime.now()
+                    insert_datetime=datetime.now(),
+                    combined_user_id=combined_user_id
                 )
                 
                 db.session.add(shopping_list)
@@ -422,7 +438,8 @@ def shopping_list():
                         app_user_id=current_user.id,
                         item_sort=ingredient_counter,
                         checked_status=item.checked_status,
-                        insert_datetime=item.insert_datetime
+                        insert_datetime=item.insert_datetime,
+                        combined_user_id=combined_user_id
                     )
                     ingredient_counter += 1
                     db.session.add(shopping_list)
@@ -452,7 +469,7 @@ def shopping_list():
             try:
 
                 # Delete existing shopping list
-                Shopping_List.query.filter_by(app_user_id=current_user.id).delete()
+                Shopping_List.query.filter_by(combined_user_id=combined_user_id).delete(synchronize_session="fetch")
 
                 db.session.flush()
                 db.session.commit()
@@ -480,7 +497,7 @@ def shopping_list():
             try:
 
                 # Delete existing shopping list
-                Shopping_List.query.filter(Shopping_List.recipe_id.isnot(None)).filter_by(app_user_id=current_user.id).delete()
+                Shopping_List.query.filter(Shopping_List.recipe_id.isnot(None)).filter_by(combined_user_id=combined_user_id).delete(synchronize_session="fetch")
 
                 db.session.flush()
                 db.session.commit()
@@ -507,7 +524,7 @@ def shopping_list():
             try:
 
                 # Delete existing shopping list
-                Shopping_List.query.filter_by(app_user_id=current_user.id).filter_by(recipe_id=None).delete()
+                Shopping_List.query.filter_by(combined_user_id=combined_user_id).filter_by(recipe_id=None).delete(synchronize_session="fetch")
 
                 db.session.flush()
                 db.session.commit()
@@ -547,7 +564,7 @@ def shopping_list():
 
 
                 # Retrieve a list of ingredients for current meals
-                shop_list = (db.session.query(Ingredient, Current_Meal).join(Current_Meal, Ingredient.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.app_user_id==current_user.id).filter(Current_Meal.active_ind==True)).all()
+                shop_list = (db.session.query(Ingredient, Current_Meal).join(Current_Meal, Ingredient.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.combined_user_id==combined_user_id).filter(Current_Meal.active_ind==True)).all()
 
 
                 # Insert ingredients from selected meals into shopping_list table
@@ -562,7 +579,8 @@ def shopping_list():
                             app_user_id=current_user.id,
                             item_sort=ingredient_counter,
                             checked_status=False,
-                            insert_datetime=datetime.now()
+                            insert_datetime=datetime.now(),
+                            combined_user_id=combined_user_id
                         )
                         ingredient_counter += 1
                         db.session.add(shopping_list)
@@ -596,7 +614,7 @@ def shopping_list():
     ).outerjoin(
         Recipe, Recipe.recipe_id==Shopping_List.recipe_id
     ).filter(
-        Shopping_List.app_user_id==current_user.id
+        Shopping_List.combined_user_id==combined_user_id
     ).order_by(Shopping_List.checked_status).order_by(Shopping_List.insert_datetime.desc()).all())
 
     
@@ -612,11 +630,11 @@ def _shopping_list_items():
 
     # If user checked an item, update DB to flag it as checked
     if status == 'checked':
-        db.session.query(Shopping_List).filter(Shopping_List.shopping_list_id==s_list_id).update(dict(checked_status=True))
+        db.session.query(Shopping_List).filter(Shopping_List.shopping_list_id==s_list_id).update(dict(checked_status=True), synchronize_session=False)
     
     # If user unchecked an item, update DB to flag it as unchecked
     elif status == 'unchecked':
-        db.session.query(Shopping_List).filter(Shopping_List.shopping_list_id==s_list_id).update(dict(checked_status=False))
+        db.session.query(Shopping_List).filter(Shopping_List.shopping_list_id==s_list_id).update(dict(checked_status=False), synchronize_session=False)
     
     db.session.flush()
     db.session.commit()
@@ -628,7 +646,7 @@ def _shopping_list_items():
     ).join(
         Recipe, Recipe.recipe_id==Shopping_List.recipe_id
     ).filter(
-        Shopping_List.app_user_id==current_user.id
+        Shopping_List.combined_user_id==combined_user_id
     ).order_by(Shopping_List.item_sort).all())
 
     return render_template('meal_planning/shopping_list.html', shop_list=shop_list)
@@ -638,6 +656,10 @@ def _shopping_list_items():
 @bp.route('/_meal_plan', methods=['GET', 'POST'])
 @login_required
 def _meal_plan():
+
+    # Get combined_user_id
+    combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
+
     status = request.form.get('status')
     recipe_id = request.form.get('recipe_id')
 
@@ -646,7 +668,7 @@ def _meal_plan():
         # If recipe is categorized as a breakfast recipe, add to Meal Plan as a breakfast meal
         if (db.session.query(Recipe.meal_breakfast).filter(Recipe.recipe_id==recipe_id)).scalar() == True:
 
-            breakfast_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).filter_by(meal='breakfast').first()
+            breakfast_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(Current_Meal.combined_user_id==combined_user_id).filter_by(active_ind=True).filter_by(meal='breakfast').first()
 
             if breakfast_exists is None:
 
@@ -656,7 +678,8 @@ def _meal_plan():
                     day_number=0,
                     meal='breakfast',
                     active_ind=True,
-                    insert_datetime=datetime.now()
+                    insert_datetime=datetime.now(),
+                    combined_user_id=combined_user_id
                 )
                 db.session.add(current_meal)
                 db.session.flush()
@@ -665,7 +688,7 @@ def _meal_plan():
         # If recipe is categorized as a lunch recipe, add to Meal Plan as a lunch meal
         if (db.session.query(Recipe.meal_lunch).filter(Recipe.recipe_id==recipe_id)).scalar() == True:
 
-            lunch_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).filter_by(meal='lunch').first()
+            lunch_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(Current_Meal.combined_user_id==combined_user_id).filter_by(active_ind=True).filter_by(meal='lunch').first()
 
             if lunch_exists is None:
 
@@ -675,7 +698,8 @@ def _meal_plan():
                     day_number=0,
                     meal='lunch',
                     active_ind=True,
-                    insert_datetime=datetime.now()
+                    insert_datetime=datetime.now(),
+                    combined_user_id=combined_user_id
                 )
                 db.session.add(current_meal)
                 db.session.flush()
@@ -684,7 +708,7 @@ def _meal_plan():
         # If recipe is categorized as a dinner recipe, add to Meal Plan as a dinner meal
         if (db.session.query(Recipe.meal_dinner).filter(Recipe.recipe_id==recipe_id)).scalar() == True:
 
-            dinner_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).filter_by(meal='dinner').first()
+            dinner_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(Current_Meal.combined_user_id==combined_user_id).filter_by(active_ind=True).filter_by(meal='dinner').first()
 
             if dinner_exists is None:
 
@@ -694,7 +718,8 @@ def _meal_plan():
                     day_number=0,
                     meal='dinner',
                     active_ind=True,
-                    insert_datetime=datetime.now()
+                    insert_datetime=datetime.now(),
+                    combined_user_id=combined_user_id
                 )
                 db.session.add(current_meal)
                 db.session.flush()
@@ -702,7 +727,7 @@ def _meal_plan():
     
     # If user selected to remove recipe to meal plan, update table
     elif status == 'unchecked':
-        db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).update(dict(active_ind=False))
+        db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(Current_Meal.combined_user_id==combined_user_id).filter_by(active_ind=True).update(dict(active_ind=False), synchronize_session=False)
 
         db.session.flush()
         db.session.commit()
@@ -714,10 +739,13 @@ def _meal_plan():
 @bp.route('/_clear_meal_plan', methods=['GET','POST'])
 @login_required
 def _clear_meal_plan():
+
+    # Get combined_user_id
+    combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
     
     # Inactivate all items from user's meal plan
     try:
-        db.session.query(Current_Meal).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).update(dict(active_ind=False))
+        db.session.query(Current_Meal).filter_by(Current_Meal.combined_user_id==combined_user_id).filter_by(active_ind=True).update(dict(active_ind=False), synchronize_session=False)
 
         db.session.flush()
         db.session.commit()
@@ -747,13 +775,17 @@ def _clear_meal_plan():
 @bp.route('/_meal_breakfast', methods=['GET', 'POST'])
 @login_required
 def _meal_breakfast():
+
+    # Get combined_user_id
+    combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
+
     status = request.form.get('status')
     recipe_id = request.form.get('recipe_id')
 
     # If user selected to add recipe to meal plan, update table
     if status == 'checked':
 
-        breakfast_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).filter_by(meal='breakfast').first()
+        breakfast_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(Current_Meal.combined_user_id==combined_user_id).filter_by(active_ind=True).filter_by(meal='breakfast').first()
 
         if breakfast_exists is None:
 
@@ -763,7 +795,8 @@ def _meal_breakfast():
                 day_number=0,
                 meal='breakfast',
                 active_ind=True,
-                insert_datetime=datetime.now()
+                insert_datetime=datetime.now(),
+                combined_user_id=combined_user_id
             )
             db.session.add(current_meal)
             db.session.flush()
@@ -772,7 +805,7 @@ def _meal_breakfast():
     
     # If user selected to remove recipe to meal plan, update table
     elif status == 'unchecked':
-        db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).update(dict(active_ind=False))
+        db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(Current_Meal.combined_user_id==combined_user_id).filter_by(active_ind=True).update(dict(active_ind=False), synchronize_session=False)
 
         db.session.flush()
         db.session.commit()
@@ -784,13 +817,17 @@ def _meal_breakfast():
 @bp.route('/_meal_lunch', methods=['GET', 'POST'])
 @login_required
 def _meal_lunch():
+
+    # Get combined_user_id
+    combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
+
     status = request.form.get('status')
     recipe_id = request.form.get('recipe_id')
 
     # If user selected to add recipe to meal plan, update table
     if status == 'checked':
 
-        lunch_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).filter_by(meal='lunch').first()
+        lunch_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(Current_Meal.combined_user_id==combined_user_id).filter_by(active_ind=True).filter_by(meal='lunch').first()
 
         if lunch_exists is None:
 
@@ -800,7 +837,8 @@ def _meal_lunch():
                 day_number=0,
                 meal='lunch',
                 active_ind=True,
-                insert_datetime=datetime.now()
+                insert_datetime=datetime.now(),
+                combined_user_id=combined_user_id
             )
             db.session.add(current_meal)
             db.session.flush()
@@ -809,7 +847,7 @@ def _meal_lunch():
     
     # If user selected to remove recipe to meal plan, update table
     elif status == 'unchecked':
-        db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).update(dict(active_ind=False))
+        db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(Current_Meal.combined_user_id==combined_user_id).filter_by(active_ind=True).update(dict(active_ind=False), synchronize_session=False)
 
         db.session.flush()
         db.session.commit()
@@ -821,13 +859,17 @@ def _meal_lunch():
 @bp.route('/_meal_dinner', methods=['GET', 'POST'])
 @login_required
 def _meal_dinner():
+
+    # Get combined_user_id
+    combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
+
     status = request.form.get('status')
     recipe_id = request.form.get('recipe_id')
 
     # If user selected to add recipe to meal plan, update table
     if status == 'checked':
 
-        dinner_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).filter_by(meal='dinner').first()
+        dinner_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(Current_Meal.combined_user_id==combined_user_id).filter_by(active_ind=True).filter_by(meal='dinner').first()
 
         if dinner_exists is None:
 
@@ -837,7 +879,8 @@ def _meal_dinner():
                 day_number=0,
                 meal='dinner',
                 active_ind=True,
-                insert_datetime=datetime.now()
+                insert_datetime=datetime.now(),
+                combined_user_id=combined_user_id
             )
             db.session.add(current_meal)
             db.session.flush()
@@ -846,7 +889,7 @@ def _meal_dinner():
     
     # If user selected to remove recipe to meal plan, update table
     elif status == 'unchecked':
-        db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).update(dict(active_ind=False))
+        db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(Current_Meal.combined_user_id==combined_user_id).filter_by(active_ind=True).update(dict(active_ind=False), synchronize_session=False)
 
         db.session.flush()
         db.session.commit()
@@ -858,9 +901,13 @@ def _meal_dinner():
 @bp.route('/_remove_bfast_meal_plan', methods=['GET', 'POST'])
 @login_required
 def _remove_bfast_meal_plan():
+
+    # Get combined_user_id
+    combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
+
     recipe_id = request.form.get('recipe_id')
 
-    db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).filter_by(meal='breakfast').update(dict(active_ind=False))
+    db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(combined_user_id=combined_user_id).filter_by(active_ind=True).filter_by(meal='breakfast').update(dict(active_ind=False), synchronize_session=False)
 
     db.session.flush()
     db.session.commit()
@@ -872,9 +919,13 @@ def _remove_bfast_meal_plan():
 @bp.route('/_remove_lunch_meal_plan', methods=['GET', 'POST'])
 @login_required
 def _remove_lunch_meal_plan():
+
+    # Get combined_user_id
+    combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
+
     recipe_id = request.form.get('recipe_id')
 
-    db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).filter_by(meal='lunch').update(dict(active_ind=False))
+    db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(combined_user_id=combined_user_id).filter_by(active_ind=True).filter_by(meal='lunch').update(dict(active_ind=False), synchronize_session=False)
 
     db.session.flush()
     db.session.commit()
@@ -886,9 +937,13 @@ def _remove_lunch_meal_plan():
 @bp.route('/_remove_dinner_meal_plan', methods=['GET', 'POST'])
 @login_required
 def _remove_dinner_meal_plan():
+
+    # Get combined_user_id
+    combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
+
     recipe_id = request.form.get('recipe_id')
 
-    db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(app_user_id=current_user.id).filter_by(active_ind=True).filter_by(meal='dinner').update(dict(active_ind=False))
+    db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(combined_user_id=combined_user_id).filter_by(active_ind=True).filter_by(meal='dinner').update(dict(active_ind=False), synchronize_session=False)
 
     db.session.flush()
     db.session.commit()
@@ -928,7 +983,7 @@ def _favorite():
 
     # If user selected to remove recipe from favorites, update table
     elif status == 'unchecked':
-        db.session.query(Favorite_Recipe).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Favorite_Recipe.recipe_id==recipe_id).delete()
+        db.session.query(Favorite_Recipe).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Favorite_Recipe.recipe_id==recipe_id).delete(synchronize_session="fetch")
 
         db.session.flush()
         db.session.commit()
@@ -949,10 +1004,14 @@ def _favorite():
 @bp.route('/_del_shopping_list_items', methods=['GET', 'POST'])
 @login_required
 def _del_shopping_list_items():
+
+    # Get combined_user_id
+    combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
+
     s_list_id = request.form.get('s_list_id')
 
     # Delete value from database
-    Shopping_List.query.filter_by(shopping_list_id=s_list_id).delete()
+    Shopping_List.query.filter_by(shopping_list_id=s_list_id).delete(synchronize_session="fetch")
 
     db.session.flush()
     db.session.commit()
@@ -964,7 +1023,7 @@ def _del_shopping_list_items():
     ).join(
         Recipe, Recipe.recipe_id==Shopping_List.recipe_id
     ).filter(
-        Shopping_List.app_user_id==current_user.id
+        Shopping_List.combined_user_id==combined_user_id
     ).order_by(Shopping_List.item_sort).all())
 
     return render_template('meal_planning/shopping_list.html', shop_list=shop_list)

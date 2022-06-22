@@ -263,6 +263,11 @@ dt {
 	font-size: 0;
 }
 
+#editor-cert {
+	font-size: 20px;
+	color: rgb(8, 119, 8);
+}
+
 @media (prefers-color-scheme: dark) {
 	a {
 		color: ghostwhite;
@@ -272,6 +277,10 @@ dt {
 	}
 	body {
 		background-color: #181a1b;
+	}
+	#editor-cert {
+		font-size: 20px;
+		color: rgb(9, 187, 9);
 	}
 }
 
@@ -500,3 +509,9 @@ iframe {
 .hidden {
 	display: none;
 }
+
+
+.cert-icon {
+	padding-right: 10px;
+}
+
