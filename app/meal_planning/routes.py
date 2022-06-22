@@ -27,7 +27,7 @@ def meal_selector():
         
         try:
             # Update user's current meal list to inactivate all meals
-            db.session.query(Current_Meal).filter(Current_Meal.combined_user_id==combined_user_id).update(dict(active_ind=False), synchronize_session=False)
+            db.session.query(Current_Meal).filter(combined_user_id=combined_user_id).update(dict(active_ind=False), synchronize_session=False)
 
             db.session.flush()
             db.session.commit()
@@ -668,7 +668,7 @@ def _meal_plan():
         # If recipe is categorized as a breakfast recipe, add to Meal Plan as a breakfast meal
         if (db.session.query(Recipe.meal_breakfast).filter(Recipe.recipe_id==recipe_id)).scalar() == True:
 
-            breakfast_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(Current_Meal.combined_user_id==combined_user_id).filter_by(active_ind=True).filter_by(meal='breakfast').first()
+            breakfast_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(combined_user_id=combined_user_id).filter_by(active_ind=True).filter_by(meal='breakfast').first()
 
             if breakfast_exists is None:
 
@@ -688,7 +688,7 @@ def _meal_plan():
         # If recipe is categorized as a lunch recipe, add to Meal Plan as a lunch meal
         if (db.session.query(Recipe.meal_lunch).filter(Recipe.recipe_id==recipe_id)).scalar() == True:
 
-            lunch_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(Current_Meal.combined_user_id==combined_user_id).filter_by(active_ind=True).filter_by(meal='lunch').first()
+            lunch_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(combined_user_id=combined_user_id).filter_by(active_ind=True).filter_by(meal='lunch').first()
 
             if lunch_exists is None:
 
@@ -708,7 +708,7 @@ def _meal_plan():
         # If recipe is categorized as a dinner recipe, add to Meal Plan as a dinner meal
         if (db.session.query(Recipe.meal_dinner).filter(Recipe.recipe_id==recipe_id)).scalar() == True:
 
-            dinner_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(Current_Meal.combined_user_id==combined_user_id).filter_by(active_ind=True).filter_by(meal='dinner').first()
+            dinner_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(combined_user_id=combined_user_id).filter_by(active_ind=True).filter_by(meal='dinner').first()
 
             if dinner_exists is None:
 
@@ -727,7 +727,7 @@ def _meal_plan():
     
     # If user selected to remove recipe to meal plan, update table
     elif status == 'unchecked':
-        db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(Current_Meal.combined_user_id==combined_user_id).filter_by(active_ind=True).update(dict(active_ind=False), synchronize_session=False)
+        db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(combined_user_id=combined_user_id).filter_by(active_ind=True).update(dict(active_ind=False), synchronize_session=False)
 
         db.session.flush()
         db.session.commit()
@@ -745,7 +745,7 @@ def _clear_meal_plan():
     
     # Inactivate all items from user's meal plan
     try:
-        db.session.query(Current_Meal).filter_by(Current_Meal.combined_user_id==combined_user_id).filter_by(active_ind=True).update(dict(active_ind=False), synchronize_session=False)
+        db.session.query(Current_Meal).filter_by(combined_user_id=combined_user_id).filter_by(active_ind=True).update(dict(active_ind=False), synchronize_session=False)
 
         db.session.flush()
         db.session.commit()
@@ -785,7 +785,7 @@ def _meal_breakfast():
     # If user selected to add recipe to meal plan, update table
     if status == 'checked':
 
-        breakfast_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(Current_Meal.combined_user_id==combined_user_id).filter_by(active_ind=True).filter_by(meal='breakfast').first()
+        breakfast_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(combined_user_id=combined_user_id).filter_by(active_ind=True).filter_by(meal='breakfast').first()
 
         if breakfast_exists is None:
 
@@ -805,7 +805,7 @@ def _meal_breakfast():
     
     # If user selected to remove recipe to meal plan, update table
     elif status == 'unchecked':
-        db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(Current_Meal.combined_user_id==combined_user_id).filter_by(active_ind=True).update(dict(active_ind=False), synchronize_session=False)
+        db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(combined_user_id=combined_user_id).filter_by(active_ind=True).update(dict(active_ind=False), synchronize_session=False)
 
         db.session.flush()
         db.session.commit()
@@ -827,7 +827,7 @@ def _meal_lunch():
     # If user selected to add recipe to meal plan, update table
     if status == 'checked':
 
-        lunch_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(Current_Meal.combined_user_id==combined_user_id).filter_by(active_ind=True).filter_by(meal='lunch').first()
+        lunch_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(combined_user_id=combined_user_id).filter_by(active_ind=True).filter_by(meal='lunch').first()
 
         if lunch_exists is None:
 
@@ -847,7 +847,7 @@ def _meal_lunch():
     
     # If user selected to remove recipe to meal plan, update table
     elif status == 'unchecked':
-        db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(Current_Meal.combined_user_id==combined_user_id).filter_by(active_ind=True).update(dict(active_ind=False), synchronize_session=False)
+        db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(combined_user_id=combined_user_id).filter_by(active_ind=True).update(dict(active_ind=False), synchronize_session=False)
 
         db.session.flush()
         db.session.commit()
@@ -869,7 +869,7 @@ def _meal_dinner():
     # If user selected to add recipe to meal plan, update table
     if status == 'checked':
 
-        dinner_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(Current_Meal.combined_user_id==combined_user_id).filter_by(active_ind=True).filter_by(meal='dinner').first()
+        dinner_exists = db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(combined_user_id=combined_user_id).filter_by(active_ind=True).filter_by(meal='dinner').first()
 
         if dinner_exists is None:
 
@@ -889,7 +889,7 @@ def _meal_dinner():
     
     # If user selected to remove recipe to meal plan, update table
     elif status == 'unchecked':
-        db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(Current_Meal.combined_user_id==combined_user_id).filter_by(active_ind=True).update(dict(active_ind=False), synchronize_session=False)
+        db.session.query(Current_Meal).filter_by(recipe_id=recipe_id).filter_by(combined_user_id=combined_user_id).filter_by(active_ind=True).update(dict(active_ind=False), synchronize_session=False)
 
         db.session.flush()
         db.session.commit()
