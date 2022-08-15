@@ -21,7 +21,7 @@ from flask import current_app as app
 
 from app import db
 
-from app.models import Recipe, Ingredient, Recipe_Step, App_User, Current_Meal, User_Recipe, Favorite_Recipe, Shopping_List, App_Error
+from app.models import Recipe, Ingredient, Recipe_Step, App_User, Current_Meal, User_Recipe, Favorite_Recipe, Shopping_List, App_Error, User_Link
 
 from app.view_recipes import bp
 
@@ -30,11 +30,17 @@ from app.view_recipes import bp
 @bp.route('/recipe_list_favorites', methods=['GET', 'POST'])
 @login_required
 def recipe_list_favorites():
+
+    # Get combined_user_id
+    combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
+
     # Your favorite recipes (created both by you and others)
-    favorite_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.app_user_id, Current_Meal.active_ind) \
+    favorite_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.active_ind, User_Link) \
         .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==current_user.id)) \
         .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None), isouter=True) \
-        .filter(Recipe.recipe_deleted==None)) \
+        .join(User_Link, (User_Link.combined_user_id==combined_user_id), isouter=True) \
+        .filter(Recipe.recipe_deleted==False)) \
+        .filter(User_Link.app_user_id==current_user.id) \
         .order_by(Recipe.recipe_name) \
         .all()
 
@@ -142,14 +148,17 @@ def recipe_list_favorites():
 @login_required
 def recipe_list_yours():
 
+    # Get combined_user_id
+    combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
+
     # Recipes created by you
-    your_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.app_user_id, Current_Meal.active_ind) \
+    your_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.active_ind, User_Link) \
         .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None), isouter=True) \
         .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None), isouter=True) \
+        .join(User_Link, (User_Link.combined_user_id==combined_user_id), isouter=True) \
         .filter(Recipe.created_by==current_user.id) \
-        # .filter((Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None)) \
-        # .filter((Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None)) \
-        .filter(Recipe.recipe_deleted==None)) \
+        .filter(Recipe.recipe_deleted==False)) \
+        .filter(User_Link.app_user_id==current_user.id) \
         .order_by(Recipe.recipe_name) \
         .all()
 
@@ -256,13 +265,17 @@ def recipe_list_yours():
 @bp.route('/recipe_list_editor', methods=['GET', 'POST'])
 @login_required
 def recipe_list_editor():
+
+    # Get combined_user_id
+    combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
+
     # Editor's Picks recipes (recipes favorited by Admin)
-    editor_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.app_user_id, Current_Meal.active_ind) \
+    editor_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.active_ind, User_Link) \
         .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==1)) \
         .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None), isouter=True) \
-        # .filter(Favorite_Recipe.app_user_id==1) \
-        # .filter((Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None)) \
-        .filter(Recipe.recipe_deleted==None)) \
+        .join(User_Link, (User_Link.combined_user_id==combined_user_id), isouter=True) \
+        .filter(Recipe.recipe_deleted==False)) \
+        .filter(User_Link.app_user_id==current_user.id) \
         .order_by(Recipe.recipe_name) \
         .all()
 
@@ -369,15 +382,20 @@ def recipe_list_editor():
 @bp.route('/recipe_list_others', methods=['GET', 'POST'])
 @login_required
 def recipe_list_others():
+
+    # Get combined_user_id
+    combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
     
     # Recipes created by others
-    other_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.app_user_id, Current_Meal.active_ind) \
+    other_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.active_ind, User_Link) \
         .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None), isouter=True) \
         .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None), isouter=True) \
+        .join(User_Link, (User_Link.combined_user_id==combined_user_id), isouter=True) \
         .filter(Recipe.created_by!=current_user.id) \
         # .filter((Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None)) \
         # .filter((Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None)) \
-        .filter(Recipe.recipe_deleted==None)) \
+        .filter(Recipe.recipe_deleted==False)) \
+        .filter(User_Link.app_user_id==current_user.id) \
         .order_by(Recipe.recipe_name) \
         .all()
     
@@ -484,11 +502,17 @@ def recipe_list_others():
 @bp.route('/recipe_list_all', methods=['GET', 'POST'])
 @login_required
 def recipe_list_all():
+
+    # Get combined_user_id
+    combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
+
     # All recipes (created both by you and others)
-    all_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.app_user_id, Current_Meal.active_ind) \
+    all_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.active_ind, User_Link) \
         .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None), isouter=True) \
-        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None), isouter=True) \
-        .filter(Recipe.recipe_deleted==None)) \
+        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.combined_user_id==combined_user_id), isouter=True) \
+        .join(User_Link, (User_Link.combined_user_id==combined_user_id), isouter=True) \
+        .filter(Recipe.recipe_deleted==False)) \
+        .filter(User_Link.app_user_id==current_user.id) \
         .order_by(Recipe.recipe_name) \
         .all()
 
@@ -524,7 +548,8 @@ def recipe_list_all():
                             day_number=0,
                             meal='breakfast',
                             active_ind=True,
-                            insert_datetime=datetime.now()
+                            insert_datetime=datetime.now(),
+                            combined_user_id=combined_user_id
                         )
                         db.session.add(current_meal)
                         db.session.flush()
@@ -543,7 +568,8 @@ def recipe_list_all():
                             day_number=0,
                             meal='lunch',
                             active_ind=True,
-                            insert_datetime=datetime.now()
+                            insert_datetime=datetime.now(),
+                            combined_user_id=combined_user_id
                         )
                         db.session.add(current_meal)
                         db.session.flush()
@@ -562,7 +588,8 @@ def recipe_list_all():
                             day_number=0,
                             meal='dinner',
                             active_ind=True,
-                            insert_datetime=datetime.now()
+                            insert_datetime=datetime.now(),
+                            combined_user_id=combined_user_id
                         )
                         db.session.add(current_meal)
                         db.session.flush()
@@ -598,6 +625,9 @@ def search():
 
     if request.method == "POST":
 
+        # Get combined_user_id
+        combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
+
         search_terms = request.form['search_terms']
 
         # Split the search terms into individual list items
@@ -616,11 +646,13 @@ def search():
                 new_split_search_terms.append('abcxyz')
 
 
-        search_results = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.app_user_id, Current_Meal.active_ind) \
+        search_results = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.active_ind, User_Link) \
         .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None), isouter=True) \
-        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None), isouter=True) \
-        .filter(Recipe.recipe_deleted==None)) \
+        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.combined_user_id==combined_user_id), isouter=True) \
+        .join(User_Link, (User_Link.combined_user_id==combined_user_id), isouter=True) \
+        .filter(Recipe.recipe_deleted==False)) \
         .filter(or_(func.lower(Recipe.recipe_name).like(new_split_search_terms[0]), func.lower(Recipe.recipe_name).like(new_split_search_terms[1]), func.lower(Recipe.recipe_name).like(new_split_search_terms[2]), func.lower(Recipe.recipe_name).like(new_split_search_terms[3]), func.lower(Recipe.recipe_name).like(new_split_search_terms[4]))) \
+        .filter(User_Link.app_user_id==current_user.id) \
         .order_by(Recipe.recipe_name) \
         .all()
 
@@ -645,6 +677,9 @@ def recipe_detail(recipe_id):
     # Get recipe details
     recipe = db.session.query(Recipe).filter_by(recipe_id=recipe_id).join(App_User).first()
 
+    # Get combined_user_id
+    combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
+
     # Identify admins
     admins = (db.session.query(App_User).filter_by(admin=True).all())
     admins_list = [r.id for r in admins]
@@ -656,7 +691,7 @@ def recipe_detail(recipe_id):
     # Identify if recipe is on curent meal plan
     current = db.session.query(Current_Meal) \
         .filter_by(recipe_id=recipe_id) \
-        .filter_by(app_user_id=current_user.id) \
+        .filter_by(combined_user_id=combined_user_id) \
         .first()
 
 
@@ -777,7 +812,7 @@ def recipe_detail(recipe_id):
             favorite_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.app_user_id, Current_Meal.active_ind) \
                 .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==current_user.id)) \
                 .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None), isouter=True) \
-                .filter(Recipe.recipe_deleted==None)) \
+                .filter(Recipe.recipe_deleted==False)) \
                 .order_by(Recipe.recipe_name) \
                 .all()
 

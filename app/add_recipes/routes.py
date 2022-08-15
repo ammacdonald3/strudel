@@ -95,7 +95,9 @@ def add_recipe():
                 meal_lunch=meal_lunch_input,
                 meal_dinner=meal_dinner_input,
                 created_by=current_user.id,
-                insert_datetime=datetime.now()
+                insert_datetime=datetime.now(),
+                recipe_deleted=False,
+                editor_certified=False
             )
 
             db.session.add(recipe)
@@ -259,7 +261,9 @@ def auto_import():
                     meal_lunch=meal_lunch_input,
                     meal_dinner=meal_dinner_input,
                     created_by=current_user.id,
-                    insert_datetime=datetime.now()
+                    insert_datetime=datetime.now(),
+                    recipe_deleted=False,
+                    editor_certified=False
                 )
 
                 db.session.add(recipe)
@@ -586,6 +590,7 @@ def edit_recipe(recipe_id):
                     
                     db.session.add(ingredient)
                     db.session.commit()
+
                 # Return error if database write was unsuccessful
                 except Exception as e:
                     db.session.rollback()

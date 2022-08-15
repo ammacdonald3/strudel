@@ -27,7 +27,7 @@ def meal_selector():
         
         try:
             # Update user's current meal list to inactivate all meals
-            db.session.query(Current_Meal).filter(combined_user_id=combined_user_id).update(dict(active_ind=False), synchronize_session=False)
+            db.session.query(Current_Meal).filter(Current_Meal.combined_user_id==combined_user_id).update(dict(active_ind=False), synchronize_session=False)
 
             db.session.flush()
             db.session.commit()
@@ -57,7 +57,7 @@ def meal_selector():
                     .join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe \
                     .recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id) \
                     .filter(Recipe.meal_breakfast==True) \
-                    .filter(Recipe.recipe_deleted==None)) \
+                    .filter(Recipe.recipe_deleted==False)) \
                     .order_by(Recipe.recipe_name) \
                     .all()
 
@@ -66,7 +66,7 @@ def meal_selector():
                     .join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id) \
                     .filter(Favorite_Recipe.app_user_id==current_user.id) \
                     .filter(Recipe.meal_lunch==True) \
-                    .filter(Recipe.recipe_deleted==None)) \
+                    .filter(Recipe.recipe_deleted==False)) \
                     .order_by(Recipe.recipe_name) \
                     .all()
 
@@ -75,7 +75,7 @@ def meal_selector():
                     .join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id) \
                     .filter(Favorite_Recipe.app_user_id==current_user.id) \
                     .filter(Recipe.meal_dinner==True) \
-                    .filter(Recipe.recipe_deleted==None)) \
+                    .filter(Recipe.recipe_deleted==False)) \
                     .order_by(Recipe.recipe_name) \
                     .all()
 
@@ -87,7 +87,7 @@ def meal_selector():
                 bfast_recipe_list = (db.session.query(Recipe) \
                     .filter(Recipe.created_by==current_user.id) \
                     .filter(Recipe.meal_breakfast==True) \
-                    .filter(Recipe.recipe_deleted==None)) \
+                    .filter(Recipe.recipe_deleted==False)) \
                     .order_by(Recipe.recipe_name) \
                     .all()
 
@@ -95,7 +95,7 @@ def meal_selector():
                 lunch_recipe_list = (db.session.query(Recipe) \
                     .filter(Recipe.created_by==current_user.id) \
                     .filter(Recipe.meal_lunch==True) \
-                    .filter(Recipe.recipe_deleted==None)) \
+                    .filter(Recipe.recipe_deleted==False)) \
                     .order_by(Recipe.recipe_name) \
                     .all()
 
@@ -103,7 +103,7 @@ def meal_selector():
                 dinner_recipe_list = (db.session.query(Recipe) \
                     .filter(Recipe.created_by==current_user.id) \
                     .filter(Recipe.meal_dinner==True) \
-                    .filter(Recipe.recipe_deleted==None)) \
+                    .filter(Recipe.recipe_deleted==False)) \
                     .order_by(Recipe.recipe_name) \
                     .all()
 
@@ -115,7 +115,7 @@ def meal_selector():
                 bfast_recipe_list = (db.session.query(Recipe, Favorite_Recipe) \
                     .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==1)) \
                     .filter(Recipe.meal_breakfast==True) \
-                    .filter(Recipe.recipe_deleted==None)) \
+                    .filter(Recipe.recipe_deleted==False)) \
                     .order_by(Recipe.recipe_name) \
                     .all()
 
@@ -123,7 +123,7 @@ def meal_selector():
                 lunch_recipe_list = (db.session.query(Recipe, Favorite_Recipe) \
                     .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==1)) \
                     .filter(Recipe.meal_lunch==True) \
-                    .filter(Recipe.recipe_deleted==None)) \
+                    .filter(Recipe.recipe_deleted==False)) \
                     .order_by(Recipe.recipe_name) \
                     .all()
 
@@ -131,7 +131,7 @@ def meal_selector():
                 dinner_recipe_list = (db.session.query(Recipe, Favorite_Recipe) \
                     .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==1)) \
                     .filter(Recipe.meal_dinner==True) \
-                    .filter(Recipe.recipe_deleted==None)) \
+                    .filter(Recipe.recipe_deleted==False)) \
                     .order_by(Recipe.recipe_name) \
                     .all()
 
@@ -142,21 +142,21 @@ def meal_selector():
                 # Retrieve a list of user's breakfast recipes
                 bfast_recipe_list = (db.session.query(Recipe) \
                     .filter(Recipe.meal_breakfast==True) \
-                    .filter(Recipe.recipe_deleted==None)) \
+                    .filter(Recipe.recipe_deleted==False)) \
                     .order_by(Recipe.recipe_name) \
                     .all()
 
                 # Retrieve a list of user's lunch recipes
                 lunch_recipe_list = (db.session.query(Recipe) \
                     .filter(Recipe.meal_lunch==True) \
-                    .filter(Recipe.recipe_deleted==None)) \
+                    .filter(Recipe.recipe_deleted==False)) \
                     .order_by(Recipe.recipe_name) \
                     .all()
 
                 # Retrieve a list of user's dinner recipes
                 dinner_recipe_list = (db.session.query(Recipe) \
                     .filter(Recipe.meal_dinner==True) \
-                    .filter(Recipe.recipe_deleted==None)) \
+                    .filter(Recipe.recipe_deleted==False)) \
                     .order_by(Recipe.recipe_name) \
                     .all()
             
@@ -290,9 +290,9 @@ def meal_selector():
                     db.session.add(current_meal)
                     db.session.flush()
                     db.session.commit()
-                
+                    
 
-            #print("selected_meals " + str(selected_meals_list), file=sys.stderr)
+                #print("selected_meals " + str(selected_meals_list), file=sys.stderr)
 
         except Exception as e:
             db.session.rollback()
@@ -972,7 +972,7 @@ def _favorite():
             db.session.flush()
             db.session.commit()
 
-        favorite_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
+        favorite_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.recipe_deleted==False)).order_by(Recipe.recipe_name).all()
 
         fav_length = len(favorite_recipe_list)
 
@@ -988,7 +988,7 @@ def _favorite():
         db.session.flush()
         db.session.commit()
 
-        favorite_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.recipe_deleted==None)).order_by(Recipe.recipe_name).all()
+        favorite_recipe_list = (db.session.query(Recipe, Favorite_Recipe).join(Favorite_Recipe, Recipe.recipe_id==Favorite_Recipe.recipe_id).filter(Favorite_Recipe.app_user_id==current_user.id).filter(Recipe.recipe_deleted==False)).order_by(Recipe.recipe_name).all()
 
         fav_length = len(favorite_recipe_list)
 
