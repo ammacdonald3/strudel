@@ -2,6 +2,7 @@ from flask import Flask, render_template, current_app
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
+from sqlalchemy.sql import func
 
 from flask import current_app as app
 
@@ -25,7 +26,18 @@ def admin():
         current_user_admin = True
 
         # Get list of users
-        user_list = (db.session.query(App_User))
+        user_list = (db.session.query(
+            App_User.app_email,
+            func.to_char(App_User.last_seen, 'YYYY-MM-DD').label('last_seen'),
+            func.to_char(App_User.insert_datetime, 'YYYY-MM-DD').label('insert_date'),
+            App_User.first_name,
+            App_User.last_name,
+            App_User.admin,
+            App_User.native_authenticated,
+            App_User.google_authenticated
+            ) \
+            .order_by(func.to_char(App_User.last_seen, 'YYYY-MM-DD').desc())
+            )
     
     else:
         current_user_admin = False

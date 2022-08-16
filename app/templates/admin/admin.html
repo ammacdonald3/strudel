@@ -17,29 +17,29 @@ active
         <table class="table table-bordered" id="admin-table">
             <thead>
                 <tr>
-                    <th>Username</th>
+                    <!-- <th>Username</th> -->
                     <th>Email</th>
+                    <th>Last Seen</th>
+                    <th>Insert Date</th>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Administrator</th>
                     <th>Native Authenticated</th>
                     <th>Google Authenticated</th>
-                    <th>Insert Datetime</th>
-                    <th>Last Seen</th>
                 </tr>
             </thead>
             <tbody>
                 {% for user in user_list %}
                 <tr>
-                    <th>{{ user.app_username }}</th>
+                    <!-- <th>{{ user.app_username }}</th> -->
                     <th>{{ user.app_email }}</th>
+                    <th>{{ user.last_seen }}</th>
+                    <th>{{ user.insert_date }}</th>
                     <th>{{ user.first_name }}</th>
                     <th>{{ user.last_name }}</th>
                     <th>{{ user.admin }}</th>
                     <th>{{ user.native_authenticated }}</th>
                     <th>{{ user.google_authenticated }}</th>
-                    <th>{{ user.insert_datetime }}</th>
-                    <th>{{ user.last_seen }}</th>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -61,10 +61,18 @@ active
 {% block footer %}
 <!-- DataTables CSS -->
 <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"> -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
+
+<!-- PROD -->
+<!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
+
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js" crossorigin="anonymous"></script> -->
+<!-- PROD END -->
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.12.1/cr-1.5.6/r-2.3.0/datatables.min.css"/>
+ 
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.12.1/cr-1.5.6/r-2.3.0/datatables.min.js"></script>
+
 
 <script type="text/javascript" src="{{ url_for('static', filename='admin/admin.js') }}"></script>
-
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
 
 {% endblock %}
