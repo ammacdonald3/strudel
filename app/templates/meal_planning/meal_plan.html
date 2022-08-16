@@ -122,9 +122,13 @@ active
 
                     <!-- Display button so that user can view recipe's source website -->
                     <div class="form-group col-sm">
-                      <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
-                        class="btn btn-primary btn-block">Source
-                        Website</a>
+                      {% if recipe.Recipe.recipe_url %}
+                          <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
+                          class="btn btn-primary btn-block">Source
+                          Website</a>
+                      {% else %}
+                          <button type="button" class="btn btn-danger btn-block">No Source Website</button>
+                      {% endif %}
                     </div>
 
                     <!-- Display button so that user can delete recipe from their current meal plan -->
@@ -240,9 +244,13 @@ active
 
                     <!-- Display button so that user can view recipe's source website -->
                     <div class="form-group col-sm">
-                      <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
-                        class="btn btn-primary btn-block">Source
-                        Website</a>
+                      {% if recipe.Recipe.recipe_url %}
+                          <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
+                          class="btn btn-primary btn-block">Source
+                          Website</a>
+                      {% else %}
+                          <button type="button" class="btn btn-danger btn-block">No Source Website</button>
+                      {% endif %}
                     </div>
 
                     <!-- Display button so that user can delete recipe from their current meal plan -->
@@ -357,9 +365,13 @@ active
 
                     <!-- Display button so that user can view recipe's source website -->
                     <div class="form-group col-sm">
-                      <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
-                        class="btn btn-primary btn-block">Source
-                        Website</a>
+                      {% if recipe.Recipe.recipe_url %}
+                          <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
+                          class="btn btn-primary btn-block">Source
+                          Website</a>
+                      {% else %}
+                          <button type="button" class="btn btn-danger btn-block">No Source Website</button>
+                      {% endif %}
                     </div>
 
                     <!-- Display button so that user can delete recipe from their current meal plan -->

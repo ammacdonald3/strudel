@@ -311,12 +311,14 @@ active
   <div class="container">
     <div class="form-group">
       <!-- Display button so that user can view recipe's source website -->
+      {% if recipe.recipe_url %}
       <div class="row" style="padding-top: 20px;">
         <div class="form-group col-sm">
           <a href="https://{{ recipe.recipe_url }}" target="_blank" class="btn btn-primary btn-block">Source
             Website</a>
         </div>
       </div>
+      {% endif %}
 
       <!-- Display button so that user can edit the recipe if they're the owner -->
       {% if owner_ind == True %}
