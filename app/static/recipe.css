@@ -358,7 +358,7 @@ dt {
 		padding-top: 30px;
 	} */
 	.navbar-brand {
-		font-size: 25px;
+		font-size: 28px;
 	}
 	#navbar-brand {
 		margin-right: 0px;
@@ -374,6 +374,10 @@ dt {
 	}
 	#btn-back-to-top {
 		bottom: 90px;
+	}
+	.extra-height {
+		padding: 3%;
+		font-size: 130%;
 	}
 }
 
@@ -392,9 +396,9 @@ dt {
 }
 
 @media (min-width: 501px) {
-	#navbar-icon {
+	/* #navbar-icon {
 		display: none;
-	}
+	} */
 	#navbar-brand {
 		display: none;
 	}
@@ -514,4 +518,3 @@ iframe {
 .cert-icon {
 	padding-right: 10px;
 }
-
