@@ -32,6 +32,17 @@ $(document).ready(function(){
         navbarTogglePin()
     }
 
+    // Close collapsed navbar when clicking anywhere else on the screen
+    $(document).click(
+        function (event) {
+            var target = $(event.target);
+            var _mobileMenuOpen = $(".navbar-collapse").hasClass("show");
+            if (_mobileMenuOpen === true && !target.hasClass("navbar-toggler")) {
+                $("button.navbar-toggler").click();
+            }
+        }
+    );
+
     // Page-loading spinner animation
     $(window).on('pageshow', function() {
         // $('#spinner-img').hide();
