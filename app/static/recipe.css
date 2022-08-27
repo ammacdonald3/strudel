@@ -200,6 +200,8 @@ dt {
 
 .error {
 	color: red;
+	font-size: 25px;
+	margin-top: 20px;
 }
 
 .navbar-collapse {

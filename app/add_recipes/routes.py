@@ -164,7 +164,8 @@ def add_recipe():
 
 
         # Render recipe_confirm.html template after recipe is written to DB    
-        return(render_template('add_recipes/recipe_confirm.html', recipe_id=recipe.recipe_id, recipe_name=request.form['recipe_name']))
+        # return(render_template('add_recipes/recipe_confirm.html', recipe_id=recipe.recipe_id, recipe_name=request.form['recipe_name']))
+        return redirect(url_for('view_recipes.recipe_detail', recipe_id=recipe_id))
 
     # When not posting form, render the add.html template (main page for this route)
     #return render_template('add.html', output=output)
@@ -383,8 +384,8 @@ def auto_import():
 
 
             # Render recipe_confirm.html template after recipe is written to DB
-            return(render_template('add_recipes/recipe_confirm.html', recipe_id=recipe.recipe_id, recipe_name=scraper.title(), output=output))
-
+            # return(render_template('add_recipes/recipe_confirm.html', recipe_id=recipe.recipe_id, recipe_name=scraper.title(), output=output))
+            return redirect(url_for('view_recipes.recipe_detail', recipe_id=recipe_id))
             
         except Exception as e:
             error = 'This website is not supported at this time. Please manually add this recipe, and use the Auto Import function for one of the supported websites below.'
@@ -424,6 +425,11 @@ def upload_image(recipe_id):
         try:
             uploaded_file = request.files['file']
             filename_sec = secure_filename(uploaded_file.filename)
+
+            # print("--------------------FILENAME--------------------")
+            # print(filename_sec)
+            # print("--------------------FILENAME--------------------")
+
             if filename_sec != '':
                 file_ext_base = os.path.splitext(filename_sec)[1]
                 if file_ext_base == '.jpeg':
@@ -431,14 +437,26 @@ def upload_image(recipe_id):
                 else:
                     file_ext = file_ext_base
 
+                # print("--------------------FILE EXT--------------------")
+                # print(file_ext)
+                # print("--------------------FILE EXT--------------------")
+
                 if file_ext in current_app.config['UPLOAD_EXTENSIONS'] and \
                     file_ext == validate_image(uploaded_file.stream):
 
                         # Generate unique file name
                         filename = str(uuid4()) + file_ext
 
+                        # print("--------------------FILENAME2--------------------")
+                        # print(filename)
+                        # print("--------------------FILENAME2--------------------")
+
                         # Call the upload_image.upload_file function to physically upload the image to AWS
                         image_url = upload_file(uploaded_file, current_app.config['BUCKET'], filename)
+
+                        # print("--------------------IMAGE URL--------------------")
+                        # print(image_url)
+                        # print("--------------------IMAGE URL--------------------")
 
                         # Update database table with AWS URL for the image
                         db.session.query(Recipe).filter_by(recipe_id=recipe_id).update(dict(recipe_image_url=image_url))
@@ -446,7 +464,9 @@ def upload_image(recipe_id):
                         db.session.flush()
                         db.session.commit()
                 else:
-                    pass
+                    error = "Invalid image upload. Images must be a maximum size of 1024x1024 and one of the following types: .JPG or .PNG"
+                    print(error)
+                    return render_template('errors/error.html', error=error)
 
             else:
                 error = "Invalid image upload. Images must be a maximum size of 1024x1024 and one of the following types: .JPG or .PNG"
@@ -461,7 +481,8 @@ def upload_image(recipe_id):
             return render_template('errors/error.html', error=e)
 
         # Render recipe_confirm.html template after image URL is written to DB    
-        return(render_template('add_recipes/recipe_confirm.html', recipe_id=recipe.recipe_id, recipe_name=recipe.recipe_name))
+        # return(render_template('add_recipes/recipe_confirm.html', recipe_id=recipe.recipe_id, recipe_name=recipe.recipe_name))
+        return redirect(url_for('view_recipes.recipe_detail', recipe_id=recipe_id))
 
 
     # When not posting form, render the upload_image.html template (main page for this route)
@@ -476,8 +497,11 @@ def edit_recipe(recipe_id):
     output = []
     recipe = db.session.query(Recipe).filter_by(recipe_id=recipe_id).join(App_User).first()
 
-    ingredient_list = Ingredient.query.filter_by(recipe_id=recipe_id)
-    step_list = Recipe_Step.query.filter_by(recipe_id=recipe_id)
+    ingredient_list = Ingredient.query.filter_by(recipe_id=recipe_id).order_by(Ingredient.ingredient_id)
+    ingredient_count = ingredient_list.count()
+
+    step_list = Recipe_Step.query.filter_by(recipe_id=recipe_id).order_by(Recipe_Step.recipe_step_id)
+    step_count = step_list.count()
 
 
     # If user submits data on input form, write to DB
@@ -578,18 +602,28 @@ def edit_recipe(recipe_id):
             db.session.flush()
             db.session.commit()
 
+            # Determine number of ingredients currently on the form
+            ing_count = int(request.form['ing_count']) + 1
+
+            # print('----------INGREDIENT COUNT------------')
+            # print(ing_count)
+            # print('----------INGREDIENT COUNT------------')
+
             # Insert data to INGREDIENT table
-            for x in range(1, 50):
+            for x in range(1, ing_count):
                 try:
-                    # Insert new ingredients
-                    ingredient = Ingredient(
-                        recipe_id=recipe.recipe_id,
-                        ingredient_desc=request.form['ingredient_desc' + str(x)],
-                        insert_datetime=datetime.now()
-                    )
-                    
-                    db.session.add(ingredient)
-                    db.session.commit()
+                    # Check if ingredient contains letters
+                    ing = request.form['ingredient_desc' + str(x)]
+                    if ing.upper().isupper():
+                        # Insert new ingredients
+                        ingredient = Ingredient(
+                            recipe_id=recipe.recipe_id,
+                            ingredient_desc=request.form['ingredient_desc' + str(x)],
+                            insert_datetime=datetime.now()
+                        )
+                        
+                        db.session.add(ingredient)
+                        db.session.commit()
 
                 # Return error if database write was unsuccessful
                 except Exception as e:
@@ -605,20 +639,35 @@ def edit_recipe(recipe_id):
             db.session.flush()
             db.session.commit()
 
+            # Determine number of steps currently on the form
+            step_count = int(request.form['step_count']) + 1
+
+            # print('----------STEP COUNT------------')
+            # print(step_count)
+            # print('----------STEP COUNT------------')
+
             # Insert data to RECIPE_STEP table
             counter = 1
-            for x in range(1, 50):
+            for x in range(1, step_count):
                 try:
-                    # Insert new recipe steps
-                    recipe_step = Recipe_Step(
-                        recipe_id=recipe.recipe_id,
-                        step_order=counter,
-                        step_desc=request.form['recipe_step' + str(x)],
-                        insert_datetime=datetime.now()
-                    )
-                    counter += 1
-                    db.session.add(recipe_step)
-                    db.session.commit()
+                    # Check if step contains letters
+                    step = request.form['recipe_step' + str(x)]
+                    if step.upper().isupper():
+                        # Insert new recipe steps
+                        recipe_step = Recipe_Step(
+                            recipe_id=recipe.recipe_id,
+                            step_order=counter,
+                            step_desc=request.form['recipe_step' + str(x)],
+                            insert_datetime=datetime.now()
+                        )
+                        counter += 1
+                        db.session.add(recipe_step)
+                        db.session.commit()
+                        counterminus = counter - 1
+                        print(f"-----------STEP {counterminus}--------------")
+                        # print(step_desc)
+                        print(f"-----------STEP {counterminus}--------------")
+
                 # Return error if database write was unsuccessful
                 except Exception as e:
                     db.session.rollback()
@@ -639,10 +688,11 @@ def edit_recipe(recipe_id):
 
 
             # Render recipe_confirm.html template after recipe is written to DB    
-            return(render_template('add_recipes/recipe_confirm.html', recipe_id=recipe.recipe_id, error=error, recipe_name=request.form['recipe_name']))
+            # return(render_template('add_recipes/recipe_confirm.html', recipe_id=recipe.recipe_id, error=error, recipe_name=request.form['recipe_name']))
+            return redirect(url_for('view_recipes.recipe_detail', recipe_id=recipe_id))
 
         except Exception as e:
             return render_template('errors/error.html', error=e)
 
     # When not posting form, render the edit_recipe.html template (main page for this route)
-    return render_template('add_recipes/edit_recipe.html', recipe=recipe, ingredient_list=ingredient_list, step_list=step_list)
+    return render_template('add_recipes/edit_recipe.html', recipe=recipe, ingredient_list=ingredient_list, ingredient_count=ingredient_count, step_list=step_list, step_count=step_count)

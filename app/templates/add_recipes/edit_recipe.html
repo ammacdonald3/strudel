@@ -31,13 +31,6 @@ active
       <br>
       <br>
 
-      <!-- User selects an image to upload -->
-      <!-- <p>Select a new image for this recipe</p>
-    <div class="custom-file">
-      <input type="file" class="custom-file-input" id="file_input" name="file">
-      <label class="custom-file-label" for="file_input">Image location</label>
-    </div> 
-
     <br>
     <br> -->
 
@@ -56,8 +49,6 @@ active
           <label for="recipe_desc_box">Description</label>
           <textarea name="recipe_desc" class="form-control" id="recipe_desc_box" placeholder="Enter recipe description"
             rows="3" autofocus required>{{ recipe.recipe_desc }}</textarea>
-          <!-- <input type="text" name="recipe_desc" class="form-control" id="recipe_desc_box"
-          placeholder="Enter recipe description" style="max-width: 500px;" autofocus required> -->
         </div>
       </div>
 
@@ -164,9 +155,10 @@ active
       <div>
         <h3>Ingredients</h3>
         <p>Add your ingredients.</p>
+        <input type="hidden" name="ing_count" id="ing_count" value="{{ ingredient_count }}"/>
 
         {% for ingredient in ingredient_list %}
-        <div class="form-group">
+        <div class="form-group IngredientInputsWrapper">
           <div class="row">
             <div class="form-group col-lg-2">Ingredient {{ loop.index }}</div>
             <div class="form-group col-lg-7">
@@ -174,13 +166,15 @@ active
                 placeholder="Ingredient {{ loop.index }}" value="{{ ingredient.ingredient_desc }}">
             </div>
             <div class="form-group col-lg-3">
-              <button class="removeclass btn btn-danger col">Delete</button>
+              <button class="ingremoveclass btn btn-danger col">Delete</button>
             </div>
           </div>
         </div>
+        
         {% endfor %}
 
-        <div id="IngredientInputsWrapper"></div>
+        <div id="IngredientInputsLine"></div>
+
         <br>
 
         <button type="button" id="addingredientfield" class="btn btn-success btn-block">Add ingredient</button>
@@ -195,8 +189,10 @@ active
         <h3>Recipe Steps</h3>
         <p>Add the recipe method.</p>
 
+        <input type="hidden" name="step_count" id="step_count" value="{{ step_count }}"/>
+
         {% for step in step_list %}
-        <div class="form-group">
+        <div class="form-group StepInputsWrapper">
           <div class="row">
             <div class="form-group col-lg-1">Step {{ loop.index }}</div>
             <div class="form-group col-lg-8">
@@ -204,13 +200,13 @@ active
                 value="{{ step.step_desc }}">
             </div>
             <div class="form-group col-lg-3">
-              <button class="removeclass btn btn-danger col">Delete</button>
+              <button class="stepremoveclass btn btn-danger col">Delete</button>
             </div>
           </div>
         </div>
         {% endfor %}
 
-        <div id="StepInputsWrapper"></div>
+        <div id="StepInputsLine"></div>
         <br />
 
         <button type="button" id="addstepfield" class="btn btn-success btn-block">Add step</button>
@@ -238,13 +234,17 @@ active
 
 {% block footer %}
 <script type="text/javascript" src="{{ url_for('static', filename='add_recipes/ingredients.js') }}"></script>
-<!-- <script type="text/javascript" src="{{ url_for('static', filename='upload.js') }}"></script> -->
 
 <script type="application/javascript">
   $('input[type="file"]').change(function (e) {
     var fileName = e.target.files[0].name;
     $('.custom-file-label').html(fileName);
   });
+</script>
+
+<script type="text/javascript">
+  ingredientVar = ingredientFunc({{ingredient_count}})
+  stepVar = stepFunc({{step_count}})
 </script>
 
 {% endblock %}

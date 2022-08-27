@@ -47,7 +47,7 @@ $(document).ready(function(){
     $(window).on('pageshow', function() {
         // $('#spinner-img').hide();
         $('.overlay').hide();
-      });
+    });
   
     // Only display spinning animation if used as PWA, not in browser
     if (window.matchMedia('(display-mode: standalone)').matches) {
