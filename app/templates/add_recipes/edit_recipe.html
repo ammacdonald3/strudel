@@ -20,6 +20,7 @@ active
     <form role="form" method='POST' action="" enctype="multipart/form-data">
 
       <!-- Display recipe image -->
+      <br>
       <div class="image-container center">
         {% if recipe.recipe_image_url != None %}
         <img id="preview" src="{{ recipe.recipe_image_url}}" class="center rounded img-fluid" alt="Responsive image" />
@@ -30,9 +31,6 @@ active
       </div>
       <br>
       <br>
-
-    <br>
-    <br> -->
 
       <div class="row">
         <!-- Recipe Name input -->

@@ -605,15 +605,13 @@ def edit_recipe(recipe_id):
             # Determine number of ingredients currently on the form
             ing_count = int(request.form['ing_count']) + 1
 
-            # print('----------INGREDIENT COUNT------------')
-            # print(ing_count)
-            # print('----------INGREDIENT COUNT------------')
 
             # Insert data to INGREDIENT table
             for x in range(1, ing_count):
                 try:
                     # Check if ingredient contains letters
                     ing = request.form['ingredient_desc' + str(x)]
+
                     if ing.upper().isupper():
                         # Insert new ingredients
                         ingredient = Ingredient(
@@ -642,10 +640,6 @@ def edit_recipe(recipe_id):
             # Determine number of steps currently on the form
             step_count = int(request.form['step_count']) + 1
 
-            # print('----------STEP COUNT------------')
-            # print(step_count)
-            # print('----------STEP COUNT------------')
-
             # Insert data to RECIPE_STEP table
             counter = 1
             for x in range(1, step_count):
@@ -663,10 +657,7 @@ def edit_recipe(recipe_id):
                         counter += 1
                         db.session.add(recipe_step)
                         db.session.commit()
-                        counterminus = counter - 1
-                        print(f"-----------STEP {counterminus}--------------")
-                        # print(step_desc)
-                        print(f"-----------STEP {counterminus}--------------")
+
 
                 # Return error if database write was unsuccessful
                 except Exception as e:

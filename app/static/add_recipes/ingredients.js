@@ -19,11 +19,11 @@ function stepFunc(step_count) {
 $(AddIngredientButton).click(function (e) //on add input button click
     {
         //Get current count of ingredients
-        var ing_count = $('#ing_count').val();
+        var ingCount = $('#ing_count').val();
         
         //Update ingredient count to += 1
-        ing_count ++;
-        $('#ing_count').val(ing_count);
+        ingCount ++;
+        $('#ing_count').val(ingCount);
 
         //if(x <= MaxInputs) //max input box allowed
         if (x <= IngredientFieldCount) {
@@ -60,7 +60,9 @@ $("body").on("click", ".ingremoveclass", function (e) { //user click on remove t
     var ingCount = $('#ing_count').val();
         
     //Update ingredient count to -= 1
-    ingCount --;
+    //NOTE: Below decement code was intentionally commented. While originally used, it resulted in the Python for loop not actually looping through every possible ingredient. For example, if the recipe originally had 15 ingedients, the ingCount would be 15. If the user deleted 2 of them and added 3, the ingCount would be 16. However, the actual ingredients would have IDs up until 18 (i.e. 15 + 3). Therefore, the looping code would stop after the ingredient ID=16, and ingredients 17 and 18 would not be saved.
+
+    // ingCount --;
 
     $('#ing_count').val(ingCount);
     if (x > 1) {
@@ -76,7 +78,9 @@ $("body").on("click", ".stepremoveclass", function (e) { //user click on remove 
     var stepCount = $('#step_count').val();
         
     //Update ingredient count to -= 1
-    stepCount --;
+    //NOTE: See note above for ingredient count.
+    
+    // stepCount --;
 
     $('#step_count').val(stepCount);
     if (y > 1) {

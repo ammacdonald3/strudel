@@ -5,5 +5,5 @@ $(document).ready( function () {
         colReorder: true,
         order: [[1, 'desc']],
         pageLength: 100
-    } );
-} );
+    });
+});
