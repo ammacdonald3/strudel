@@ -220,7 +220,7 @@ dt {
 
 
 .badge {
-	margin-left: 15px;
+	margin-left: 5px;
 }
 
 
@@ -270,6 +270,11 @@ dt {
 	color: rgb(8, 119, 8);
 }
 
+.editor-cert-list {
+	font-size: 14px;
+	color: rgb(8, 119, 8);
+}
+
 @media (prefers-color-scheme: dark) {
 	a {
 		color: ghostwhite;
@@ -282,6 +287,9 @@ dt {
 	}
 	#editor-cert {
 		font-size: 20px;
+		color: rgb(9, 187, 9);
+	}
+	.editor-cert-list {
 		color: rgb(9, 187, 9);
 	}
 }

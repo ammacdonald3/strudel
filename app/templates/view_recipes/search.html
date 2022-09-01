@@ -111,6 +111,13 @@ active
                                     <span class="badge badge-pill badge-success">Dinner</span>
                                     {% endif %}
                                 </div>
+                                <!-- Editor Certified Label -->
+                                {% if recipe.Recipe.editor_certified %}
+                                    <p class="text-center editor-cert-list">
+                                        <i class="fa-solid fa-circle-check cert-icon"></i>
+                                        Editor Certified
+                                    </p>
+                                {% endif %}
                                 <!-- Recipe Image -->
                                 {% if recipe.Recipe.recipe_image_url != None %}
                                 <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}"

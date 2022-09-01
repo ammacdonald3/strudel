@@ -64,7 +64,9 @@ active
             <li>
                 <a href="{{ url_for('view_recipes.recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
                     class="text-decoration-none">
-                    <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
+                    <h3 class="text-center">
+                        {{ recipe.Recipe.recipe_name }}
+                    </h3>
                     <!-- Recipe Prep/Cook Time -->
                     <h6 class="text-center">
                         {% if recipe.Recipe.recipe_total_time != None %}
@@ -83,6 +85,13 @@ active
                         <span class="badge badge-pill badge-success">Dinner</span>
                         {% endif %}
                     </div>
+                    <!-- Editor Certified Label -->
+                    {% if recipe.Recipe.editor_certified %}
+                            <p class="text-center editor-cert-list">
+                                <i class="fa-solid fa-circle-check cert-icon"></i>
+                                Editor Certified
+                            </p>
+                        {% endif %}
                     <!-- Recipe Image -->
                     {% if recipe.Recipe.recipe_image_url != None %}
                     <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}"

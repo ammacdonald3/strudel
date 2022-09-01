@@ -101,6 +101,13 @@ active
                     ({{ recipe.Recipe.recipe_total_time }} minutes total prep/cook time)
                     {% endif %}
                   </h6>
+                  <!-- Editor Certified Label -->
+                  {% if recipe.Recipe.editor_certified %}
+                      <p class="text-center editor-cert-list">
+                          <i class="fa-solid fa-circle-check cert-icon"></i>
+                          Editor Certified
+                      </p>
+                  {% endif %}
                   <!-- Recipe Image -->
                   {% if recipe.Recipe.recipe_image_url != None %}
                   <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}"
@@ -223,6 +230,13 @@ active
                     ({{ recipe.Recipe.recipe_total_time }} minutes total prep/cook time)
                     {% endif %}
                   </h6>
+                  <!-- Editor Certified Label -->
+                  {% if recipe.Recipe.editor_certified %}
+                      <p class="text-center editor-cert-list">
+                          <i class="fa-solid fa-circle-check cert-icon"></i>
+                          Editor Certified
+                      </p>
+                  {% endif %}
                   <!-- Recipe Image -->
                   {% if recipe.Recipe.recipe_image_url != None %}
                   <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}"
@@ -344,6 +358,13 @@ active
                     ({{ recipe.Recipe.recipe_total_time }} minutes total prep/cook time)
                     {% endif %}
                   </h6>
+                  <!-- Editor Certified Label -->
+                  {% if recipe.Recipe.editor_certified %}
+                      <p class="text-center editor-cert-list">
+                          <i class="fa-solid fa-circle-check cert-icon"></i>
+                          Editor Certified
+                      </p>
+                  {% endif %}
                   <!-- Recipe Image -->
                   {% if recipe.Recipe.recipe_image_url != None %}
                   <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}"
