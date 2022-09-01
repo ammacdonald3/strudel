@@ -204,6 +204,15 @@ dt {
 	margin-top: 20px;
 }
 
+.redx {
+	color: red;
+	font-size: 25px;
+}
+
+.checkmark {
+	font-size: 25px;
+}
+
 .navbar-collapse {
 	text-align: center;
 	/* font-size: 1.3em; */

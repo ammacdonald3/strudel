@@ -224,17 +224,17 @@ active
             <tr>
               <th scope="row">Vegan</th>
               <td>{% if recipe.diet_vegan == True %} <i class="fas fa-check"></i> {% else %} <i
-                  class="fas fa-times error"></i>{% endif %}</td>
+                  class="fas fa-times redx"></i>{% endif %}</td>
             </tr>
             <tr>
               <th scope="row">Vegetarian</th>
               <td>{% if recipe.diet_vegetarian == True %} <i class="fas fa-check"></i> {% else %} <i
-                  class="fas fa-times error"></i>{% endif %}</td>
+                  class="fas fa-times redx"></i>{% endif %}</td>
             </tr>
             <tr>
               <th scope="row">Gluten-free</th>
               <td>{% if recipe.diet_gluten == True %} <i class="fas fa-check"></i> {% else %} <i
-                  class="fas fa-times error"></i>{% endif %}</td>
+                  class="fas fa-times redx"></i>{% endif %}</td>
             </tr>
           </tbody>
         </table>
@@ -248,17 +248,17 @@ active
             <tr>
               <th scope="row">Breakfast</th>
               <td>{% if recipe.meal_breakfast == True %} <i class="fas fa-check"></i> {% else %} <i
-                  class="fas fa-times error"></i>{% endif %}</td>
+                  class="fas fa-times redx"></i>{% endif %}</td>
             </tr>
             <tr>
               <th scope="row">Lunch</th>
-              <td>{% if recipe.meal_lunch == True %} <i class="fas fa-check"></i> {% else %} <i
-                  class="fas fa-times error"></i>{% endif %}</td>
+              <td>{% if recipe.meal_lunch == True %} <i class="fas fa-check checkmark"></i> {% else %} <i
+                  class="fas fa-times redx"></i>{% endif %}</td>
             </tr>
             <tr>
               <th scope="row">Dinner</th>
               <td>{% if recipe.meal_dinner == True %} <i class="fas fa-check"></i> {% else %} <i
-                  class="fas fa-times error"></i>{% endif %}</td>
+                  class="fas fa-times redx"></i>{% endif %}</td>
             </tr>
           </tbody>
         </table>
