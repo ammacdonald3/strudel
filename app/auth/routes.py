@@ -77,13 +77,13 @@ def login():
                 db.session.add(app_user)
                 db.session.commit()
                 flash('Congratulations, you are now a registered user!')
-                login_user(app_user)
+                login_user(app_user, remember=True)
                 next_page = url_for('main.index')
                 return redirect(next_page)
 
             else:
                 app_user = existing_user
-                login_user(app_user)
+                login_user(app_user, remember=True)
                 next_page = url_for('main.index')
                 existing_user.google_authenticated=True
                 existing_user.google_id=user_id
@@ -165,13 +165,13 @@ def register():
                 db.session.commit()
 
                 flash('Congratulations, you are now a registered user!')
-                login_user(app_user)
+                login_user(app_user, remember=True)
                 next_page = url_for('main.index')
                 return redirect(next_page)
 
             else:
                 app_user = existing_user
-                login_user(app_user)
+                login_user(app_user, remember=True)
                 next_page = url_for('main.index')
                 existing_user.google_authenticated=True
                 existing_user.google_id=user_id
@@ -214,7 +214,7 @@ def register():
             db.session.commit()
 
             flash('Congratulations, you are now a registered user!')
-            login_user(app_user)
+            login_user(app_user, remember=True)
             next_page = url_for('main.index')
             return redirect(next_page)
 
