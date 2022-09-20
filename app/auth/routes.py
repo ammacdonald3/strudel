@@ -236,13 +236,7 @@ def reset_password_request():
         return redirect(url_for('main.index'))
     form = ResetPasswordRequestForm()
     if form.validate_on_submit():
-        print('-------------------')
-        print('FORM VALIDATE ON SUBMIT')
-        print('-------------------')
         user = App_User.query.filter_by(app_email=form.email.data).first()
-        print('--------USER-----------')
-        print(user)
-        print('---------USER----------')
         if user:
             send_password_reset_email(user)
         flash('Check your email for the instructions to reset your password')
