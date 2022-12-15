@@ -1,4 +1,5 @@
 import os
+import re
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -8,7 +9,13 @@ class Config(object):
     TESTING = False
     CSRF_ENABLED = True
     SECRET_KEY = os.environ.get('SECRET_KEY')
-    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
+
+    # Below DB URL code necessary because SQLAlchemy expects "postgresql://" but Heroku mandates outdated usage of "postgres://"
+    DATABASE_URL = os.environ['DATABASE_URL']
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")  
+    if SQLALCHEMY_DATABASE_URI and SQLALCHEMY_DATABASE_URI.startswith("postgres://"):
+        SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace("postgres://", "postgresql://", 1)
+
     SQLALCHEMY_ECHO = True
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     SQLALCHEMY_DATABASE_URL = ['DATABASE_URL']
