@@ -18,18 +18,25 @@ active
 
         <!-- Display button so that user can navigate to All Recipes page -->
         <div class="form-group col-sm">
-          <a href="{{ url_for('view_recipes.recipe_list_favorites') }}" class="btn btn-primary btn-block">Choose Recipes</a>
+          <a href="{{ url_for('view_recipes.recipe_list_favorites') }}" class="btn btn-primary btn-block">Choose
+            Recipes</a>
         </div>
 
         <!-- Display button so that user can navigate to Meal Selector page -->
-        <div class="form-group col-sm">
+        <!-- <div class="form-group col-sm">
           <a href="{{ url_for('meal_planning.meal_selector') }}" class="btn btn-primary btn-block">Automatically Generate Recipes</a>
-        </div>
+        </div> -->
 
         <!-- Display button so that user can delete all recipes from their current meal plan -->
         <div class="form-group col-sm">
           <button class="btn btn-danger btn-block" id="clear-meal-plan-submit" name="clear-meal-plan-submit"
             data-toggle="modal" data-target="#clear-mealplan-modal-confirm-delete">Clear Current Meal Plan</button>
+        </div>
+
+        <!-- Display button so that user can manually add a one-off item to meal plan -->
+        <div class="form-group col-sm">
+          <button class="btn btn-success btn-block" id="one-off-meal-submit" name="one-off-meal-submit"
+            data-toggle="modal" data-target="#one-off-meal-modal">Add One-Off Item</button>
         </div>
 
         <!-- Modal prompting whether to clear their entire meal plan -->
@@ -56,6 +63,53 @@ active
                 <button type="button" class="btn btn-secondary center" data-dismiss="modal">
                   Cancel
                 </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal prompting user to add one-off item to meal plan -->
+        <div class="modal fade one-off-meal-modal" id="one-off-meal-modal" tabindex="-1" role="dialog"
+          aria-labelledby="one-off-meal-modal-title" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="one-off-meal-modal-title">Add One-Off Item</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <!-- Input box -->
+              <div class="modal-body">
+                <form role="form" method="POST">
+                  <input class="form-control" type="text" name="one-off-item-input" id="one-off-item-input">
+
+                  <!-- Breakfast/Lunch/Dinner selector -->
+                  <div style="margin-top: 1em;">
+                    <div class="btn-group btn-group-toggle btn-block" data-toggle="buttons">
+                      <label class="btn btn-outline-success active">
+                        <input type="radio" name="meal_choice" value="breakfast" id="meal_breakfast" autocomplete="off" checked>Breakfast
+                      </label>
+                      <label class="btn btn-outline-success">
+                        <input type="radio" name="meal_choice" value="lunch" id="meal_lunch" autocomplete="off">Lunch
+                      </label>
+                      <label class="btn btn-outline-success">
+                        <input type="radio" name="meal_choice" value="dinner" id="meal_dinner" autocomplete="off">Dinner
+                      </label>
+                    </div>
+                  </div>
+
+                  <button type="submit" id="one-off-meal-proceed" name="one-off-meal-proceed"
+                    class="btn btn-success center one-off-meal-proceed modal-form-button">
+                    Add Item
+                  </button>
+                  <!-- Button to cancel and close modal -->
+                  <button type="button" class="btn btn-secondary center modal-form-button" data-dismiss="modal">
+                    Cancel
+                  </button>
+
+                </form>
+
               </div>
             </div>
           </div>
@@ -95,28 +149,34 @@ active
                 <a href="{{ url_for('view_recipes.recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
                   class="text-decoration-none">
                   <h3 class="text-center">{{ recipe.Recipe.recipe_name }}</h3>
-                  <!-- Recipe Prep/Cook Time -->
-                  <h6 class="text-center">
-                    {% if recipe.Recipe.recipe_total_time != None %}
-                    ({{ recipe.Recipe.recipe_total_time }} minutes total prep/cook time)
+                    <!-- Recipe Prep/Cook Time -->
+                    <h6 class="text-center">
+                      {% if recipe.Recipe.recipe_total_time != None %}
+                      ({{ recipe.Recipe.recipe_total_time }} minutes total prep/cook time)
+                      {% endif %}
+                    </h6>
+                    <!-- Editor Certified Label -->
+                    {% if recipe.Recipe.editor_certified %}
+                    <p class="text-center editor-cert-list">
+                      <i class="fa-solid fa-circle-check cert-icon"></i>
+                      Editor Certified
+                    </p>
                     {% endif %}
-                  </h6>
-                  <!-- Editor Certified Label -->
-                  {% if recipe.Recipe.editor_certified %}
-                      <p class="text-center editor-cert-list">
-                          <i class="fa-solid fa-circle-check cert-icon"></i>
-                          Editor Certified
-                      </p>
-                  {% endif %}
-                  <!-- Recipe Image -->
-                  {% if recipe.Recipe.recipe_image_url != None %}
-                  <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}"
-                    class="center rounded img-fluid small-image" alt="Responsive image" />
-                  {% else %}
-                  <img id="preview" src="/static/view_recipes/placeholder-recipe-image.jpg"
-                    class="center rounded img-fluid small-image" alt="Responsive image" />
-                  {% endif %}
-                </a>
+                    <!-- Recipe Image -->
+                    {% if recipe.Recipe.recipe_image_url != None %}
+                    <img id="preview" src="{{ recipe.Recipe.recipe_image_url}}"
+                      class="center rounded img-fluid small-image" alt="Responsive image" />
+                    {% else %}
+                    <img id="preview" src="/static/view_recipes/placeholder-recipe-image.jpg"
+                      class="center rounded img-fluid small-image" alt="Responsive image" />
+                    {% endif %}
+                  </a>
+
+                {% if '-' in recipe.Current_Meal.combined_user_id %}
+                <div>
+                  <h5 class="text-center chef-label">Chef: {{ recipe.App_User.first_name }}</h5>
+                </div>
+                {% endif %}
 
 
                 <div class="form-group">
@@ -130,11 +190,11 @@ active
                     <!-- Display button so that user can view recipe's source website -->
                     <div class="form-group col-sm">
                       {% if recipe.Recipe.recipe_url %}
-                          <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
-                          class="btn btn-primary btn-block">Source
-                          Website</a>
+                      <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
+                        class="btn btn-primary btn-block">Source
+                        Website</a>
                       {% else %}
-                          <button type="button" class="btn btn-danger btn-block">No Source Website</button>
+                      <button type="button" class="btn btn-danger btn-block">No Source Website</button>
                       {% endif %}
                     </div>
 
@@ -232,10 +292,10 @@ active
                   </h6>
                   <!-- Editor Certified Label -->
                   {% if recipe.Recipe.editor_certified %}
-                      <p class="text-center editor-cert-list">
-                          <i class="fa-solid fa-circle-check cert-icon"></i>
-                          Editor Certified
-                      </p>
+                  <p class="text-center editor-cert-list">
+                    <i class="fa-solid fa-circle-check cert-icon"></i>
+                    Editor Certified
+                  </p>
                   {% endif %}
                   <!-- Recipe Image -->
                   {% if recipe.Recipe.recipe_image_url != None %}
@@ -246,6 +306,12 @@ active
                     class="center rounded img-fluid small-image" alt="Responsive image" />
                   {% endif %}
                 </a>
+
+                {% if '-' in recipe.Current_Meal.combined_user_id %}
+                <div>
+                  <h5 class="text-center chef-label">Chef: {{ recipe.App_User.first_name }}</h5>
+                </div>
+                {% endif %}
 
 
                 <div class="form-group">
@@ -259,11 +325,11 @@ active
                     <!-- Display button so that user can view recipe's source website -->
                     <div class="form-group col-sm">
                       {% if recipe.Recipe.recipe_url %}
-                          <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
-                          class="btn btn-primary btn-block">Source
-                          Website</a>
+                      <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
+                        class="btn btn-primary btn-block">Source
+                        Website</a>
                       {% else %}
-                          <button type="button" class="btn btn-danger btn-block">No Source Website</button>
+                      <button type="button" class="btn btn-danger btn-block">No Source Website</button>
                       {% endif %}
                     </div>
 
@@ -360,10 +426,10 @@ active
                   </h6>
                   <!-- Editor Certified Label -->
                   {% if recipe.Recipe.editor_certified %}
-                      <p class="text-center editor-cert-list">
-                          <i class="fa-solid fa-circle-check cert-icon"></i>
-                          Editor Certified
-                      </p>
+                  <p class="text-center editor-cert-list">
+                    <i class="fa-solid fa-circle-check cert-icon"></i>
+                    Editor Certified
+                  </p>
                   {% endif %}
                   <!-- Recipe Image -->
                   {% if recipe.Recipe.recipe_image_url != None %}
@@ -374,6 +440,12 @@ active
                     class="center rounded img-fluid small-image" alt="Responsive image" />
                   {% endif %}
                 </a>
+
+                {% if '-' in recipe.Current_Meal.combined_user_id %}
+                <div>
+                  <h5 class="text-center chef-label">Chef: {{ recipe.App_User.first_name }}</h5>
+                </div>
+                {% endif %}
 
 
                 <div class="form-group">
@@ -387,11 +459,11 @@ active
                     <!-- Display button so that user can view recipe's source website -->
                     <div class="form-group col-sm">
                       {% if recipe.Recipe.recipe_url %}
-                          <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
-                          class="btn btn-primary btn-block">Source
-                          Website</a>
+                      <a href="https://{{ recipe.Recipe.recipe_url }}" target="_blank"
+                        class="btn btn-primary btn-block">Source
+                        Website</a>
                       {% else %}
-                          <button type="button" class="btn btn-danger btn-block">No Source Website</button>
+                      <button type="button" class="btn btn-danger btn-block">No Source Website</button>
                       {% endif %}
                     </div>
 

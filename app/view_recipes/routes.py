@@ -75,6 +75,7 @@ def recipe_list_favorites():
                             app_user_id=current_user.id,
                             day_number=0,
                             meal='breakfast',
+                            weekday_id=None,
                             active_ind=True,
                             insert_datetime=datetime.now()
                         )
@@ -94,6 +95,7 @@ def recipe_list_favorites():
                             app_user_id=current_user.id,
                             day_number=0,
                             meal='lunch',
+                            weekday_id=None,
                             active_ind=True,
                             insert_datetime=datetime.now()
                         )
@@ -113,6 +115,7 @@ def recipe_list_favorites():
                             app_user_id=current_user.id,
                             day_number=0,
                             meal='dinner',
+                            weekday_id=None,
                             active_ind=True,
                             insert_datetime=datetime.now()
                         )
@@ -193,6 +196,7 @@ def recipe_list_yours():
                             app_user_id=current_user.id,
                             day_number=0,
                             meal='breakfast',
+                            weekday_id=None,
                             active_ind=True,
                             insert_datetime=datetime.now()
                         )
@@ -212,6 +216,7 @@ def recipe_list_yours():
                             app_user_id=current_user.id,
                             day_number=0,
                             meal='lunch',
+                            weekday_id=None,
                             active_ind=True,
                             insert_datetime=datetime.now()
                         )
@@ -231,6 +236,7 @@ def recipe_list_yours():
                             app_user_id=current_user.id,
                             day_number=0,
                             meal='dinner',
+                            weekday_id=None,
                             active_ind=True,
                             insert_datetime=datetime.now()
                         )
@@ -310,6 +316,7 @@ def recipe_list_editor():
                             app_user_id=current_user.id,
                             day_number=0,
                             meal='breakfast',
+                            weekday_id=None,
                             active_ind=True,
                             insert_datetime=datetime.now()
                         )
@@ -329,6 +336,7 @@ def recipe_list_editor():
                             app_user_id=current_user.id,
                             day_number=0,
                             meal='lunch',
+                            weekday_id=None,
                             active_ind=True,
                             insert_datetime=datetime.now()
                         )
@@ -348,6 +356,7 @@ def recipe_list_editor():
                             app_user_id=current_user.id,
                             day_number=0,
                             meal='dinner',
+                            weekday_id=None,
                             active_ind=True,
                             insert_datetime=datetime.now()
                         )
@@ -430,6 +439,7 @@ def recipe_list_others():
                             app_user_id=current_user.id,
                             day_number=0,
                             meal='breakfast',
+                            weekday_id=None,
                             active_ind=True,
                             insert_datetime=datetime.now()
                         )
@@ -449,6 +459,7 @@ def recipe_list_others():
                             app_user_id=current_user.id,
                             day_number=0,
                             meal='lunch',
+                            weekday_id=None,
                             active_ind=True,
                             insert_datetime=datetime.now()
                         )
@@ -468,6 +479,7 @@ def recipe_list_others():
                             app_user_id=current_user.id,
                             day_number=0,
                             meal='dinner',
+                            weekday_id=None,
                             active_ind=True,
                             insert_datetime=datetime.now()
                         )
@@ -547,6 +559,7 @@ def recipe_list_all():
                             app_user_id=current_user.id,
                             day_number=0,
                             meal='breakfast',
+                            weekday_id=None,
                             active_ind=True,
                             insert_datetime=datetime.now(),
                             combined_user_id=combined_user_id
@@ -567,6 +580,7 @@ def recipe_list_all():
                             app_user_id=current_user.id,
                             day_number=0,
                             meal='lunch',
+                            weekday_id=None,
                             active_ind=True,
                             insert_datetime=datetime.now(),
                             combined_user_id=combined_user_id
@@ -587,6 +601,7 @@ def recipe_list_all():
                             app_user_id=current_user.id,
                             day_number=0,
                             meal='dinner',
+                            weekday_id=None,
                             active_ind=True,
                             insert_datetime=datetime.now(),
                             combined_user_id=combined_user_id

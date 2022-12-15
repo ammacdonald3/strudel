@@ -196,6 +196,7 @@ def meal_selector():
                         app_user_id=current_user.id,
                         day_number=day_counter,
                         meal='breakfast',
+                        weekday_id=None,
                         active_ind=True,
                         insert_datetime=datetime.now(),
                         combined_user_id=combined_user_id
@@ -213,6 +214,7 @@ def meal_selector():
                         app_user_id=current_user.id,
                         day_number=day_counter,
                         meal='lunch',
+                        weekday_id=None,
                         active_ind=True,
                         insert_datetime=datetime.now(),
                         combined_user_id=combined_user_id
@@ -230,6 +232,7 @@ def meal_selector():
                         app_user_id=current_user.id,
                         day_number=day_counter,
                         meal='dinner',
+                        weekday_id=None,
                         active_ind=True,
                         insert_datetime=datetime.now(),
                         combined_user_id=combined_user_id
@@ -249,6 +252,7 @@ def meal_selector():
                         app_user_id=current_user.id,
                         day_number=day_counter,
                         meal='breakfast',
+                        weekday_id=None,
                         active_ind=True,
                         insert_datetime=datetime.now(),
                         combined_user_id=combined_user_id
@@ -266,6 +270,7 @@ def meal_selector():
                         app_user_id=current_user.id,
                         day_number=day_counter,
                         meal='lunch',
+                        weekday_id=None,
                         active_ind=True,
                         insert_datetime=datetime.now(),
                         combined_user_id=combined_user_id
@@ -283,6 +288,7 @@ def meal_selector():
                         app_user_id=current_user.id,
                         day_number=day_counter,
                         meal='dinner',
+                        weekday_id=None,
                         active_ind=True,
                         insert_datetime=datetime.now(),
                         combined_user_id=combined_user_id
@@ -329,8 +335,63 @@ def meal_plan():
     # Get combined_user_id
     combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
 
+    # User manually adds a one-off meal
+    if request.method == "POST":
+
+        if "one-off-meal-proceed" in request.form:
+
+            # Get recipe name
+            one_off_meal = request.form['one-off-item-input']
+
+            # Identify meal time
+            input_meal = request.form['meal_choice']
+
+            # Insert to Recipe table with deleted flag set
+            recipe = Recipe(
+                recipe_name=one_off_meal,
+                recipe_desc=None,
+                recipe_prep_time=None,
+                recipe_cook_time=None,
+                recipe_total_time=None,
+                serving_size=None,
+                recipe_url=None,
+                recipe_image_url=None,
+                diet_vegan=None,
+                diet_vegetarian=None,
+                diet_gluten=None,
+                meal_breakfast=None,
+                meal_lunch=None,
+                meal_dinner=None,
+                created_by=current_user.id,
+                insert_datetime=datetime.now(),
+                recipe_deleted=True,
+                editor_certified=False
+            )
+
+            db.session.add(recipe)
+            db.session.flush()
+            db.session.commit()
+
+
+            # Insert selected meals to Current_Meal table
+            current_meal = Current_Meal(
+                recipe_id=recipe.recipe_id,
+                app_user_id=current_user.id,
+                day_number=0,
+                meal=input_meal,
+                weekday_id=None,
+                active_ind=True,
+                insert_datetime=datetime.now(),
+                combined_user_id=combined_user_id
+            )
+
+            db.session.add(current_meal)
+            db.session.flush()
+            db.session.commit()
+
+
     # Get list of user's selected breakfast meals
-    selected_bfast_meals_list = (db.session.query(Recipe, Current_Meal).join(Current_Meal, Recipe.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.combined_user_id==combined_user_id).filter(Current_Meal.active_ind==True).filter(Current_Meal.meal=='breakfast').order_by(Current_Meal.day_number)).all()
+    selected_bfast_meals_list = (db.session.query(Recipe, Current_Meal, App_User).join(Current_Meal, Recipe.recipe_id==Current_Meal.recipe_id).join(App_User, Current_Meal.app_user_id==App_User.id).filter(Current_Meal.combined_user_id==combined_user_id).filter(Current_Meal.active_ind==True).filter(Current_Meal.meal=='breakfast').order_by(Current_Meal.day_number)).all()
 
     bfast_length = len(selected_bfast_meals_list)
 
@@ -340,7 +401,7 @@ def meal_plan():
         bfast_exists = False 
 
     # Get list of user's selected lunch meals
-    selected_lunch_meals_list = (db.session.query(Recipe, Current_Meal).join(Current_Meal, Recipe.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.combined_user_id==combined_user_id).filter(Current_Meal.active_ind==True).filter(Current_Meal.meal=='lunch').order_by(Current_Meal.day_number)).all()
+    selected_lunch_meals_list = (db.session.query(Recipe, Current_Meal, App_User).join(Current_Meal, Recipe.recipe_id==Current_Meal.recipe_id).join(App_User, Current_Meal.app_user_id==App_User.id).filter(Current_Meal.combined_user_id==combined_user_id).filter(Current_Meal.active_ind==True).filter(Current_Meal.meal=='lunch').order_by(Current_Meal.day_number)).all()
 
     lunch_length = len(selected_lunch_meals_list)
 
@@ -351,7 +412,7 @@ def meal_plan():
 
 
     # Get list of user's selected dinner meals
-    selected_dinner_meals_list = (db.session.query(Recipe, Current_Meal).join(Current_Meal, Recipe.recipe_id==Current_Meal.recipe_id).filter(Current_Meal.combined_user_id==combined_user_id).filter(Current_Meal.active_ind==True).filter(Current_Meal.meal=='dinner').order_by(Current_Meal.day_number)).all()
+    selected_dinner_meals_list = (db.session.query(Recipe, Current_Meal, App_User).join(Current_Meal, Recipe.recipe_id==Current_Meal.recipe_id).join(App_User, Current_Meal.app_user_id==App_User.id).filter(Current_Meal.combined_user_id==combined_user_id).filter(Current_Meal.active_ind==True).filter(Current_Meal.meal=='dinner').order_by(Current_Meal.day_number)).all()
 
     dinner_length = len(selected_dinner_meals_list)
 
@@ -677,6 +738,7 @@ def _meal_plan():
                     app_user_id=current_user.id,
                     day_number=0,
                     meal='breakfast',
+                    weekday_id=None,
                     active_ind=True,
                     insert_datetime=datetime.now(),
                     combined_user_id=combined_user_id
@@ -697,6 +759,7 @@ def _meal_plan():
                     app_user_id=current_user.id,
                     day_number=0,
                     meal='lunch',
+                    weekday_id=None,
                     active_ind=True,
                     insert_datetime=datetime.now(),
                     combined_user_id=combined_user_id
@@ -717,6 +780,7 @@ def _meal_plan():
                     app_user_id=current_user.id,
                     day_number=0,
                     meal='dinner',
+                    weekday_id=None,
                     active_ind=True,
                     insert_datetime=datetime.now(),
                     combined_user_id=combined_user_id
@@ -794,6 +858,7 @@ def _meal_breakfast():
                 app_user_id=current_user.id,
                 day_number=0,
                 meal='breakfast',
+                weekday_id=None,
                 active_ind=True,
                 insert_datetime=datetime.now(),
                 combined_user_id=combined_user_id
@@ -836,6 +901,7 @@ def _meal_lunch():
                 app_user_id=current_user.id,
                 day_number=0,
                 meal='lunch',
+                weekday_id=None,
                 active_ind=True,
                 insert_datetime=datetime.now(),
                 combined_user_id=combined_user_id
@@ -878,6 +944,7 @@ def _meal_dinner():
                 app_user_id=current_user.id,
                 day_number=0,
                 meal='dinner',
+                weekday_id=None,
                 active_ind=True,
                 insert_datetime=datetime.now(),
                 combined_user_id=combined_user_id

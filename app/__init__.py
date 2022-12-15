@@ -9,7 +9,7 @@ from config import Config
 
 db = SQLAlchemy()
 login = LoginManager()
-login.login_view = 'login'
+login.login_view = 'auth.login'
 migrate = Migrate()
 mail = Mail()
 

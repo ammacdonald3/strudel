@@ -36,6 +36,7 @@ def login():
         app_user.native_authenticated=True
         db.session.flush()
         db.session.commit()
+
         return redirect(url_for('main.index'))
 
     # Google account login

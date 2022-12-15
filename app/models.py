@@ -57,6 +57,19 @@ class App_User(UserMixin, db.Model):
         return App_User.query.get(id)
 
 
+class Weekday(db.Model):
+    __tablename__ = 'weekday'
+
+    weekday_id = db.Column(db.Integer, primary_key=True)
+    weekday_name = db.Column(db.String())
+    current_meal = db.relationship('Current_Meal', backref='current_meal', lazy=True)
+
+    def __init__(self, weekday_name):
+        self.weekday_name = weekday_name
+
+    def __repr__(self):
+        return '<id {}>'.format(self.weekday_id)
+
 
 class Recipe(db.Model):
     __tablename__ = 'recipe'
@@ -110,7 +123,6 @@ class Recipe(db.Model):
 
     def __repr__(self):
         return '<id {}>'.format(self.recipe_id)
-
 
 
 class Ingredient(db.Model):
@@ -329,20 +341,22 @@ class Current_Meal(db.Model):
     __tablename__ = 'current_meal'
 
     current_meal_id = db.Column(db.Integer, primary_key=True)
-    recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.recipe_id'), nullable=False)
+    recipe_id = db.Column(db.Integer(), db.ForeignKey('recipe.recipe_id'), nullable=True)
     app_user_id = db.Column(db.Integer(), db.ForeignKey('app_user.id'), nullable=False)
     combined_user_id = db.Column(db.String())
     day_number = db.Column(db.Integer())
     meal = db.Column(db.String())
+    weekday_id = db.Column(db.Integer(), db.ForeignKey('weekday.weekday_id'), nullable=True)
     active_ind = db.Column(db.Boolean())
     insert_datetime = db.Column(db.DateTime())
 
-    def __init__(self, recipe_id, app_user_id, combined_user_id, day_number, meal, active_ind, insert_datetime):
+    def __init__(self, recipe_id, app_user_id, combined_user_id, day_number, meal, weekday_id, active_ind, insert_datetime):
         self.recipe_id = recipe_id
         self.app_user_id = app_user_id
         self.combined_user_id = combined_user_id
         self.day_number = day_number
         self.meal = meal
+        self.weekday_id = weekday_id
         self.active_ind = active_ind
         self.insert_datetime = insert_datetime
 
