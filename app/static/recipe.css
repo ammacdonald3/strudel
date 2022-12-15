@@ -398,6 +398,12 @@ dt {
 		padding: 3%;
 		font-size: 130%;
 	}
+	#desktop-nav {
+		display: none;
+	}
+	.btn-group-desktop {
+		display: none;
+	}
 }
 
 
@@ -419,6 +425,12 @@ dt {
 		display: none;
 	} */
 	#navbar-brand {
+		display: none;
+	}
+	#mobile-nav {
+		display: none;
+	}
+	.btn-group-mobile {
 		display: none;
 	}
 }
