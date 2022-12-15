@@ -23,7 +23,9 @@ active
 
     <br>
     <div class="container">
-        <div id="btn-group-filter" class="btn-group btn-group-vertical btn-group-toggle btn-block" data-toggle="buttons">
+
+        <!-- Mobile button block -->
+        <div id="btn-group-filter" class="btn-group btn-group-vertical btn-group-toggle btn-block btn-group-mobile" data-toggle="buttons">
 
             <a href="{{ url_for('view_recipes.recipe_list_favorites') }}" class="btn btn-outline-success ar-btn-group">
                 <input type="radio" name="recipe_source" value="fav" id="fav" autocomplete="off"> Favorites
@@ -47,6 +49,33 @@ active
             </a>
 
         </div>
+
+        <!-- Desktop button block -->
+        <div id="btn-group-filter" class="btn-group btn-group-toggle btn-block btn-group-desktop" data-toggle="buttons">
+
+            <a href="{{ url_for('view_recipes.recipe_list_favorites') }}" class="btn btn-outline-success ar-btn-group">
+                <input type="radio" name="recipe_source" value="fav" id="fav" autocomplete="off"> Favorites
+            </a>
+
+            <a href="{{ url_for('view_recipes.recipe_list_editor') }} " class="btn btn-outline-success ar-btn-group">
+                <input type="radio" name="recipe_source" value="editor" id="editor" autocomplete="off"> Editor's Picks
+            </a>
+
+            <a href="{{ url_for('view_recipes.recipe_list_yours') }} " class="btn btn-outline-success ar-btn-group">
+                <input type="radio" name="recipe_source" value="you" id="you" autocomplete="off"> Uploaded by
+                You
+            </a>
+
+            <a href="{{ url_for('view_recipes.recipe_list_others') }} " class="btn btn-outline-success ar-btn-group active">
+                <input type="radio" name="recipe_source" value="all" id="all" autocomplete="off" checked> Uploaded by Others
+            </a>
+
+            <a href="{{ url_for('view_recipes.recipe_list_all') }} " class="btn btn-outline-success ar-btn-group">
+                <input type="radio" name="recipe_source" value="all" id="all" autocomplete="off"> All Recipes
+            </a>
+
+        </div>
+
     </div>
 
     <br>
