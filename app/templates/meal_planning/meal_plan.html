@@ -136,7 +136,7 @@ active
           </h4>
         </div>
 
-        <div id="collapseOne" {% if priority_meal != "Breakfast" %} class="collapse" {% endif %}
+        <div id="collapseOne" class="collapse"
           aria-labelledby="headingOne" data-parent="#accordion">
           <div class="card-body">
             {% if bfast_exists == True %}
@@ -271,7 +271,7 @@ active
             <span class="sr-only">lunch recipes</span>
           </h4>
         </div>
-        <div id="collapseTwo" {% if priority_meal != "Lunch" %} class="collapse" {% endif %}
+        <div id="collapseTwo" class="collapse"
           aria-labelledby="headingTwo" data-parent="#accordion">
           <div class="card-body">
             {% if lunch_exists == True %}
@@ -405,7 +405,7 @@ active
             <span class="sr-only">dinner recipes</span>
           </h4>
         </div>
-        <div id="collapseThree" {% if priority_meal != "Dinner" %} class="collapse" {% endif %}
+        <div id="collapseThree" class="collapse"
           aria-labelledby="headingThree" data-parent="#accordion">
           <div class="card-body">
             {% if dinner_exists == True %}
