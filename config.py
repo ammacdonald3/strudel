@@ -19,6 +19,7 @@ class Config(object):
     SQLALCHEMY_ECHO = True
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     SQLALCHEMY_DATABASE_URL = ['DATABASE_URL']
+    RECIPES_PER_PAGE = 50
 
     # Below config for image uploads
     MAX_CONTENT_LENGTH = 4 * 2048 * 2048

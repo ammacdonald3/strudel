@@ -18,37 +18,27 @@ active
 <div class="container feature-page">
 
     <div class="container" id="title">
-        <h2>Recipes</h2>
+        <h2>Favorite Recipes</h2>
     </div>
 
     <br>
     <div class="container">
 
-        <!-- Mobile button block -->
-        <div id="btn-group-filter" class="btn-group btn-group-vertical btn-group-toggle btn-block btn-group-mobile" data-toggle="buttons">
-            
-            <a href="{{ url_for('view_recipes.recipe_list_favorites') }}" class="btn btn-outline-success ar-btn-group active">
-                <input type="radio" name="recipe_source" value="fav" id="fav" autocomplete="off" checked> Favorites
-            </a>
-
-            <a href="{{ url_for('view_recipes.recipe_list_editor') }} " class="btn btn-outline-success ar-btn-group">
-                <input type="radio" name="recipe_source" value="editor" id="editor" autocomplete="off"> Editor's Picks
-            </a>
-
-            <a href="{{ url_for('view_recipes.recipe_list_yours') }} " class="btn btn-outline-success ar-btn-group">
-                <input type="radio" name="recipe_source" value="you" id="you" autocomplete="off"> Uploaded by
-                You
-            </a>
-
-            <a href="{{ url_for('view_recipes.recipe_list_others') }} " class="btn btn-outline-success ar-btn-group">
-                <input type="radio" name="recipe_source" value="all" id="all" autocomplete="off"> Uploaded by Others
-            </a>
-
-            <a href="{{ url_for('view_recipes.recipe_list_all') }} " class="btn btn-outline-success ar-btn-group">
-                <input type="radio" name="recipe_source" value="all" id="all" autocomplete="off"> All Recipes
-            </a>
-
-        </div>
+        <!-- Mobile dropdown menu -->
+        <br>
+        <div class="dropdown btn-group-mobile">
+            <button class="btn btn-success btn-block dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                View Additional Recipes
+            </button>
+            <div class="dropdown-menu w-100 center-text" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item center-text active" href="{{ url_for('view_recipes.recipe_list_favorites') }}">Favorites</a>
+              <a class="dropdown-item center-text" href="{{ url_for('view_recipes.recipe_list_editor') }}">Editor's Picks</a>
+              <a class="dropdown-item center-text" href="{{ url_for('view_recipes.recipe_list_yours') }}">Uploaded by You</a>
+              <a class="dropdown-item center-text" href="{{ url_for('view_recipes.recipe_list_others') }}">Uploaded by Others</a>
+              <a class="dropdown-item center-text" href="{{ url_for('view_recipes.recipe_list_all') }}">All Recipes</a>
+              
+            </div>
+          </div>
 
         <!-- Desktop button block -->
         <div id="btn-group-filter" class="btn-group btn-group-toggle btn-block btn-group-desktop" data-toggle="buttons">
@@ -82,7 +72,39 @@ active
     <br>
 
     <div class="card-body">
-        <h4 class="text-center">{{ fav_length }} Recipes Returned</h4>
+        <h4 class="text-center">{{ fav_length }} Total Recipes</h4>
+        <br>
+        <!-- Pagination Links-->
+        <div class="center-text">
+            <a href="{{ url_for('view_recipes.recipe_list_favorites', page=favorite_recipe_list.prev_num) }}"
+            class="btn btn-outline-secondary 
+            {% if favorite_recipe_list.page == 1 %}disabled{% endif %}">
+                &laquo;
+            </a>
+            <!-- Loop through the number of pages to display a link for each-->
+            {% for page_num in favorite_recipe_list.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}{% if page_num %}
+            <!-- Check for the active page and set the link to "Active"-->
+                    {% if favorite_recipe_list.page == page_num %}
+                    <a href="{{ url_for('view_recipes.recipe_list_favorites', page=page_num) }}"
+                    class="btn btn-secondary">
+                        {{ page_num }}
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('view_recipes.recipe_list_favorites', page=page_num) }}"
+                    class="btn btn-outline-secondary">
+                        {{ page_num }}
+                    </a>
+                    {% endif %}
+                {% else %}
+                    ...
+                {% endif %}
+            {% endfor %}    <a href="{{ url_for('view_recipes.recipe_list_favorites', page=favorite_recipe_list.next_num) }}"
+            class="btn btn-outline-secondary 
+            {% if favorite_recipe_list.page == favorite_recipe_list.pages %}disabled{% endif %}">
+                &raquo;
+            </a>
+        </div>
+
         <hr class="recipe-list-hr" />
 
         {% if fav_exists == True %}
@@ -135,11 +157,6 @@ active
                 <div class="form-group">
 
                     <div class="row" style="padding-top: 20px;">
-                        <!-- Display button so that user can view recipe's page -->
-                        <div class="form-group col-sm">
-                            <a href="{{ url_for('view_recipes.recipe_detail', recipe_id=recipe.Recipe.recipe_id) }}"
-                                class="btn btn-primary btn-block">View Recipe</a>
-                        </div>
 
                         <!-- Display button so that user can view recipe's source website -->
                         <div class="form-group col-sm">
@@ -151,8 +168,6 @@ active
                                 <button type="button" class="btn btn-danger btn-block">No Source Website</button>
                             {% endif %}
                         </div>
-                    </div>
-                    <div class="row">
                         <!-- Display button so that user can add the recipe to their current meal plan via subsequent buttons on modal -->
                         <div class="form-group col-sm">
                             <button name="{{ recipe.Recipe.recipe_id }}" id="meal-{{ recipe.Recipe.recipe_id }}" class="meal-button fav-meal-button meal-{{ recipe.Recipe.recipe_id }} btn btn-block 
@@ -279,16 +294,6 @@ active
 
                         </div>
 
-                        <!-- Display button so that user can add the recipe to their favorites -->
-                        <div class="form-group col-sm">
-                            <button name="{{ recipe.Recipe.recipe_id }}" id="fav-{{ recipe.Recipe.recipe_id }}" class="favorite-button fav-{{ recipe.Recipe.recipe_id }} btn btn-block 
-                          {% if recipe.Favorite_Recipe.app_user_id == current_user.id and recipe.Favorite_Recipe.favorite_recipe_id != None %}
-                          btn-danger">Remove from Favorites
-                                {% else %}
-                                btn-success">Add to Favorites
-                                {% endif %}
-                            </button>
-                        </div>
 
                     </div>
                 </div>
@@ -298,6 +303,39 @@ active
             {% endfor %}
 
         </ul>
+
+        <br>
+
+        <!-- Pagination Links-->
+        <div class="center-text">
+            <a href="{{ url_for('view_recipes.recipe_list_favorites', page=favorite_recipe_list.prev_num) }}"
+            class="btn btn-outline-secondary 
+            {% if favorite_recipe_list.page == 1 %}disabled{% endif %}">
+                &laquo;
+            </a>
+            <!-- Loop through the number of pages to display a link for each-->
+            {% for page_num in favorite_recipe_list.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}{% if page_num %}
+            <!-- Check for the active page and set the link to "Active"-->
+                    {% if favorite_recipe_list.page == page_num %}
+                    <a href="{{ url_for('view_recipes.recipe_list_favorites', page=page_num) }}"
+                    class="btn btn-secondary">
+                        {{ page_num }}
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('view_recipes.recipe_list_favorites', page=page_num) }}"
+                    class="btn btn-outline-secondary">
+                        {{ page_num }}
+                    </a>
+                    {% endif %}
+                {% else %}
+                    ...
+                {% endif %}
+            {% endfor %}    <a href="{{ url_for('view_recipes.recipe_list_favorites', page=favorite_recipe_list.next_num) }}"
+            class="btn btn-outline-secondary 
+            {% if favorite_recipe_list.page == favorite_recipe_list.pages %}disabled{% endif %}">
+                &raquo;
+            </a>
+        </div>
 
         <!-- If user doesn't have any recipes, display placeholder message -->
         {% else %}

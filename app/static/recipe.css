@@ -152,10 +152,6 @@ dt {
 	background-repeat: no-repeat;
   }
 
-.center-text {
-	text-align: center;
-}
-
 .small-image {
 	max-width: 300px;
 }
@@ -452,4 +448,8 @@ iframe {
 
 .modal-form-button {
 	margin-top: 1em;
+}
+
+.center-text {
+	text-align: center;
 }

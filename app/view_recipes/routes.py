@@ -34,6 +34,9 @@ def recipe_list_favorites():
     # Get combined_user_id
     combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
 
+    # Pagination
+    page = request.args.get('page', 1, type=int)
+
     # Your favorite recipes (created both by you and others)
     favorite_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.active_ind, User_Link) \
         .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==current_user.id)) \
@@ -42,9 +45,10 @@ def recipe_list_favorites():
         .filter(Recipe.recipe_deleted==False)) \
         .filter(User_Link.app_user_id==current_user.id) \
         .order_by(Recipe.recipe_name) \
-        .all()
+        .paginate(
+        page=page, per_page=app.config['RECIPES_PER_PAGE'], error_out=False)
 
-    fav_length = len(favorite_recipe_list)
+    fav_length = favorite_recipe_list.total
 
     if fav_length != 0:
         fav_exists = True
@@ -154,6 +158,9 @@ def recipe_list_yours():
     # Get combined_user_id
     combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
 
+    # Pagination
+    page = request.args.get('page', 1, type=int)
+
     # Recipes created by you
     your_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.active_ind, User_Link) \
         .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None), isouter=True) \
@@ -163,9 +170,10 @@ def recipe_list_yours():
         .filter(Recipe.recipe_deleted==False)) \
         .filter(User_Link.app_user_id==current_user.id) \
         .order_by(Recipe.recipe_name) \
-        .all()
+        .paginate(
+        page=page, per_page=app.config['RECIPES_PER_PAGE'], error_out=False)
 
-    your_length = len(your_recipe_list)
+    your_length = your_recipe_list.total
 
     if your_length != 0:
         your_exists = True
@@ -275,6 +283,9 @@ def recipe_list_editor():
     # Get combined_user_id
     combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
 
+    # Pagination
+    page = request.args.get('page', 1, type=int)
+
     # Editor's Picks recipes (recipes favorited by Admin)
     editor_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.active_ind, User_Link) \
         .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==1)) \
@@ -283,9 +294,10 @@ def recipe_list_editor():
         .filter(Recipe.recipe_deleted==False)) \
         .filter(User_Link.app_user_id==current_user.id) \
         .order_by(Recipe.recipe_name) \
-        .all()
+        .paginate(
+        page=page, per_page=app.config['RECIPES_PER_PAGE'], error_out=False)
 
-    editor_length = len(editor_recipe_list)
+    editor_length = editor_recipe_list.total
 
     if editor_length != 0:
         editor_exists = True
@@ -394,6 +406,9 @@ def recipe_list_others():
 
     # Get combined_user_id
     combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
+
+    # Pagination
+    page = request.args.get('page', 1, type=int)
     
     # Recipes created by others
     other_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.active_ind, User_Link) \
@@ -406,9 +421,10 @@ def recipe_list_others():
         .filter(Recipe.recipe_deleted==False)) \
         .filter(User_Link.app_user_id==current_user.id) \
         .order_by(Recipe.recipe_name) \
-        .all()
+        .paginate(
+        page=page, per_page=app.config['RECIPES_PER_PAGE'], error_out=False)
     
-    other_length = len(other_recipe_list)
+    other_length = other_recipe_list.total
 
     if other_length != 0:
         other_exists = True
@@ -518,6 +534,9 @@ def recipe_list_all():
     # Get combined_user_id
     combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
 
+    # Pagination
+    page = request.args.get('page', 1, type=int)
+
     # All recipes (created both by you and others)
     all_recipe_list = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.active_ind, User_Link) \
         .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None), isouter=True) \
@@ -526,9 +545,10 @@ def recipe_list_all():
         .filter(Recipe.recipe_deleted==False)) \
         .filter(User_Link.app_user_id==current_user.id) \
         .order_by(Recipe.recipe_name) \
-        .all()
+        .paginate(
+        page=page, per_page=app.config['RECIPES_PER_PAGE'], error_out=False)
 
-    all_length = len(all_recipe_list)
+    all_length = all_recipe_list.total
 
     if all_length != 0:
         all_exists = True
