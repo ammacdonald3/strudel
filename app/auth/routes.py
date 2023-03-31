@@ -204,7 +204,8 @@ def register():
             db.session.add(app_user)
             db.session.commit()
 
-            app_user_id = (db.session.query(App_User.id).filter_by(app_email=app_email).first())
+            app_user_row = (db.session.query(App_User.id).filter_by(app_email=app_email).first())
+            app_user_id = app_user_row.id
 
             user_link = User_Link(
                 app_user_id=app_user_id,
