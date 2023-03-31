@@ -11,6 +11,35 @@ html {
 	}
 }
 
+a.bloc-icon:link {
+	text-decoration: none;
+	/* color: ghostwhite; */
+}
+
+a.bloc-icon:visited {
+	text-decoration: none;
+	color: ghostwhite;
+}
+
+a.bloc-icon:hover {
+	/* text-decoration: none; */
+	color: ghostwhite;
+}
+
+a.bloc-icon:active {
+	text-decoration: none;
+	color: ghostwhite;
+}
+
+#navbar-toggler {
+	border-color: transparent;
+}
+
+.navbar-button {
+	border-color: transparent;
+	background-color: transparent;
+}
+
 .container {
 	max-width: 1000px;
 }
@@ -192,6 +221,25 @@ dt {
 	.editor-cert-list {
 		color: rgb(9, 187, 9);
 	}
+	a:link {
+		text-decoration: none;
+		color: ghostwhite;
+	}
+	
+	a:visited {
+		text-decoration: none;
+		color: ghostwhite;
+	}
+	
+	a:hover {
+		/* text-decoration: none; */
+		color: ghostwhite;
+	}
+	
+	a:active {
+		text-decoration: none;
+		color: ghostwhite;
+	}
 }
 
 
@@ -272,7 +320,8 @@ dt {
 	}
 	#navbar-brand {
 		margin-right: 0px;
-		margin-left: 3%;
+		text-align: center;
+		/* margin-left: 3%; */
 	}
 	.navbar-true {
 		border-top:2px solid #f0f0f0;
@@ -289,14 +338,19 @@ dt {
 		padding: 3%;
 		font-size: 130%;
 	}
-	#desktop-nav {
+	.btn-group-desktop {
 		display: none;
 	}
-	.btn-group-desktop {
+	#desktop-nav {
 		display: none;
 	}
 }
 
+@media (max-width: 500px) and (display-mode: browser) {
+	#mobile-nav-standalone {
+		display: none;
+	}
+}
 
 @media (max-width: 500px) and (display-mode: standalone) {
 	.navbar-false {
@@ -309,6 +363,12 @@ dt {
 	#btn-back-to-top {
 		bottom: 130px;
 	}
+	#desktop-nav {
+		display: none;
+	}
+	#mobile-nav-browser {
+		display: none;
+	}
 }
 
 @media (min-width: 501px) {
@@ -318,10 +378,16 @@ dt {
 	#navbar-brand {
 		display: none;
 	}
-	#mobile-nav {
+	#mobile-nav-browser {
+		display: none;
+	}
+	#mobile-nav-standalone {
 		display: none;
 	}
 	.btn-group-mobile {
+		display: none;
+	}
+	#mobile-nav-icons {
 		display: none;
 	}
 }
@@ -452,4 +518,31 @@ iframe {
 
 .center-text {
 	text-align: center;
+}
+
+
+.mobile-nav-icons {
+	background: #F1F1F1;
+	position: fixed;
+	bottom: 0;
+	height: 65px;
+	width: 100%;
+	display: flex;
+	justify-content: space-around;
+  }
+  
+.bloc-icon {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: ghostwhite;
+	/* width: 60px; */
+}
+
+.nav-arrow > .dropdown-toggle::after {
+    display: none;
+}
+
+.mobile-nav-item-text {
+	font-size: 1.5em;
 }

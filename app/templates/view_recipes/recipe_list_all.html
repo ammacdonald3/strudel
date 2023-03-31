@@ -36,6 +36,7 @@ active
               <a class="dropdown-item center-text" href="{{ url_for('view_recipes.recipe_list_yours') }}">Uploaded by You</a>
               <a class="dropdown-item center-text" href="{{ url_for('view_recipes.recipe_list_others') }}">Uploaded by Others</a>
               <a class="dropdown-item center-text active" href="{{ url_for('view_recipes.recipe_list_all') }}">All Recipes</a>
+              <a class="dropdown-item center-text" href="{{ url_for('view_recipes.search') }}">Search</a>
               
             </div>
           </div>
@@ -72,6 +73,10 @@ active
 
     <div class="card-body">
         <h4 class="text-center">{{ all_length }} Total Recipes</h4>
+
+        {% if pagination_required %}
+
+
         <br>
         <!-- Pagination Links-->
         <div class="center-text">
@@ -102,6 +107,7 @@ active
             {% if all_recipe_list.page == all_recipe_list.pages %}disabled{% endif %}">
                 &raquo;
             </a>
+            {% endif %}
         </div>
 
 
@@ -306,6 +312,7 @@ active
         <br>
 
         <!-- Pagination Links-->
+        {% if pagination_required %}
         <div class="center-text">
             <a href="{{ url_for('view_recipes.recipe_list_all', page=all_recipe_list.prev_num) }}"
             class="btn btn-outline-secondary 
@@ -335,6 +342,7 @@ active
                 &raquo;
             </a>
         </div>
+        {% endif %}
         
 
         <!-- If user doesn't have any recipes, display placeholder message -->

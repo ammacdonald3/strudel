@@ -48,12 +48,25 @@ def recipe_list_favorites():
         .paginate(
         page=page, per_page=app.config['RECIPES_PER_PAGE'], error_out=False)
 
-    fav_length = favorite_recipe_list.total
+    fav_length = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.active_ind, User_Link) \
+        .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==current_user.id)) \
+        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None), isouter=True) \
+        .join(User_Link, (User_Link.combined_user_id==combined_user_id), isouter=True) \
+        .filter(Recipe.recipe_deleted==False)) \
+        .filter(User_Link.app_user_id==current_user.id) \
+        .distinct(Recipe.recipe_id) \
+        .count()
 
     if fav_length != 0:
         fav_exists = True
     else:
         fav_exists = False 
+
+
+    if fav_length <= app.config['RECIPES_PER_PAGE']:
+        pagination_required = False
+    else:
+        pagination_required = True
 
 
     if request.method == "POST":
@@ -147,7 +160,7 @@ def recipe_list_favorites():
 
 
     # Render the recipe_list_favorites.html template (main page for this route)
-    return render_template("view_recipes/recipe_list_favorites.html", favorite_recipe_list=favorite_recipe_list, fav_exists=fav_exists, fav_length=fav_length)
+    return render_template("view_recipes/recipe_list_favorites.html", favorite_recipe_list=favorite_recipe_list, fav_exists=fav_exists, fav_length=fav_length, pagination_required=pagination_required)
 
 
 # Define route for page to view your uploaded recipes
@@ -173,12 +186,26 @@ def recipe_list_yours():
         .paginate(
         page=page, per_page=app.config['RECIPES_PER_PAGE'], error_out=False)
 
-    your_length = your_recipe_list.total
+    your_length = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.active_ind, User_Link) \
+        .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None), isouter=True) \
+        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None), isouter=True) \
+        .join(User_Link, (User_Link.combined_user_id==combined_user_id), isouter=True) \
+        .filter(Recipe.created_by==current_user.id) \
+        .filter(Recipe.recipe_deleted==False)) \
+        .filter(User_Link.app_user_id==current_user.id) \
+        .distinct(Recipe.recipe_id) \
+        .count()
 
     if your_length != 0:
         your_exists = True
     else:
         your_exists = False 
+
+
+    if your_length <= app.config['RECIPES_PER_PAGE']:
+        pagination_required = False
+    else:
+        pagination_required = True
 
 
     if request.method == "POST":
@@ -272,7 +299,7 @@ def recipe_list_yours():
 
 
     # Render the recipe_list_yours.html template (main page for this route)
-    return render_template("view_recipes/recipe_list_yours.html", your_recipe_list=your_recipe_list, your_exists=your_exists, your_length=your_length)
+    return render_template("view_recipes/recipe_list_yours.html", your_recipe_list=your_recipe_list, your_exists=your_exists, your_length=your_length, pagination_required=pagination_required)
 
 
 # Define route for page to view editor's picks recipes
@@ -296,13 +323,26 @@ def recipe_list_editor():
         .order_by(Recipe.recipe_name) \
         .paginate(
         page=page, per_page=app.config['RECIPES_PER_PAGE'], error_out=False)
-
-    editor_length = editor_recipe_list.total
+    
+    editor_length = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.active_ind, User_Link) \
+        .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==1)) \
+        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None), isouter=True) \
+        .join(User_Link, (User_Link.combined_user_id==combined_user_id), isouter=True) \
+        .filter(Recipe.recipe_deleted==False)) \
+        .filter(User_Link.app_user_id==current_user.id) \
+        .distinct(Recipe.recipe_id) \
+        .count()
 
     if editor_length != 0:
         editor_exists = True
     else:
         editor_exists = False 
+
+
+    if editor_length <= app.config['RECIPES_PER_PAGE']:
+        pagination_required = False
+    else:
+        pagination_required = True
 
 
     if request.method == "POST":
@@ -416,20 +456,34 @@ def recipe_list_others():
         .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None), isouter=True) \
         .join(User_Link, (User_Link.combined_user_id==combined_user_id), isouter=True) \
         .filter(Recipe.created_by!=current_user.id) \
-        # .filter((Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None)) \
-        # .filter((Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None)) \
         .filter(Recipe.recipe_deleted==False)) \
         .filter(User_Link.app_user_id==current_user.id) \
         .order_by(Recipe.recipe_name) \
         .paginate(
         page=page, per_page=app.config['RECIPES_PER_PAGE'], error_out=False)
     
-    other_length = other_recipe_list.total
+
+    other_length = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.active_ind, User_Link) \
+        .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None), isouter=True) \
+        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.app_user_id==current_user.id) | (Current_Meal.app_user_id==None), isouter=True) \
+        .join(User_Link, (User_Link.combined_user_id==combined_user_id), isouter=True) \
+        .filter(Recipe.created_by!=current_user.id) \
+        .filter(Recipe.recipe_deleted==False)) \
+        .filter(User_Link.app_user_id==current_user.id) \
+        .distinct(Recipe.recipe_id) \
+        .count()
+
 
     if other_length != 0:
         other_exists = True
     else:
         other_exists = False 
+
+
+    if other_length <= app.config['RECIPES_PER_PAGE']:
+        pagination_required = False
+    else:
+        pagination_required = True
 
 
     if request.method == "POST":
@@ -523,7 +577,7 @@ def recipe_list_others():
 
 
     # Render the recipe_list_others.html template (main page for this route)
-    return render_template("view_recipes/recipe_list_others.html", other_recipe_list=other_recipe_list, other_exists=other_exists, other_length=other_length)
+    return render_template("view_recipes/recipe_list_others.html", other_recipe_list=other_recipe_list, other_exists=other_exists, other_length=other_length, pagination_required=pagination_required)
 
 
 # Define route for page to view all recipes
@@ -548,12 +602,25 @@ def recipe_list_all():
         .paginate(
         page=page, per_page=app.config['RECIPES_PER_PAGE'], error_out=False)
 
-    all_length = all_recipe_list.total
+    all_length = (db.session.query(Recipe, Favorite_Recipe, Current_Meal.recipe_id, Current_Meal.active_ind, User_Link) \
+        .join(Favorite_Recipe, (Recipe.recipe_id==Favorite_Recipe.recipe_id) & (Favorite_Recipe.app_user_id==current_user.id) | (Favorite_Recipe.app_user_id==None), isouter=True) \
+        .join(Current_Meal, (Recipe.recipe_id==Current_Meal.recipe_id) & (Current_Meal.active_ind==True) & (Current_Meal.combined_user_id==combined_user_id), isouter=True) \
+        .join(User_Link, (User_Link.combined_user_id==combined_user_id), isouter=True) \
+        .filter(Recipe.recipe_deleted==False)) \
+        .filter(User_Link.app_user_id==current_user.id) \
+        .distinct(Recipe.recipe_id) \
+        .count()
 
     if all_length != 0:
         all_exists = True
     else:
         all_exists = False 
+
+    
+    if all_length <= app.config['RECIPES_PER_PAGE']:
+        pagination_required = False
+    else:
+        pagination_required = True
 
 
     if request.method == "POST":
@@ -650,7 +717,7 @@ def recipe_list_all():
 
 
     # Render the recipe_list_all.html template (main page for this route)
-    return render_template("view_recipes/recipe_list_all.html", all_recipe_list=all_recipe_list, all_exists=all_exists, all_length=all_length)
+    return render_template("view_recipes/recipe_list_all.html", all_recipe_list=all_recipe_list, all_exists=all_exists, all_length=all_length, pagination_required=pagination_required)
 
 
 # Define route for recipe search

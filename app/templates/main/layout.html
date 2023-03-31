@@ -55,8 +55,87 @@
     </div>
   </div>
 
-  <!-- Mobile Navbar -->
-  <nav id="mobile-nav" class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark navbar-true">
+  <!-- Mobile Navbar Standalone -->
+  <nav id="mobile-nav-standalone" class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark navbar-true">
+
+    
+
+    
+
+
+    {% if current_user.is_anonymous %}
+    <!-- <button class="navbar-button order-3">
+      <a class="nav-link active" href="{{ url_for('auth.login') }}">Login</a>
+    </button> -->
+
+    <!-- Navbar Brand -->
+    <a id="navbar-brand" class="navbar-brand title-name order-3 mx-auto" href="{{ url_for('main.index') }}">Strudel</a>
+    
+    {% else %}
+
+    <button class="navbar-button order-2">
+      <a href="{{ url_for('main.index') }}" id="navbar-home" class="bloc-icon">
+        <i class="fa-solid fa-house fa-2x"></i>
+      </a>
+    </button>
+
+    <button class="navbar-button order-3">
+      <a href="{{ url_for('view_recipes.recipe_list_favorites') }}" class="bloc-icon">
+        <i class="fa-solid fa-magnifying-glass fa-2x"></i>
+      </a>
+    </button>
+
+    <button class="navbar-button order-4">
+      <a href="{{ url_for('meal_planning.meal_plan') }}" class="bloc-icon">
+        <i class="fa-solid fa-utensils fa-2x"></i>
+      </a>
+    </button>
+
+    <button class="navbar-button order-5">
+      <a href="{{ url_for('meal_planning.shopping_list') }}" class="bloc-icon">
+        <i class="fa-solid fa-list-check fa-2x"></i>
+      </a>
+    </button>
+
+    <button id="navbar-toggler" class="navbar-toggler order-6" type="button" data-toggle="collapse"
+      data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+      aria-label="Toggle navigation">
+      <!-- <span class="navbar-toggler-icon"></span> -->
+      <i class="fa-solid fa-angles-up fa-2x bloc-icon"></i>
+    </button>
+
+    <div class="collapse navbar-collapse order-1" style="font-size: 1.3em;" id="navbarSupportedContent">
+
+
+
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a href="{{ url_for('add_recipes.auto_import') }}" class="nav-link">Auto
+            Import Recipe</a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ url_for('add_recipes.add_recipe') }}" class="nav-link">Manually
+            Enter Recipe</a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ url_for('meal_planning.meal_selector') }}" class="nav-link">Meal Selector</a>
+        </li>
+
+        <!-- </ul> -->
+
+        <!-- <ul class="navbar-nav"> -->
+        <li class="nav-item">
+          <!-- Below class stops Google One Tap from auto logging in the user after they intentionally log out -->
+          <a class="nav-link g_id_signout" href="{{ url_for('auth.logout') }}">Logout</a>
+          {% endif %}
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+
+  <!-- Mobile Navbar in Browser -->
+  <nav id="mobile-nav-browser" class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark navbar-true">
 
     <!-- Navbar Brand -->
     <a id="navbar-brand" class="navbar-brand title-name order-3" href="{{ url_for('main.index') }}">Strudel</a>
@@ -140,8 +219,9 @@
       <i class="fa-solid fa-house-chimney"></i>
     </a>
 
-    <button id="navbar-toggler" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button id="navbar-toggler" class="navbar-toggler" type="button" data-toggle="collapse"
+      data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+      aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -156,9 +236,11 @@
             Add New
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item {% block nav_auto_import_d %}{% endblock %}" href="{{ url_for('add_recipes.auto_import') }}">Auto
+            <a class="dropdown-item {% block nav_auto_import_d %}{% endblock %}"
+              href="{{ url_for('add_recipes.auto_import') }}">Auto
               Import</a>
-            <a class="dropdown-item {% block nav_add_d %}{% endblock %}" href="{{ url_for('add_recipes.add_recipe') }}">Manual
+            <a class="dropdown-item {% block nav_add_d %}{% endblock %}"
+              href="{{ url_for('add_recipes.add_recipe') }}">Manual
               Entry</a>
           </div>
         </li>
@@ -170,7 +252,8 @@
             View Recipes
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item {% block nav_search_d %}{% endblock %}" href="{{ url_for('view_recipes.search') }}">Search</a>
+            <a class="dropdown-item {% block nav_search_d %}{% endblock %}"
+              href="{{ url_for('view_recipes.search') }}">Search</a>
             <a class="dropdown-item {% block nav_recipes_d %}{% endblock %}"
               href="{{ url_for('view_recipes.recipe_list_favorites') }}">View All Recipes</a>
           </div>
@@ -229,7 +312,7 @@
   <script type="text/javascript" src="{{ url_for('static', filename='main/layout.js') }}?v=1.01"></script>
 
   {% block footer %}
-  
+
   {% endblock %}
 
 </body>
