@@ -234,6 +234,11 @@ def auto_import():
                 db.session.flush()
                 db.session.commit()
 
+                # BELOW LINES USED FOR TROUBLESHOOTING IMPORT ISSUES
+                error = 'Recipe scraping error'
+
+                return render_template("add_recipes/auto_import.html", error=error)
+
             try:
                 clean_yields = re.sub('[^0-9]','', yields)
                 if clean_yields == None:
@@ -287,6 +292,11 @@ def auto_import():
                 db.session.flush()
                 db.session.commit()
 
+                # BELOW LINES USED FOR TROUBLESHOOTING IMPORT ISSUES
+                error = 'Recipe initial insert error'
+
+                return render_template("add_recipes/auto_import.html", error=error)
+
 
             # Insert data to INGREDENT table
             for item in scraper.ingredients():
@@ -315,6 +325,11 @@ def auto_import():
                     db.session.add(app_error)
                     db.session.flush()
                     db.session.commit()
+
+                    # BELOW LINES USED FOR TROUBLESHOOTING IMPORT ISSUES
+                    error = 'Ingredients error'
+
+                    return render_template("add_recipes/auto_import.html", error=error)
 
             # Insert data to RECIPE_STEP table
             instructions = scraper.instructions().split('\n')
@@ -348,14 +363,14 @@ def auto_import():
                     db.session.commit()
 
                     # BELOW LINES USED FOR TROUBLESHOOTING IMPORT ISSUES
-                    # error = 'This website is not supported at this time. Please manually add this recipe, and use the Auto Import function for one of the supported websites below.'
+                    error = 'Recipe steps error'
 
-                    # return render_template("auto_import.html", error=error)
+                    return render_template("add_recipes/auto_import.html", error=error)
 
 
             # Insert data to FAVORITE_RECIPE table
             try:
-                if request.form['mark_fav'] == 'fav':
+                if 'mark_fav' in request.form:
                     favorite_recipe = Favorite_Recipe(
                         recipe_id=recipe.recipe_id,
                         app_user_id=current_user.id,
@@ -382,10 +397,15 @@ def auto_import():
                 db.session.flush()
                 db.session.commit()
 
+                # BELOW LINES USED FOR TROUBLESHOOTING IMPORT ISSUES
+                error = 'Favorite recipe error'
+
+                return render_template("add_recipes/auto_import.html", error=error)
+
 
             # Render recipe_confirm.html template after recipe is written to DB
             # return(render_template('add_recipes/recipe_confirm.html', recipe_id=recipe.recipe_id, recipe_name=scraper.title(), output=output))
-            return redirect(url_for('view_recipes.recipe_detail', recipe_id=recipe_id))
+            return redirect(url_for('view_recipes.recipe_detail', recipe_id=recipe.recipe_id))
             
         except Exception as e:
             error = 'This website is not supported at this time. Please manually add this recipe, and use the Auto Import function for one of the supported websites below.'
