@@ -74,25 +74,25 @@
     {% else %}
 
     <button class="navbar-button order-2">
-      <a href="{{ url_for('main.index') }}" id="navbar-home" class="bloc-icon">
+      <a href="{{ url_for('main.index') }}" id="navbar-home" class="bloc-icon {% block mobile_nav_home %}{% endblock %}">
         <i class="fa-solid fa-house fa-2x"></i>
       </a>
     </button>
 
     <button class="navbar-button order-3">
-      <a href="{{ url_for('view_recipes.recipe_list_favorites') }}" class="bloc-icon">
+      <a href="{{ url_for('view_recipes.recipe_list_favorites') }}" class="bloc-icon {% block mobile_nav_search %}{% endblock %}">
         <i class="fa-solid fa-magnifying-glass fa-2x"></i>
       </a>
     </button>
 
     <button class="navbar-button order-4">
-      <a href="{{ url_for('meal_planning.meal_plan') }}" class="bloc-icon">
+      <a href="{{ url_for('meal_planning.meal_plan') }}" class="bloc-icon {% block mobile_nav_meal_plan %}{% endblock %}">
         <i class="fa-solid fa-utensils fa-2x"></i>
       </a>
     </button>
 
     <button class="navbar-button order-5">
-      <a href="{{ url_for('meal_planning.shopping_list') }}" class="bloc-icon">
+      <a href="{{ url_for('meal_planning.shopping_list') }}" class="bloc-icon {% block mobile_nav_shopping_list %}{% endblock %}">
         <i class="fa-solid fa-list-check fa-2x"></i>
       </a>
     </button>
@@ -101,7 +101,7 @@
       data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
       aria-label="Toggle navigation">
       <!-- <span class="navbar-toggler-icon"></span> -->
-      <i class="fa-solid fa-angles-up fa-2x bloc-icon"></i>
+      <i class="fa-solid fa-angles-up fa-2x bloc-icon {% block mobile_nav_extra_menu %}{% endblock %}"></i>
     </button>
 
     <div class="collapse navbar-collapse order-1" style="font-size: 1.3em;" id="navbarSupportedContent">
