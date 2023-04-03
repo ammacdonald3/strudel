@@ -311,6 +311,12 @@
     crossorigin="anonymous"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='main/layout.js') }}?v=1.01"></script>
 
+  <script>
+    if (typeof navigator.serviceWorker !== 'undefined') {
+      navigator.serviceWorker.register('/sw.js', {scope: '/'})
+    }
+  </script>
+
   {% block footer %}
 
   {% endblock %}

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, current_app
+from flask import Flask, render_template, current_app, make_response, send_from_directory
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from datetime import datetime
 from google.oauth2 import id_token
@@ -45,6 +45,11 @@ def index():
     return render_template('main/index.html', google_login_uri=google_login_uri, google_client_id=google_client_id, current_user_admin=current_user_admin)
 
 
-
-    
-
+# Define route for service worker
+@bp.route('/sw.js')
+def sw():
+    response=make_response(
+                     send_from_directory('static',path='sw.js'))
+    response.headers['Content-Type'] = 'application/javascript'
+    response.headers['Service-Worker-Allowed'] = '/'
+    return response
