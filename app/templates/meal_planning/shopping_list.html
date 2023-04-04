@@ -148,12 +148,51 @@ active
 
         <div class="row">
 
+            <!-- Button for deleting all checked items -->
+            <div class="form-group col-sm">
+                <form role="form" method='POST' id='del_checked_form' name='del_checked_form'>
+                    <button type="button" class="btn btn-danger btn-block" data-toggle="modal"
+                        data-target="#del-checked-confirm">
+                        Delete Checked
+                    </button>
+
+                    <!-- Modal prompting whether to delete all  shopping list items -->
+                    <div class="modal fade del-checked-confirm" id="del-checked-confirm" tabindex="-1" role="dialog"
+                        aria-labelledby="del-checked-confirm-title" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="del-checked-confirm-title">Confirm</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure that you want to delete the checked items from
+                                    your shopping list?
+                                </div>
+                                <!-- Button to proceed with removal -->
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-danger center" id="del_checked_submit"
+                                        name="del_checked_submit">
+                                        Delete Checked Items
+                                    </button>
+                                    <!-- Button to cancel and close modal -->
+                                    <button type="button" class="btn btn-secondary center" data-dismiss="modal">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
             <!-- Button for deleting custom shopping list items -->
             <div class="form-group col-sm">
                 <form role="form" method='POST' id='del_custom_form' name='del_custom_name'>
                     <button type="button" class="btn btn-danger btn-block" data-toggle="modal"
-                        data-target="#del-custom-confirm">Delete Custom
-                        Items</button>
+                        data-target="#del-custom-confirm">Delete Manually-Added</button>
 
                     <!-- Modal prompting whether to delete all custom shopping list items -->
                     <div class="modal fade del-custom-confirm" id="del-custom-confirm" tabindex="-1" role="dialog"
@@ -167,14 +206,14 @@ active
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    Are you sure that you want to delete all custom items from
+                                    Are you sure that you want to delete all manually-added items from
                                     your shopping list?
                                 </div>
                                 <!-- Button to proceed with removal -->
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-danger center" id="del_custom_submit"
                                         name="del_custom_submit">
-                                        Delete Custom Items
+                                        Delete Manually-Added Items
                                     </button>
                                     <!-- Button to cancel and close modal -->
                                     <button type="button" class="btn btn-secondary center" data-dismiss="modal">
@@ -193,7 +232,7 @@ active
                 <form role="form" method='POST' id='del_auto_form' name='del_auto_name'>
                     <button type="button" class="btn btn-danger btn-block" data-toggle="modal"
                         data-target="#del-auto-confirm">
-                        Delete Auto-Generated Items
+                        Delete Auto-Generated
                     </button>
 
                     <!-- Modal prompting whether to delete all auto-generated shopping list items -->
@@ -234,7 +273,7 @@ active
                 <form role="form" method='POST' id='del_all_form' name='del_all_form'>
                     <button type="button" class="btn btn-danger btn-block" data-toggle="modal"
                         data-target="#del-all-confirm">
-                        Delete All Items
+                        Delete All
                     </button>
 
                     <!-- Modal prompting whether to delete all  shopping list items -->

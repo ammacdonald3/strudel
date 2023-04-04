@@ -523,6 +523,33 @@ def shopping_list():
                 db.session.flush()
                 db.session.commit()
 
+        # Path for deleting checked items from shopping list:
+        if "del_checked_submit" in request.form:
+            try:
+
+                # Delete checked shopping list
+                Shopping_List.query.filter(Shopping_List.checked_status==True).filter_by(combined_user_id=combined_user_id).delete(synchronize_session="fetch")
+
+                db.session.flush()
+                db.session.commit()
+
+
+            except Exception as e:
+                db.session.rollback()
+                output.append("Application encountered an error, and your shopping list was not deleted. Better luck in the future!")
+                output.append(str(e))
+                print(output)
+
+                # Write errors to APP_ERROR table
+                app_error = App_Error(
+                    app_user_id=current_user.id,
+                    insert_datetime=datetime.now(),
+                    error_val=str(e)
+                )
+                db.session.add(app_error)
+                db.session.flush()
+                db.session.commit()
+
 
         # Path for deleting all items from shopping list:
         # This code block is placed here intentionally to allow user to delete auto-generated items in the same workflow as generating new items
