@@ -61,7 +61,7 @@
   ],
   "start_url": "/",
   "background_color": "#ffffff",
-  "display": "standalone",
+  "display": "minimal-ui",
   "scope": "/",
   "theme_color": "#1c1b1b",
   "orientation": "any",

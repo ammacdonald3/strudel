@@ -349,6 +349,8 @@ dt {
 	.navbar-true {
 		border-top:2px solid #f0f0f0;
 		border-bottom:unset;
+		padding-top: 0.5rem;
+		padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
 	}
 	.feature-page {
 		padding-bottom: 130px;
