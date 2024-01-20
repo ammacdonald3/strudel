@@ -703,10 +703,30 @@ def shopping_list():
         Recipe, Recipe.recipe_id==Shopping_List.recipe_id
     ).filter(
         Shopping_List.combined_user_id==combined_user_id
-    ).order_by(Shopping_List.checked_status).order_by(Shopping_List.insert_datetime.desc()).all())
+    ).order_by(Shopping_List.checked_status).order_by(Shopping_List.item_sort.desc()).all())
 
     
     return render_template('meal_planning/shopping_list.html', shop_list=shop_list)
+
+
+# Define route for shopping list page
+@bp.route('/_shopping_list_sort', methods=['POST'])
+@login_required
+def _shopping_list_sort():
+    new_order_data = request.json.get('newOrderData')
+    
+    # Process the new order data
+    # Update the corresponding database records
+
+    for item in new_order_data:
+        item_object = db.session.query(Shopping_List).filter(Shopping_List.shopping_list_id==item['id']).first()
+        # Get item_desc attribute from item2
+        db.session.query(Shopping_List).filter(Shopping_List.shopping_list_id==item['id']).update(dict(item_sort=item['position']), synchronize_session=False)
+
+        db.session.flush()
+        db.session.commit()
+    
+    return 'Order updated successfully'
 
 
 # Define route for checking off shopping list items with ajax
@@ -716,13 +736,51 @@ def _shopping_list_items():
     status = request.form.get('status')
     s_list_id = request.form.get('s_list_id')
 
+    # Get combined_user_id
+    combined_user_id = (db.session.query(User_Link.combined_user_id).filter(User_Link.app_user_id==current_user.id))
+
+    # Get maximum item_sort value from ShoppingList model for the user where checked_status is False
+    max_item_sort_unchecked = (db.session.query(func.max(Shopping_List.item_sort)).filter(Shopping_List.combined_user_id==combined_user_id).filter(Shopping_List.checked_status==False).scalar())
+
+    try:
+        new_item_sort_unchecked = max_item_sort_unchecked + 1
+    except:
+        new_item_sort_unchecked = 1
+
+    # Get maximum item_sort value from ShoppingList model for the user where checked_status is True
+    max_item_sort_checked = (db.session.query(func.max(Shopping_List.item_sort)).filter(Shopping_List.combined_user_id==combined_user_id).filter(Shopping_List.checked_status==True).scalar())
+
+    try:
+        new_item_sort_checked = max_item_sort_checked + 1
+    except:
+        new_item_sort_checked = 1
+
+    # Get list of all checked items for the user
+    checked_items = (db.session.query(Shopping_List).filter(Shopping_List.combined_user_id==combined_user_id).filter(Shopping_List.checked_status==True).order_by(Shopping_List.item_sort).all())
+
+    # Loop through checked_items, add 1 to item_sort for each item, and commit to db
+    for item in checked_items:
+        item.item_sort += 1
+        db.session.flush()
+        db.session.commit()
+
+    # Get object for the item that was checked/unchecked
+    item = (db.session.query(Shopping_List).filter(Shopping_List.shopping_list_id==s_list_id).first())
+
     # If user checked an item, update DB to flag it as checked
     if status == 'checked':
-        db.session.query(Shopping_List).filter(Shopping_List.shopping_list_id==s_list_id).update(dict(checked_status=True), synchronize_session=False)
+        item.checked_status = True
+        item.item_sort = new_item_sort_checked
+        item.item_sort = 1
+        db.session.flush()
+        db.session.commit()
     
     # If user unchecked an item, update DB to flag it as unchecked
     elif status == 'unchecked':
-        db.session.query(Shopping_List).filter(Shopping_List.shopping_list_id==s_list_id).update(dict(checked_status=False), synchronize_session=False)
+        item.checked_status = False
+        item.item_sort = new_item_sort_unchecked
+        db.session.flush()
+        db.session.commit()
     
     db.session.flush()
     db.session.commit()

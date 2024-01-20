@@ -22,8 +22,6 @@ active
             <br>
 
             <form role="form" method='POST' id="generate_form" name="generate_form">
-
-
                 <button class="btn btn-primary btn-block" {% if shop_list %} type="button" data-toggle="modal"
                     data-target="#generate-confirm" {% else %} type="submit" id="gen_no_existing_items_submit" name="gen_no_existing_items_submit" {% endif %}>
                     Generate Shopping List
@@ -67,6 +65,15 @@ active
         </div>
 
         <br>
+
+        <!-- Button for showing/hiding trash can column used to delete individual shopping list items -->
+        <div class="form-group col-sm">
+            <div class="row">
+                <button class="btn btn-block btn-warning edit-inactive" id="edit-button">
+                    Enter Edit Mode
+                </button>
+            </div>
+        </div>
         <br>
 
         <!-- Manually add new items to the shopping list -->
@@ -82,21 +89,22 @@ active
 
         </form>
 
+        <!-- Shopping List table -->
         <table class="table table-bordered" id="shopping-table">
             <thead>
                 <tr>
-                    <th scope="col" class="trash-column d-none"></th>
+                    <th scope="col" class="table-edit-column d-none"></th>
                     <th scope="col"></th>
                     <th scope="col">Item</th>
+                    <th scope="col" class="table-edit-column d-none">Sort</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="shopping-list-body">
                 {% for ingredient in shop_list %}
-                <tr>
+                <tr data-id="{{ ingredient.Shopping_List.shopping_list_id }}">
                     <!-- Column #1 - Trash Icon -->
-                    <td class="text-center trash-column d-none align-middle">
-                        <span class="trash"><i class="fa fa-trash"
-                                id="{{ ingredient.Shopping_List.shopping_list_id }}"></i></span>
+                    <td class="trash-cell text-center table-edit-column d-none align-middle" id="{{ ingredient.Shopping_List.shopping_list_id }}">
+                        <span class="trash"><i class="fa fa-trash"></i></span>
                     </td>
 
                     <!-- Column #2 - Checkboxes -->
@@ -115,12 +123,23 @@ active
                     </td>
 
                     <!-- Column #3 - Item Name -->
-                    <td {% if ingredient.Shopping_List.checked_status == True %} class="completed" {% endif %}>
-                        <div>{{ ingredient.Shopping_List.item_desc }}</div>
-                        <div class="slist-recipe">
-                            {% if ingredient.Recipe.recipe_id %}
-                            {{ ingredient.Recipe.recipe_name }}
-                            {% endif %}
+                    <td class="td-item-name">
+                            <div {% if ingredient.Shopping_List.checked_status == True %} class="item-name-recipe-name completed" {% else %} class="item-name-recipe-name" {% endif %}>
+                                <div>{{ ingredient.Shopping_List.item_desc }}</div>
+                                <div class="slist-recipe">
+                                    {% if ingredient.Recipe.recipe_id %}
+                                    {{ ingredient.Recipe.recipe_name }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                                <div id="success-message-{{ ingredient.Shopping_List.shopping_list_id }}" style="display: none; color: green;"></div>
+                                <div id="error-message-{{ ingredient.Shopping_List.shopping_list_id }}" style="display: none; color: red;"></div>
+                    </td>
+
+                    <!-- Column 4 - Sortable Handle -->
+                    <td {% if ingredient.Shopping_List.checked_status == True %} class="table-edit-column d-none handle completed" {% else %} class="table-edit-column handle d-none" {% endif %}>
+                        <div style="text-align: center;">
+                            <i class="fa-solid fa-grip-lines"></i>
                         </div>
                     </td>
 
@@ -133,18 +152,6 @@ active
 
         <br>
         <br>
-
-        <!-- NOTE: Hiding button below, as functionality is not working correctly. The trash can icon currently hides every time that the page refreshes (i.e. every 5 seconds). Need to figure out alternate approach before unhiding the button. -->
-        <!-- Button for showing/hiding trash can column used to delete individual shopping list items -->
-        <!-- <div class="form-group col-sm">
-            <div class="row">
-                <button class="btn btn-block btn-warning edit-inactive" id="edit-button">
-                    Enter Edit Mode
-                </button>
-            </div>
-        </div>
-
-        <br> -->
 
         <div class="row">
 
@@ -326,5 +333,6 @@ active
 {% block footer %}
 <script type="text/javascript" src="{{ url_for('static', filename='meal_planning/shopping_list.js') }}?v=1.01"></script>
 
+<script src=" https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js "></script>
 
 {% endblock %}

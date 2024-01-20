@@ -20,7 +20,7 @@
     * MAC OS
         * ```export FLASK_APP="strudel.py"```
         * ```export APP_SETTINGS="config.DevelopmentConfig"```
-        * ```export DATABASE_URL="postgresql:///recipe-dev"```
+        * ```export DATABASE_URL="postgresql:///strudel-dev"```
         * ```export GOOGLE_LOGIN_URI="http://localhost:5000/auth/register"```
         * ```export GOOGLE_CLIENT_ID="<populate from Google>```
         * ```export SECRET_KEY="123"```
