@@ -205,6 +205,9 @@ $(document).ready(function(){
         $(successModalId).modal('show')
 
     });
+
+    $('#imageUploadModal').modal('show');
+
 });
 
 

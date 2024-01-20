@@ -16,7 +16,7 @@ class Config(object):
     if SQLALCHEMY_DATABASE_URI and SQLALCHEMY_DATABASE_URI.startswith("postgres://"):
         SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace("postgres://", "postgresql://", 1)
 
-    SQLALCHEMY_ECHO = True
+    SQLALCHEMY_ECHO = False
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     SQLALCHEMY_DATABASE_URL = ['DATABASE_URL']
     RECIPES_PER_PAGE = 50

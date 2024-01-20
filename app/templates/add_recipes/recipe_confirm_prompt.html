@@ -1,0 +1,65 @@
+{% extends "main/layout.html" %}
+{% block mobile_nav_extra_menu %}
+bloc-icon-active
+{% endblock %}
+{% block nav_add_menu %}
+active
+{% endblock %}
+
+{% block body %}
+<div class="container feature-page">
+
+    <div class="container" id="title">
+        <h2><i class="fa-solid fa-triangle-exclamation"></i> Recipe Import Warning</h2>
+    </div>
+
+    <div class="container mt-3">
+        <div class="alert alert-secondary" role="alert">
+            You have previously added {{ recipe.recipe_name }}. Do you want to add it again?
+        </div>
+
+        <div class="container" style="padding-top: 20px;">
+            <div class="form-group">
+                <div class="row" style="padding-top: 20px;">
+                    <div class="form-group col-sm">
+                        <a href="{{ url_for('view_recipes.recipe_detail', recipe_id=recipe.recipe_id) }}"
+                            class="btn btn-success btn-block">View Existing Recipe</a>
+                    </div>
+                    <div class="form-group col-sm">
+                            <form action="{{ url_for('add_recipes.auto_import') }}" method="POST">
+                                <input type="hidden" name="recipe_url" value="{{ url_input }}">
+                                <input type="hidden" name="bypass_warning" value="True">
+                                <button type="submit" class="btn btn-warning btn-block">Proceed with Import</button>
+                            </form>
+                    </div>
+
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <div class="form-group col-sm">
+                        <a href="{{ url_for('add_recipes.auto_import') }}" class="btn btn-primary btn-block">Add
+                            Another (Auto Import)</a>
+                    </div>
+
+                    <div class="form-group col-sm">
+                        <a href="{{ url_for('add_recipes.add_recipe') }}" class="btn btn-primary btn-block">Add
+                            Another (Manual Entry)</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Uncomment below lines for debugging -->
+<!-- {% for item in output %}
+<h4>{{ item }}</h4>
+{% endfor %} -->
+
+
+{% endblock %}
+
+
+{% block footer %}
+<script type="text/javascript" src="{{ url_for('static', filename='add_recipes/ingredients.js') }}"></script>
+{% endblock %}

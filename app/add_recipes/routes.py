@@ -180,7 +180,29 @@ def auto_import():
     output = []
     # If user inputs URL, scrape website for recipe data and write to DB:
     if request.method == "POST":
+        # If recipe already exists, prompt user to confirm duplicate
+        if request.form['bypass_warning'] != 'True':
+            try:
+                url_input = request.form['recipe_url']
+                auto_import_clean_url = clean(url_input)
+                recipe = db.session.query(Recipe).filter_by(recipe_url=auto_import_clean_url).filter_by(created_by=current_user.id).first()
 
+                if recipe:
+                    return render_template("add_recipes/recipe_confirm_prompt.html", recipe=recipe, url_input=url_input)
+
+            except Exception as e:
+                output.append("Error identifying if recipe already exists on Strudel")
+                # Write errors to APP_ERROR table
+                app_error = App_Error(
+                    app_user_id=current_user.id,
+                    insert_datetime=datetime.now(),
+                    error_val=str(e)
+                )
+                db.session.add(app_error)
+                db.session.flush()
+                db.session.commit()
+
+        # If recipe doesn't yet exist or the user confirms duplicate, write to DB
         try:
             
             # HTML form only passes checked inputs
@@ -404,8 +426,9 @@ def auto_import():
 
 
             # Render recipe_confirm.html template after recipe is written to DB
+            render_image_upload_modal = True
             # return(render_template('add_recipes/recipe_confirm.html', recipe_id=recipe.recipe_id, recipe_name=scraper.title(), output=output))
-            return redirect(url_for('view_recipes.recipe_detail', recipe_id=recipe.recipe_id))
+            return redirect(url_for('view_recipes.recipe_detail', recipe_id=recipe.recipe_id, render_image_upload_modal=render_image_upload_modal))
             
         except Exception as e:
             error = 'This website is not supported at this time. Please manually add this recipe, and use the Auto Import function for one of the supported websites below.'

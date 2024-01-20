@@ -772,9 +772,10 @@ def search():
 
 
 # Define route for page to view detailed info about one recipe
-@bp.route('/recipe/<recipe_id>', methods=['GET', 'POST'])
+@bp.route('/recipe/<recipe_id>/', defaults={'render_image_upload_modal': None},  methods=['GET', 'POST'])
+@bp.route('/recipe/<recipe_id>/<render_image_upload_modal>', methods=['GET', 'POST'])
 @login_required
-def recipe_detail(recipe_id):
+def recipe_detail(recipe_id, render_image_upload_modal=False):
 
     # Get recipe details
     recipe = db.session.query(Recipe).filter_by(recipe_id=recipe_id).join(App_User).first()
@@ -864,7 +865,7 @@ def recipe_detail(recipe_id):
 
                     favorite = None
 
-                    return render_template('view_recipes/recipe_detail.html', recipe=recipe, ingredient_list=ingredient_list, step_list=step_list, favorite=favorite)
+                    return render_template('view_recipes/recipe_detail.html', recipe=recipe, ingredient_list=ingredient_list, step_list=step_list, favorite=favorite, render_image_upload_modal=render_image_upload_modal)
                 
                 except Exception as e:
                     db.session.rollback()
@@ -894,7 +895,7 @@ def recipe_detail(recipe_id):
             db.session.flush()
             db.session.commit()
 
-            return redirect(url_for('view_recipes.recipe_detail', recipe_id=recipe_id))
+            return redirect(url_for('view_recipes.recipe_detail', recipe_id=recipe_id, render_image_upload_modal=render_image_upload_modal))
 
                 
 
@@ -937,5 +938,5 @@ def recipe_detail(recipe_id):
         owner_ind = False
 
     # Render the recipe_detail.html template (main page for this route)
-    return render_template('view_recipes/recipe_detail.html', recipe=recipe, current=current, ingredient_list=ingredient_list, step_list=step_list, favorite=favorite, owner_ind=owner_ind, admin_user=admin_user)
+    return render_template('view_recipes/recipe_detail.html', recipe=recipe, current=current, ingredient_list=ingredient_list, step_list=step_list, favorite=favorite, owner_ind=owner_ind, admin_user=admin_user, render_image_upload_modal=render_image_upload_modal)
  
